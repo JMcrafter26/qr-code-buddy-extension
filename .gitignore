@@ -1,2 +1,4 @@
 # No private key for you :P
 *.pem
+
+*.bak
