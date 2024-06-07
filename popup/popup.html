@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="popup.css">
-    <title>Chrome Addon v3: popup</title>
-</head>
-<body>
-    This is the <span class="special-text">HTML</span> body of the addon.
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../resources/water.css" />
+    <link rel="stylesheet" href="../resources/style.css" />
+    <title>QR Code Buddy</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="qr-code-container">
+        <img src="" alt="QR Code" class="qr-code hidden" id="png" />
+        <div id="canvas" class="qr-code-canvas"></div>
+      </div>
+      <div class="tools">
+        <input type="text" class="input" id="url" placeholder="Enter URL" value="https://www.google.com" />
+        <button id="download"><i data-feather="download"></i></button>
+      </div>
+    </div>
+
+    <script src="../resources/feater-icons.js"></script>
+
+    <script type="text/javascript" src="../resources/qr-code.js"></script>
+    <script type="text/javascript" src="../resources/popup.js"></script>
+  </body>
 </html>
