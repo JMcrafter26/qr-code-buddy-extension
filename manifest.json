@@ -10,7 +10,7 @@
     },
     "options_page": "settings/settings.html",
     "action": {
-        "default_title": "Chrome Addon v3 Starter",
+        "default_title": "Generate QR Code",
         "default_popup": "popup/popup.html"
     },
     "permissions": [
@@ -25,9 +25,7 @@
     },
     "content_scripts": [{
         "js": [
-            "foreground.js",
-            "resources/qr-code.js",
-            "resources/popup.js"
+            "foreground.js"
         ],
         "matches": ["https://github.com/*"]
     }]

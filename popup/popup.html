@@ -3,23 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="../resources/water.css" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css"> -->
     <link rel="stylesheet" href="../resources/style.css" />
     <title>QR Code Buddy</title>
+    <style>
+      body {
+    width: 310px;
+    height: 20rem;
+    margin: 0;
+    padding: 0.5rem;
+}
+    </style>
   </head>
   <body>
     <div class="container">
       <div class="qr-code-container">
-        <img src="" alt="QR Code" class="qr-code hidden" id="png" />
-        <div id="canvas" class="qr-code-canvas"></div>
+        <!-- <div id="canvas" class="qr-code-canvas"></div> -->
+        <div class="placeholder placeholderAnimation" id="canvas"></div>
       </div>
       <div class="tools">
         <input type="text" class="input" id="url" placeholder="Enter URL" value="https://www.google.com" />
-        <button id="download"><i data-feather="download"></i></button>
+        <input type="button" id="download" class="button" data-feather="download">
       </div>
+      
+    <div class="footer">
+      <p><a id="settings">Settings</a> | QR Code Buddy by <a style="color: var(--main-text);" href="https://github.com/JMcrafter26">JMcrafter26</a></p>
+    </div>
     </div>
 
     <script src="../resources/feater-icons.js"></script>
-
+    <script src="../resources/tools.js"></script>
     <script type="text/javascript" src="../resources/qr-code.js"></script>
     <script type="text/javascript" src="../resources/popup.js"></script>
   </body>

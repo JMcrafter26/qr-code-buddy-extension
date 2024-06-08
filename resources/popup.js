@@ -1,82 +1,114 @@
-function generate() {
-    let url = document.getElementById("url").value;
-    // get the url from the current tab
+let canvas = document.getElementById("canvas");
+let download = document.getElementById("download");
+feather.replace();
+function getSettings() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(null, (items) => {
+      window.QRsettings = items;
+      resolve(window.QRsettings);
+      // alert(JSON.stringify(window.QRsettings));
+      generate();
+    });
+  });
+}
 
-  const qrCode = new QRCodeStyling({
-    width: 300,
-    height: 300,
+function qrOptions(url) {
+  if(QRsettings.cleanUrl){
+    url = removeTrackersFromUrl(url, ALL_TRACKERS);
+    document.getElementById("url").value = url;
+  }
+  let options = {
+    width: 280,
+    height: 280,
     type: "canvas",
     data: url,
 
     dotsOptions: {
-      color: "#4267b2",
+      color: "#161f27",
       type: "rounded",
     },
     backgroundOptions: {
-      color: "#e9ebee",
+      color: "#efefef",
     },
     imageOptions: {
       crossOrigin: "anonymous",
-      margin: 20,
+      margin: 5,
     },
-  });
+  };
+  // if getSetting("logo") is not empty
+  if (window.QRsettings.logo) {
+    options.image = window.QRsettings.logo;
+  }
+  if (window.QRsettings.type) {
+    options.dotsOptions.type = window.QRsettings.type;
+  }
+  if (window.QRsettings.color) {
+    options.dotsOptions.color = window.QRsettings.color;
+  }
+  if (window.QRsettings.background) {
+    options.backgroundOptions.color = window.QRsettings.background;
+  }
+  return options;
+}
 
-  qrCode.append(document.getElementById("canvas"));
-  // qrCode.download({ name: "qr", extension: "svg" });
+function generate() {
+  if (document.getElementById("url").value == "") {
+    if (!canvas.classList.contains("placeholder")) {
+      canvas.classList.add("placeholder");
+    }
+    if (canvas.classList.contains("qr-code-canvas")) {
+      canvas.classList.remove("qr-code-canvas");
+    }
+    canvas.innerHTML = "";
+    return;
+  }
+  const qrCode = new QRCodeStyling(
+    qrOptions(document.getElementById("url").value)
+  );
 
-  // get the png image
-  /*
-    QRCodeStyling.getRawData(extension) => Promise<Blob>
-
-Param	Type	Default Value	Description
-extension	string ('png' 'jpeg' 'webp' 'svg')	'png'	Blob type
-Returns: Promise<Blob>
-    */
-  qrCode.getRawData("png").then((blob) => {
-    const url = URL.createObjectURL(blob);
-    // document.getElementById("png").src = url;
-
-    // remove class hidden from the qr code image
-    // remove the qr code canvas
-    // document.getElementById("canvas").classList.add("hidden");
-    // document.getElementById("png").classList.remove("hidden");
-  });
+  if (canvas.classList.contains("placeholder")) {
+    canvas.classList.remove("placeholder");
+    canvas.classList.remove("placeholderAnimation");
+  }
+  if (!canvas.classList.contains("qr-code-canvas")) {
+    canvas.classList.add("qr-code-canvas");
+  }
+  // replace canvas
+  canvas.innerHTML = "";
+  qrCode.append(canvas);
 }
 
 // on click download
 document.getElementById("download").addEventListener("click", function () {
-    let url = document.getElementById("url").value;
-    let hostname = new URL(url).hostname;
-  const qrCode = new QRCodeStyling({
-    width: 300,
-    height: 300,
-    type: "canvas",
-    data: url,
+  let url = document.getElementById("url").value;
 
-    dotsOptions: {
-      color: "#4267b2",
-      type: "rounded",
-    },
-    backgroundOptions: {
-      color: "#e9ebee",
-    },
-    imageOptions: {
-      crossOrigin: "anonymous",
-      margin: 20,
-    },
-  });
+  const qrCode = new QRCodeStyling(qrOptions(url));
+  // check if url is an url
+  if (url.includes("http")) {
+    const hostname = new URL(url).hostname;
+    const path = new URL(url).pathname;
+    qrCode.download({ name: "qr-" + hostname + path, extension: "png" });
+  } else {
+    qrCode.download({ name: "qr-code", extension: "png" });
+  }
+});
 
-  qrCode.download({ name: "qr-" + hostname, extension: "png" });
+document.getElementById("settings").addEventListener("click", function () {
+  chrome.runtime.openOptionsPage();
+});
+
+
+document.getElementById("url").addEventListener("input", function () {
+  console.log("input");
+  generate();
 });
 
 // on dom content loaded
 document.addEventListener("DOMContentLoaded", function () {
-feather.replace();
+  // generate();
 
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let url = tabs[0].url;
-    document.getElementById("url").value = url;
-  generate();
-
-});
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    document.getElementById("url").value = tabs[0].url;
+    getSettings();
+  });
 });

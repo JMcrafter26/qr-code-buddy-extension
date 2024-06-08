@@ -1,12 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="../resources/style.css">
-    <title>Chrome Addon v3: Settings</title>
-</head>
-<body>
-    This is the <span class="special-text">settings</span> page for the addon.
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Settings - QR Code Buddy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../resources/water.css" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css"> -->
+    <link rel="stylesheet" href="../resources/style.css" />
+  </head>
+  <body>
+    <div>
+        <h1>Settings</h1>
+        <p>Change the URL to generate a QR code for.</p>
+        <hr>
+        <br>
+        <div class="settings">
+            <div class="setting">
+                <h3>URL</h3>
+                <input type="checkbox" id="cleanUrl" data-eventlistener="true" />
+                <label for="cleanUrl">Clean URL (Remove tracking parameters)</label>
+            </div>
+            <div class="setting">
+                <h3>QR Code Settings</h3>
+                <div class="setting">
+                    <h4>Type</h4>
+                    <select id="type" data-eventlistener="true">
+                        <!-- 'rounded' 'dots' 'classy' 'classy-rounded' 'square' 'extra-rounded' -->
+                        <option value="rounded">Rounded</option>
+                        <option value="dots">Dots</option>
+                        <option value="classy">Classy</option>
+                        <option value="classy-rounded">Classy Rounded</option>
+                        <option value="square">Square</option>
+                        <option value="extra-rounded">Extra Rounded</option>
+                    </select>
+                </div>
+                <p style="color: #ff3535;" class="hidden" id="colorWarning">Warning: Color is not very visible compared to background color</p>
+                <div class="setting">
+                    <h4>Color</h4>
+                    <input type="color" id="color" value="#161f27" data-eventlistener="true" />
+                    <label for="color">Select a color</label>
+                </div>
+                <div class="setting">
+                    <h4>Background Color</h4>
+                    <input type="color" id="background" value="#efefef" data-eventlistener="true" />
+                    <label for="background">Select a color</label>
+                </div>
+                <div class="setting">
+                    <h4>Logo</h4>
+                    <input type="url" id="logo" placeholder="Enter URL" data-eventlistener="true" />
+                    <label for="logo">Enter URL for logo (you can upload to <a href="https://imgur.com">imgur</a> and paste the link here)</label>
+                </div>
+                <div class="setting">
+                    <h4>Save format</h4>
+                    <select id="format" data-eventlistener="true">
+                        <option value="png">PNG</option>
+                        <option value="jpeg">JPEG</option>
+                        <option value="webp">WEBP</option>
+                        <option value="svg">SVG</option>
+                    </select>
+                </div>
+
+        </div>
+    </div>
+
+    <!-- debug -->
+    <details>
+    <summary>Debug</summary>
+        <h2>Clean URL</h2>
+        <textarea id="dirtyUrl" placeholder="Paste dirty URL here"></textarea>
+        <button id="cleanBtn">Clean</button>
+    </div>
+</details>
+
+    <!-- <button id="save"><i class="save"></i> Save</button> -->
+    <p>Settings are saved automatically. <a id="reset" href="#">Reset</a> to default settings.</p>
+
+    <footer>
+        <p><span id="year">202X</span> QR Code Buddy</p>
+        <p>Made with ❤️ by <a href="https://github.com/JMcrafter26">JMcrafter26</a></p>
+    </footer>
+
+    <script src="../resources/feater-icons.js"></script>
+    <script src="../resources/tools.js"></script>
+    <script src="../resources/settings.js"></script>
+  </body>
 </html>
