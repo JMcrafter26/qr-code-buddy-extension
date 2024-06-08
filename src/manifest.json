@@ -8,20 +8,21 @@
         "48": "resources/logo/logo-48.png",
         "128": "resources/logo/logo-128.png"
     },
-    "options_page": "settings/settings.html",
+    "options_page": "page/settings.html",
     "action": {
         "default_title": "Generate QR Code",
-        "default_popup": "popup/popup.html"
+        "default_popup": "page/popup.html"
     },
     "permissions": [
         "activeTab",
-        "storage"
+        "storage",
+        "contextMenus"
     ],
     "host_permissions": [
         "*://*/*"
     ],
     "background": {
-        "service_worker": "service-worker.js"
+        "service_worker": "./resources/background.js"
     },
     "content_scripts": [{
         "js": [

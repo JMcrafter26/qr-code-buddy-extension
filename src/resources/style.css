@@ -176,3 +176,23 @@ footer p
 {
     cursor: pointer;
 }
+
+#settings
+{
+    cursor: pointer;
+}
+
+.logo
+{
+    height: 50px;
+    width: 50px;
+    margin-top: 20px;
+    margin-right: 5px;
+}
+
+.logo-container
+{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10vh;
+}

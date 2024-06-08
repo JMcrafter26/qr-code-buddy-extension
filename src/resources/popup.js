@@ -17,11 +17,14 @@ function getSettings() {
 }
 
 function qrOptions(url) {
-  if(QRsettings.cleanUrl){
+  if (QRsettings.cleanUrl) {
     url = removeTrackersFromUrl(url, ALL_TRACKERS);
     document.getElementById("url").value = url;
   }
-  if(QRsettings.urlShortener != "none" && QRsettings.urlShortener != undefined){
+  if (
+    QRsettings.urlShortener != "none" &&
+    QRsettings.urlShortener != undefined
+  ) {
     url = getShortUrl(url, QRsettings.urlShortener, QRsettings.api_key);
     document.getElementById("url").value = url;
   }
@@ -109,7 +112,6 @@ document.getElementById("settings").addEventListener("click", function () {
   chrome.runtime.openOptionsPage();
 });
 
-
 document.getElementById("url").addEventListener("input", function () {
   console.log("input");
   generate();
@@ -117,10 +119,19 @@ document.getElementById("url").addEventListener("input", function () {
 
 // on dom content loaded
 document.addEventListener("DOMContentLoaded", function () {
-  // generate();
-
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    document.getElementById("url").value = tabs[0].url;
+  if (document.getElementById("popup")) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      document.getElementById("url").value = tabs[0].url;
+      getSettings();
+    });
+  } else {
+    // get ?url= parameter
+    const url = new URLSearchParams(window.location.search).get("url");
+    if (!url) {
+      document.getElementById("url").value = 'https://www.google.com';
+    } else {
+      document.getElementById("url").value = url;
+    }
     getSettings();
-  });
+  }
 });
