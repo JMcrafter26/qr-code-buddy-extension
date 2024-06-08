@@ -42,12 +42,12 @@
                     <h4>Type</h4>
                     <select id="type" data-eventlistener="true">
                         <!-- 'rounded' 'dots' 'classy' 'classy-rounded' 'square' 'extra-rounded' -->
+                        <option value="extra-rounded">Extra Rounded</option>
                         <option value="rounded">Rounded</option>
                         <option value="dots">Dots</option>
                         <option value="classy">Classy</option>
                         <option value="classy-rounded">Classy Rounded</option>
                         <option value="square">Square</option>
-                        <option value="extra-rounded">Extra Rounded</option>
                     </select>
                 </div>
                 <p style="color: #ff3535;" class="hidden" id="colorWarning">Warning: Color is not very visible compared to background color</p>
@@ -63,14 +63,14 @@
                 </div>
                 <div class="setting">
                     <h4>Logo</h4>
-                    <input type="url" id="logo" placeholder="Enter URL" data-eventlistener="true" />
-                    <label for="logo">Enter URL for logo (you can upload to <a href="https://imgur.com">imgur</a> and paste the link here)</label>
+                    <input type="url" id="logo" placeholder="Enter URL" data-eventlistener="true" style="width: 100%;" />
+                    <label for="logo">Enter URL for the logo in the middle of the QR Code (you can upload to <a href="https://imgur.com/upload">imgur</a> and paste the link here)</label>
                 </div>
                 <div class="setting">
                     <h4>Save format</h4>
                     <select id="format" data-eventlistener="true">
                         <option value="png">PNG</option>
-                        <option value="jpeg">JPEG</option>
+                        <option value="jpg">JPG</option>
                         <option value="webp">WEBP</option>
                         <option value="svg">SVG</option>
                     </select>
@@ -83,9 +83,15 @@
     <details>
     <summary>Debug</summary>
         <h2>Clean URL</h2>
-        <textarea id="dirtyUrl" placeholder="Paste dirty URL here"></textarea>
+        <textarea id="dirtyUrl" placeholder="Paste dirty URL here" rows="4"></textarea>
         <button id="cleanBtn">Clean</button>
+        <hr>
+        <h2>Export / Import Settings</h2>
+        <div>
+        <button id="export">Export</button>
+        <button id="import">Import</button>
     </div>
+        <textarea id="importExport" placeholder="Paste settings here to import / Exported settings will be shown here"></textarea>
 </details>
 
     <!-- <button id="save"><i class="save"></i> Save</button> -->
@@ -94,9 +100,9 @@
     <footer>
         <p><span id="year">202X</span> QR Code Buddy</p>
         <p>Made with ❤️ by <a href="https://github.com/JMcrafter26">JMcrafter26</a></p>
+        <p>This extension is Open Source. <a href="https://github.com/JMcrafter26/qr-code-buddy-extension">View on GitHub</a></p>
     </footer>
 
-    <script src="../resources/feater-icons.js"></script>
     <script src="../resources/tools.js"></script>
     <script src="../resources/settings.js"></script>
   </body>
