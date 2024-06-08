@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>QR Code Buddy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../resources/water.css" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css"> -->
+    <link rel="stylesheet" href="../resources/style.css" />
+  </head>
+  <body>
+    <div class="logo-container">
+    <img src="../resources/logo/logo-128.png" alt="QR Code Buddy" class="logo" />
+    <h1>QR Code Buddy</h1>
+    </div>
+      <div class="qr-code-container">
+        <!-- <div id="canvas" class="qr-code-canvas"></div> -->
+        <div class="placeholder placeholderAnimation" id="canvas"></div>
+      </div>
+      <div class="tools" style="margin-left: 20px;">
+        <input type="text" class="input" id="url" placeholder="Enter URL" />
+        <button id="download" type="button" class="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
+      </div>
+
+    <footer style="margin-top: 15vh;">
+      <a id="settings">Settings</a>
+        <p><span id="year">202X</span> QR Code Buddy</p>
+        <p>Made with ❤️ by <a href="https://github.com/JMcrafter26">JMcrafter26</a></p>
+        <p>This extension is Open Source. <a href="https://github.com/JMcrafter26/qr-code-buddy-extension">View on GitHub</a></p>
+    </footer>
+
+
+    <script src="../resources/tools.js"></script>
+    <script type="text/javascript" src="../resources/qr-code.js"></script>
+    <script type="text/javascript" src="../resources/popup.js"></script>
+  </body>
+</html>
