@@ -71,3 +71,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - <https://github.com/ClearURLs/Addon/> - LGPL-3.0 License
 - <https://github.com/feathericons/feather> - MIT License
 - <https://github.com/SimGus/chrome-extension-v3-starter> - MIT License
+- <https://github.com/kognise/water.css> - MIT License
