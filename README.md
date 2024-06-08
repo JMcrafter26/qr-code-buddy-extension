@@ -24,7 +24,7 @@ The simple QR Code Generator that does the thing and does it well.
 
 ### From a web store
 
-Coming soon...
+Waiting for approval...
 
 <!-- Prepare the extension for publishing and submit it to the web store:
 [![Chrome Web Store](./images/badges/chrome.png)](https://chrome.google.com/webstore/)

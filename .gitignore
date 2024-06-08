@@ -2,3 +2,6 @@
 *.pem
 *.crx
 *.bak
+
+# Exclude the firefox folder
+firefox/

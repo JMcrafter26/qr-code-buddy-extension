@@ -1,0 +1,29 @@
+{
+    "manifest_version": 2,
+    "name": "QR Code Buddy",
+    "description": "The simple QR Code Generator that does the thing and does it well.",
+    "version": "1.1.1",
+    "icons": {
+        "16": "resources/logo/logo-16.png",
+        "48": "resources/logo/logo-48.png",
+        "128": "resources/logo/logo-128.png"
+    },
+    "options_page": "page/settings.html",
+    "browser_action": {
+        "default_title": "Generate QR Code",
+        "default_popup": "page/popup.html"
+    },
+    "permissions": [
+        "activeTab",
+        "storage",
+        "contextMenus"
+    ],
+    "background": {
+        "scripts": ["./resources/background.js"]
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "qr-code-buddy@jm26.net"
+        }
+    }
+}
