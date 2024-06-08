@@ -1,7 +1,9 @@
 # No private key for you :P
 *.pem
+
 *.crx
 *.bak
+*.zip
 
 # Exclude the firefox folder
 firefox/
