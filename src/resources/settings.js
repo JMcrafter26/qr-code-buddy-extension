@@ -73,8 +73,6 @@ function saveSettings() {
   let background = document.getElementById("background").value;
   let contrast = getContrastRatio(color, background);
   if (contrast < 1.4) {
-    // console.log("Warning: Color is not very visible compared to background");
-    // alert("Warning: Color is not very visible compared to background");#
     document.getElementById("colorWarning").classList.remove("hidden");
   } else {
     document.getElementById("colorWarning").classList.add("hidden");
@@ -93,8 +91,6 @@ function saveSettings() {
 }
 
 function getContrastRatio(color1, color2) {
-  // https://stackoverflow.com/a/9733420/11817077
-  // https://www.w3.org/TR/WCAG20/#contrast-ratiodef
   let lum1 = getLuminance(color1);
   let lum2 = getLuminance(color2);
   // check which color is lighter
@@ -107,15 +103,12 @@ function getContrastRatio(color1, color2) {
 }
 
 function getLuminance(color) {
-  // https://stackoverflow.com/a/12043228/11817077
   let rgb = hexToRgb(color);
   let lum = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b;
   return lum;
 }
 
 function hexToRgb(hex) {
-  // https://stackoverflow.com/a/5624139/11817077
-  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
   var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   hex = hex.replace(shorthandRegex, function (m, r, g, b) {
     return r + r + g + g + b + b;
@@ -132,17 +125,13 @@ function hexToRgb(hex) {
 }
 
 function resetSettings() {
-  // clear the settings
   chrome.storage.local.clear();
-  // reload the page
   location.reload();
 }
 
 function cleanUrl() {
   let dirtyUrl = document.getElementById('dirtyUrl').value;
-
   let cleanUrl = removeTrackersFromUrl(dirtyUrl, ALL_TRACKERS);
-  // set the clean url
   document.getElementById('dirtyUrl').value = cleanUrl;
 }
 
@@ -171,9 +160,6 @@ document.getElementById("reset").addEventListener("click", resetSettings);
 document.getElementById("cleanBtn").addEventListener("click", cleanUrl);
 document.getElementById("export").addEventListener("click", exportSettings);
 document.getElementById("import").addEventListener("click", importSettings);
-
-// get all elements with  data-eventlistener="true"
-// add an event listener to each one
 
 document.addEventListener("DOMContentLoaded", function () {
   const elements = document.querySelectorAll("[data-eventlistener='true']");

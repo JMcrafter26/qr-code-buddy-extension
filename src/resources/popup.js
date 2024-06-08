@@ -10,7 +10,6 @@ function getSettings() {
       }
       window.QRsettings = items;
       resolve(window.QRsettings);
-      // alert(JSON.stringify(window.QRsettings));
       generate();
     });
   });
@@ -46,7 +45,6 @@ function qrOptions(url) {
       margin: 5,
     },
   };
-  // if getSetting("logo") is not empty
   if (window.QRsettings.logo) {
     options.image = window.QRsettings.logo;
   }
@@ -93,12 +91,10 @@ function generate() {
 document.getElementById("download").addEventListener("click", function () {
   let url = document.getElementById("url").value;
   let options = qrOptions(url);
-  // options increased to 500x500
   options.width = 500;
   options.height = 500;
 
   const qrCode = new QRCodeStyling(options);
-  // check if url is an url
   if (url.includes("http")) {
     const hostname = new URL(url).hostname;
     const path = new URL(url).pathname;

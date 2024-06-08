@@ -3,7 +3,7 @@
 
 ![Image2](./images/image2.jpg)
 
-This is a simple Chrome Extension that generates QR codes for the current tab's URL.
+The simple QR Code Generator that does the thing and does it well.
 
 > In development
 
