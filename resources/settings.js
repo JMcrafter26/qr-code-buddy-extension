@@ -31,6 +31,17 @@ function loadSettings(settings) {
   if (settings.logo) {
     document.getElementById("logo").value = settings.logo;
   }
+  if (settings.urlShortener) {
+    document.getElementById("urlShortener").value = settings.urlShortener;
+    if (settings.urlShortener == 'bitly') {
+      document.getElementById("urlShortenerKey").classList.remove("hidden");
+      document.getElementById("urlShortenerKey").disabled = false;
+      document.getElementById("urlShortenerWarning").classList.remove("hidden");
+    }
+  }
+  if (settings.api_key) {
+    document.getElementById("urlShortenerKey").value = settings.api_key;
+  }
 
   //   if settings is empty, set the default settings
   if (Object.keys(settings).length === 0) {
@@ -50,6 +61,8 @@ function saveSettings() {
     cleanUrl: document.getElementById("cleanUrl").checked,
     format: document.getElementById("format").value,
     logo: document.getElementById("logo").value,
+    urlShortener: document.getElementById("urlShortener").value,
+    api_key: document.getElementById("urlShortenerKey").value,
   };
   // loop through the settings and save them using the setSetting function
   for (var key in settings) {
@@ -67,6 +80,17 @@ function saveSettings() {
     document.getElementById("colorWarning").classList.remove("hidden");
   } else {
     document.getElementById("colorWarning").classList.add("hidden");
+  }
+
+  if (settings.urlShortener == 'bitly') {
+    document.getElementById("urlShortenerKey").classList.remove("hidden");
+    document.getElementById("urlShortenerKey").disabled = false;
+    document.getElementById("urlShortenerWarning").classList.remove("hidden");
+    document.getElementById("urlShortenerKey").focus();
+  } else {
+    document.getElementById("urlShortenerKey").classList.add("hidden");
+    document.getElementById("urlShortenerKey").disabled = true;
+    document.getElementById("urlShortenerWarning").classList.add("hidden");
   }
 }
 

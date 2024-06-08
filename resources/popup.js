@@ -17,6 +17,10 @@ function qrOptions(url) {
     url = removeTrackersFromUrl(url, ALL_TRACKERS);
     document.getElementById("url").value = url;
   }
+  if(QRsettings.urlShortener != "none" && QRsettings.urlShortener != undefined){
+    url = getShortUrl(url, QRsettings.urlShortener, QRsettings.api_key);
+    document.getElementById("url").value = url;
+  }
   let options = {
     width: 280,
     height: 280,
@@ -81,8 +85,12 @@ function generate() {
 // on click download
 document.getElementById("download").addEventListener("click", function () {
   let url = document.getElementById("url").value;
+  let options = qrOptions(url);
+  // options increased to 500x500
+  options.width = 500;
+  options.height = 500;
 
-  const qrCode = new QRCodeStyling(qrOptions(url));
+  const qrCode = new QRCodeStyling(options);
   // check if url is an url
   if (url.includes("http")) {
     const hostname = new URL(url).hostname;

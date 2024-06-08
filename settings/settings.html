@@ -16,9 +16,25 @@
         <br>
         <div class="settings">
             <div class="setting">
-                <h3>URL</h3>
-                <input type="checkbox" id="cleanUrl" data-eventlistener="true" />
-                <label for="cleanUrl">Clean URL (Remove tracking parameters)</label>
+                <h3>URL Settings</h3>
+                <div class="setting">
+                    <h4>Clean URL</h4>
+                    <input type="checkbox" id="cleanUrl" data-eventlistener="true" />
+                    <label for="cleanUrl">This will remove any tracking parameters from the URL</label>
+                </div>
+                <div class="setting">
+                    <h4>Shorten URL</h4>
+                    <select id="urlShortener" data-eventlistener="true">
+                        <option value="none">None</option>
+                        <option value="tinyurl">TinyURL</option>
+                        <option value="isgd">is.gd</option>
+                        <option value="bitly">Bitly</option>
+                    </select>
+                <p style="color: #ff3535;" class="hidden" id="urlShortenerWarning">Warning: For this service to work, you need to get an API key from the service's website</p>
+                    <input type="url" id="urlShortenerKey" placeholder="Enter API key" data-eventlistener="true" class="hidden" disabled />
+                    <p>The URL will be shortened using the selected service. Disclaimer: I am not responsible for the service provided by the URL shortening service.</p>
+                </div>
+
             </div>
             <div class="setting">
                 <h3>QR Code Settings</h3>
