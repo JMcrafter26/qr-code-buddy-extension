@@ -216,7 +216,6 @@ function removeTrackersFromUrl(url, trackers) {
     return url;
   }
 
-
   trackers.forEach((tracker) => {
     urlPieces[1] = urlPieces[1].replace(
       TRACKER_REGEXES_BY_TRACKER[tracker],
@@ -239,22 +238,12 @@ function removeTrackersFromUrl(url, trackers) {
     });
   }
 
-  // If we've collapsed the URL to the point where there's an '&' against the '?'
-  // then we need to get rid of that.
   while (urlPieces[1].charAt(0) === "&") {
     urlPieces[1] = urlPieces[1].substr(1);
   }
 
   return urlPieces[1] ? urlPieces.join("?") : urlPieces[0];
 }
-
-// chrome.storage.local.set({ "phasersTo": "awesome" }, function(){
-//     //  Data's been saved boys and girls, go on home
-// });
-
-// chrome.storage.local.get(/* String or Array */["phasersTo"], function(items){
-//     //  items = [ { "phasersTo": "awesome" } ]
-// });
 
 function setSetting(key, value) {
   return new Promise((resolve, reject) => {
@@ -272,21 +261,6 @@ function getSetting(key) {
     });
   });
 }
-
-// function shortenUrl(url, service) {
-//   if (service === "bitly") {
-//     new Promise((resolve, reject) => {
-//       chrome.storage.local.get(['api_key'], (items) => {
-//         resolve(items['api_key']);
-//         getShortUrl(url, service, items['api_key']);
-//       });
-//     });
-//   } else {
-//     return getShortUrl(url, service);
-//   }
-// }
-
-
 
 function getShortUrl(url, service, KEY = "") {
   if (service === "tinyurl") {
@@ -321,9 +295,6 @@ function getShortUrl(url, service, KEY = "") {
     return response.link;
   }
 }
-
-// console.log(shortenUrl("https://www.google.com", "tinyurl"));
-
 
 if (document.getElementById("year") !== null) {
   document.getElementById("year").innerText = new Date().getFullYear();

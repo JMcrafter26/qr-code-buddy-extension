@@ -2,7 +2,6 @@
 svg
 {
     width: 1.3em;
-    /* height: 1.5em; */
     vertical-align: middle;
 }
 
@@ -13,9 +12,6 @@ svg
     margin: 0;
     padding: 5px;
     width: 300px;
-    /* height: 300px; */
-
-    /* border: 1px solid #000; */
     border-radius: 1rem;
 
 }
@@ -39,13 +35,10 @@ svg
 
 .qr-code-canvas
 {
-    /* border: 0px solid transparent; */
     border-radius: 12px;
     overflow: hidden;
     width: 280px;
     height: 280px;
-
-    /* make canvas fit the container */
     display: block;
     margin: 0;
 }
@@ -80,8 +73,6 @@ svg
     padding-bottom: 9px;
     padding-top: 8px;
     border-radius: 5px;
-    /* margin-top: -6px; */
-    /* height: 2rem; */
 }
 
 .placeholder
@@ -117,15 +108,9 @@ svg
 
 .settings
 {
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
     margin-top: 1rem;
     width: 95%;
     margin-left: 8px;
-    /* border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 5px; */
 }
 
 .setting
