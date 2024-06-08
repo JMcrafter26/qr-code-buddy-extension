@@ -1,5 +1,3 @@
-feather.replace();
-
 function getSettings() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(null, (items) => {
@@ -148,9 +146,31 @@ function cleanUrl() {
   document.getElementById('dirtyUrl').value = cleanUrl;
 }
 
+function exportSettings() {
+  chrome.storage.local.get(null, (items) => {
+    var settings = JSON.stringify(items);
+    document.getElementById("importExport").value = settings;
+  });
+}
+
+function importSettings() {
+  var settings = document.getElementById("importExport").value;
+  if (settings == "") {
+    console.log("No settings to import");
+    return;
+  }
+  chrome.storage.local.clear();
+  chrome.storage.local.set(JSON.parse(settings), function () {
+    console.log("Settings imported");
+    location.reload();
+  });
+}
+
 // document.getElementById("save").addEventListener("click", saveSettings);
 document.getElementById("reset").addEventListener("click", resetSettings);
 document.getElementById("cleanBtn").addEventListener("click", cleanUrl);
+document.getElementById("export").addEventListener("click", exportSettings);
+document.getElementById("import").addEventListener("click", importSettings);
 
 // get all elements with  data-eventlistener="true"
 // add an event listener to each one

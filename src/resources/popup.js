@@ -1,9 +1,13 @@
 let canvas = document.getElementById("canvas");
 let download = document.getElementById("download");
-feather.replace();
 function getSettings() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(null, (items) => {
+      // if there are no settings, open the settings page
+      if (Object.keys(items).length === 0) {
+        chrome.runtime.openOptionsPage();
+        return;
+      }
       window.QRsettings = items;
       resolve(window.QRsettings);
       // alert(JSON.stringify(window.QRsettings));
@@ -97,7 +101,7 @@ document.getElementById("download").addEventListener("click", function () {
     const path = new URL(url).pathname;
     qrCode.download({ name: "qr-" + hostname + path, extension: "png" });
   } else {
-    qrCode.download({ name: "qr-code", extension: "png" });
+    qrCode.download({ name: "qr-code", extension: window.QRsettings.format });
   }
 });
 
