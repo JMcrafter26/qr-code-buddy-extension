@@ -273,6 +273,58 @@ function getSetting(key) {
   });
 }
 
+// function shortenUrl(url, service) {
+//   if (service === "bitly") {
+//     new Promise((resolve, reject) => {
+//       chrome.storage.local.get(['api_key'], (items) => {
+//         resolve(items['api_key']);
+//         getShortUrl(url, service, items['api_key']);
+//       });
+//     });
+//   } else {
+//     return getShortUrl(url, service);
+//   }
+// }
+
+
+
+function getShortUrl(url, service, KEY = "") {
+  if (service === "tinyurl") {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://tinyurl.com/api-create.php?url=" + url, false);
+    xhr.onerror = function () {
+      console.error("Error getting short URL from is.gd");
+      return url;
+    };
+    xhr.send();
+    return xhr.responseText;
+  } else if (service === "isgd") {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://is.gd/create.php?format=simple&url=" + url, false);
+    xhr.onerror = function () {
+      console.error("Error getting short URL from is.gd");
+      return url;
+    };
+    xhr.send();
+    return xhr.responseText;
+  } else if (service === "bitly") {
+    if (KEY === "") {
+      console.error("No API key provided for Bitly");
+      return url;
+    }
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://api-ssl.bitly.com/v4/shorten", false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Authorization", "Bearer " + KEY);
+    xhr.send(JSON.stringify({ long_url: url }));
+    let response = JSON.parse(xhr.responseText);
+    return response.link;
+  }
+}
+
+// console.log(shortenUrl("https://www.google.com", "tinyurl"));
+
+
 if (document.getElementById("year") !== null) {
   document.getElementById("year").innerText = new Date().getFullYear();
 }

@@ -1,10 +1,20 @@
-# QR Code Generator - Chrome Extension
+# QR Code Buddy - Chrome Extension
 
 This is a simple Chrome Extension that generates QR codes for the current tab's URL.
 
 > In development
 
 <!-- Firefox: https://www.extensiontest.com/ -->
+
+## Features
+
+- 💡 Generate QR codes for the current tab's URL
+- 📷 Download QR code as image
+- 🎨 Customize QR code styling
+- 🚫 Remove tracking parameters from URL
+- 🔗 URL shortening support
+- 🖼️ Clean and simple UI
+- 🙅‍♂️ No tracking or analytics
 
 ## Credits and License
 
