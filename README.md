@@ -28,10 +28,11 @@ Waiting for approval...
 
 <!-- Prepare the extension for publishing and submit it to the web store:
 [![Chrome Web Store](./images/badges/chrome.png)](https://chrome.google.com/webstore/)
-[![Firefox Add-ons](./images/badges/firefox.png)](https://addons.mozilla.org/)
+
 [![Edge Add-ons](./images/badges/edge.png)](https://microsoftedge.microsoft.com/addons/)
 [![Opera Add-ons](./images/badges/opera.png)](https://addons.opera.com/) 
 -->
+[![Firefox Add-ons](./images/badges/firefox.png)](https://addons.mozilla.org/de/firefox/addon/qr-code-buddy/)
 
 ### From GitHub
 
