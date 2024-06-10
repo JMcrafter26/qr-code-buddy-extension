@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "QR Code Buddy",
     "description": "The simple QR Code Generator that does the thing and does it well.",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "icons": {
         "16": "resources/logo/logo-16.png",
         "48": "resources/logo/logo-48.png",

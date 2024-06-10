@@ -22,6 +22,26 @@
         <button id="download" type="button" class="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
       </div>
 
+      <!-- more options -->
+      <details class="details">
+        <summary>More Options</summary>
+        <div class="more-options">
+          <h3>QR Code Type</h3>
+          <select id="dataType" data-eventlistener="true">
+            <option value="url">URL</option>
+            <option value="text">Text</option>
+            <option value="email">Email</option>
+            <option value="phone">Phone</option>
+            <option value="sms">SMS</option>
+            <option value="wifi">WiFi</option>
+            <option value="geo">Geo</option>
+            <option value="event">Event</option>
+            <!-- <option value="contact">Contact</option> -->
+          </select>
+          <div id="dataTypeInputContainer"></div>
+        </div>
+      </details>
+
     <footer style="margin-top: 15vh;">
       <a id="settings">Settings</a>
         <p><span id="year">202X</span> QR Code Buddy</p>
@@ -33,5 +53,6 @@
     <script src="../resources/tools.js"></script>
     <script type="text/javascript" src="../resources/qr-code.js"></script>
     <script type="text/javascript" src="../resources/popup.js"></script>
+    <script type="text/javascript" src="../resources/more-options.js"></script>
   </body>
 </html>
