@@ -5,8 +5,9 @@ function getSettings() {
     chrome.storage.local.get(null, (items) => {
       // if there are no settings, open the settings page
       if (Object.keys(items).length === 0) {
-        chrome.runtime.openOptionsPage();
-        return;
+        chrome.tabs.create({
+          url: chrome.runtime.getURL('page/settings.html')
+      });        return;
       }
       window.QRsettings = items;
       resolve(window.QRsettings);
@@ -105,8 +106,9 @@ document.getElementById("download").addEventListener("click", function () {
 });
 
 document.getElementById("settings").addEventListener("click", function () {
-  chrome.runtime.openOptionsPage();
-});
+  chrome.tabs.create({
+    url: chrome.runtime.getURL('page/settings.html')
+});});
 if (document.getElementById("moreOptionsBtn")) {
   document.getElementById("moreOptionsBtn").addEventListener("click", function () {
     chrome.tabs.create({
