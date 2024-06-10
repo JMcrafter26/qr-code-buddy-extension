@@ -230,7 +230,6 @@ function removeTrackersFromUrl(url, trackers) {
   }
   if (DOMAIN_TRACKERS[host]) {
     DOMAIN_TRACKERS[host].forEach((tracker) => {
-
       urlPieces[1] = urlPieces[1].replace(
         new RegExp("((^|&)" + tracker + "=[^&#]*)", "ig"),
         ""
@@ -263,6 +262,7 @@ function getSetting(key) {
 }
 
 function getShortUrl(url, service, KEY = "") {
+  // url = encodeURIComponent(url);
   if (service === "tinyurl") {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "https://tinyurl.com/api-create.php?url=" + url, false);
@@ -271,16 +271,31 @@ function getShortUrl(url, service, KEY = "") {
       return url;
     };
     xhr.send();
-    return xhr.responseText;
+    if (xhr.responseText.startsWith("http")) {
+      return xhr.responseText;
+    } else {
+      console.log("Error getting short URL");
+      return url;
+    }
   } else if (service === "isgd") {
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://is.gd/create.php?format=simple&url=" + url, false);
+    xhr.open(
+      "POST",
+      "https://is.gd/create.php?format=simple&url=" + url,
+      false
+    );
     xhr.onerror = function () {
       console.error("Error getting short URL from is.gd");
       return url;
     };
     xhr.send();
-    return xhr.responseText;
+    if (xhr.responseText.startsWith("http")) {
+      return xhr.responseText;
+    } else {
+      console.log("Error getting short URL");
+      return url;
+    }
+    return url;
   } else if (service === "bitly") {
     if (KEY === "") {
       console.error("No API key provided for Bitly");
@@ -292,7 +307,27 @@ function getShortUrl(url, service, KEY = "") {
     xhr.setRequestHeader("Authorization", "Bearer " + KEY);
     xhr.send(JSON.stringify({ long_url: url }));
     let response = JSON.parse(xhr.responseText);
-    return response.link;
+    if (response.link) {
+      return response.link;
+    } else {
+      console.log("Error getting short URL");
+      return url;
+    }
+  } else if (service === "jm26") {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://jm26.net/l/?format=text&url=" + url, false);
+    xhr.onerror = function () {
+      console.log("Error getting short URL");
+      return url;
+    };
+    xhr.send();
+    // check if response is valid URL
+    if (xhr.responseText.startsWith("http")) {
+      return xhr.responseText;
+    } else {
+      console.log("Error getting short URL");
+      return url;
+    }
   }
 }
 

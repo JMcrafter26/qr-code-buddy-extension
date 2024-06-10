@@ -107,6 +107,15 @@ document.getElementById("download").addEventListener("click", function () {
 document.getElementById("settings").addEventListener("click", function () {
   chrome.runtime.openOptionsPage();
 });
+if (document.getElementById("moreOptionsBtn")) {
+  document.getElementById("moreOptionsBtn").addEventListener("click", function () {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('page/qr-code.html')
+  });
+  });
+}
+
+
 
 document.getElementById("url").addEventListener("input", function () {
   console.log("input");

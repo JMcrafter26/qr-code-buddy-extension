@@ -181,3 +181,22 @@ footer p
     justify-content: center;
     margin-bottom: 10vh;
 }
+
+.more-options {
+    margin: 10px;
+}
+
+.more-options input
+{
+    width: 100%;
+}
+
+.more-options select
+{
+    width: 100%;
+}
+
+.more-options textarea
+{
+    width: 100%;
+}
