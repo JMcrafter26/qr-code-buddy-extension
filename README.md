@@ -30,9 +30,10 @@ Waiting for approval...
 [![Chrome Web Store](./images/badges/chrome.png)](https://chrome.google.com/webstore/)
 
 [![Edge Add-ons](./images/badges/edge.png)](https://microsoftedge.microsoft.com/addons/)
-[![Opera Add-ons](./images/badges/opera.png)](https://addons.opera.com/) 
+
 -->
 [![Firefox Add-ons](./images/badges/firefox.png)](https://addons.mozilla.org/de/firefox/addon/qr-code-buddy/)
+[![Opera Add-ons](./images/badges/opera.png)](https://addons.opera.com/en/extensions/details/qr-code-buddy/) 
 
 ### From GitHub
 
