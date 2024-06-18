@@ -9,6 +9,8 @@ The simple QR Code Generator that does the thing and does it well.
 
 <!-- Firefox: https://www.extensiontest.com/ -->
 
+[![wakatime](https://wakatime.com/badge/github/JMcrafter26/qr-code-buddy-extension.svg)](https://wakatime.com/badge/github/JMcrafter26/qr-code-buddy-extension)
+
 ## Features
 
 - 💡 Generate QR codes for the current tab's URL
