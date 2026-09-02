@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="256px" height="256px" viewBox="0 0 256 256" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path d="M256 0L256 0L256 256L0 256L0 0L256 0Z" id="path_1" />
+    <path d="M196 40C207.047 40 216 48.9528 216 60L216 196C216 207.047 207.047 216 196 216L60 216C48.9528 216 40 207.047 40 196L40 60C40 48.9528 48.9528 40 60 40L196 40Z" id="path_2" />
+    <clipPath id="clip_1">
+      <use xlink:href="#path_1" clip-rule="evenodd" fill-rule="evenodd" />
+    </clipPath>
+  </defs>
+  <g id="Medium Rectangle">
+    <path d="M256 0L256 0L256 256L0 256L0 0L256 0Z" id="Medium-Rectangle" fill="none" stroke="none" />
+    <g id="Rechteck" clip-path="url(#clip_1)">
+      <use xlink:href="#path_2" fill="none" stroke="#161F27" stroke-width="60" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    <path d="M196 40C207.047 40 216 48.9528 216 60L216 196C216 207.047 207.047 216 196 216L60 216C48.9528 216 40 207.047 40 196L40 60C40 48.9528 48.9528 40 60 40L196 40Z" id="Rechteck" fill="#D3D3D3" stroke="none" clip-path="url(#clip_1)" />
+    <path d="M158 78C169.047 78 178 86.9528 178 98L178 158C178 169.047 169.047 178 158 178L98 178C86.9528 178 78 169.047 78 158L78 98C78 86.9528 86.9528 78 98 78L158 78Z" id="Rechteck" fill="#161F27" stroke="none" clip-path="url(#clip_1)" />
+  </g>
+</svg>
