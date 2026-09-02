@@ -5,10 +5,12 @@
   import { removeTrackersFromUrl } from '../../utils/url/tracker/cleaner';
   import { getShortUrl } from '../../utils/url/shortener';
   import logo from '../../assets/logo.svg';
+  import { ExternalLink, Settings2 } from '@lucide/svelte';
+  
 
-  let url = $state('https://www.google.com');
+  let url = $state('https://duckduckgo.com');
   let settings = $state<QrSettings>(DEFAULT_SETTINGS);
-  let qrData = $state('https://www.google.com');
+  let qrData = $state('https://duckduckgo.com');
   let qrCanvasRef: any = $state(null);
   let isLoadingSettings = $state(true);
 
@@ -68,7 +70,7 @@
         browser.tabs.query({ active: true, currentWindow: true }).catch(() => [] as any),
       ]);
       settings = stored;
-      const tabUrl = (tabs as any)[0]?.url ?? 'https://www.google.com';
+      const tabUrl = (tabs as any)[0]?.url ?? 'https://duckduckgo.com';
       url = tabUrl;
       updateQrData();
     } catch (e) {
@@ -105,16 +107,26 @@
   }
 
   function openQrPage() {
-    browser.tabs.create({ url: browser.runtime.getURL('/qr.html') });
+    browser.tabs.create({ url: browser.runtime.getURL('/qr.html') + `?url=${encodeURIComponent(url)}` });
   }
 </script>
 
 <div class="w-[320px] p-3 bg-base-100">
   <div class="flex flex-col items-center gap-3">
-    <!-- Header with logo (small) -->
-    <div class="flex items-center gap-2 self-start">
-      <img src={logo} alt="QR Buddy" class="w-6 h-6" />
-      <span class="font-bold text-sm">QR Code Buddy</span>
+    <!-- Header with logo (small), title and icon on the left, settings on the right -->
+    <div class="flex items-center justify-between w-full">
+      <div class="flex items-center gap-2">
+        <img src={logo} alt="" class="w-8 h-8 rounded" />
+        <h1 class="font-bold text-lg leading-none">QR Code Buddy</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="btn btn-ghost btn-circle btn-sm" onclick={openQrPage} title="Open QR page">
+          <ExternalLink class="w-5 h-5" />
+        </button>
+      <button class="btn btn-ghost btn-circle btn-sm" onclick={openOptions} title="Settings">
+        <Settings2 class="w-5 h-5" />
+      </button>
+      </div>
     </div>
 
     <!-- QR Preview -->
@@ -136,16 +148,6 @@
       </button>
     </div>
 
-
-    <!-- Footer -->
-    <div class="text-center text-xs opacity-70 space-y-1 w-full">
-      <p>
-        <button class="link link-hover" onclick={openQrPage}>More Options</button>
-        <span class="mx-1">|</span>
-        <button class="link link-hover" onclick={openOptions}>Settings</button>
-      </p>
-      <p>QR Code Buddy by <a href="https://github.com/JMcrafter26" target="_blank" class="link">JMcrafter26</a></p>
-    </div>
   </div>
 </div>
 

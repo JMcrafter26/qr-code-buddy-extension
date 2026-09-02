@@ -121,7 +121,7 @@
     {#if displayQrData && displayQrData !== url}
       <div class="text-xs opacity-70 break-all text-left w-full bg-base-100 p-2 rounded max-w-xl mx-auto">
         <span class="font-bold">QR encodes:</span> {displayQrData}
-        <span class="ml-2 opacity-50">({displayQrData.length} chars{#if settings.urlShortener === 'hamr'} via hamr{/if})</span>
+        <span class="ml-2 opacity-50">({displayQrData.length} chars {#if settings.urlShortener === 'hamr'} via hamr{/if})</span>
       </div>
     {:else if displayQrData}
       <div class="text-xs opacity-50 w-full text-center">QR length: {displayQrData.length} chars</div>
