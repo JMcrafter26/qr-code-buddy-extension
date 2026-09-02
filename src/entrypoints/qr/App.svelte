@@ -7,6 +7,7 @@
   import { removeTrackersFromUrl } from '../../utils/url/tracker/cleaner';
   import { getShortUrl } from '../../utils/url/shortener';
   import type { QrDataType } from '../../utils/url/data-payload/types';
+  import { Download } from '@lucide/svelte';
 
   let url = $state('');
   let displayQrData = $state('');
@@ -79,7 +80,12 @@
 
   function handleDownload() {
     try {
-      qrCanvasRef?.download();
+      let hostname = '';
+      try {
+        const u = new URL(url);
+        hostname = u.hostname.replace(/\./g, '-');
+      } catch {}
+      qrCanvasRef?.download(hostname ? `qr-${hostname}` : 'qr-code');
     } catch (e: any) {
       alert(e?.message || 'Failed to download - URL may be too long');
     }
@@ -95,7 +101,7 @@
 <div class="min-h-screen bg-base-200 flex flex-col items-center p-6">
   <div class="w-full max-w-xl space-y-6">
     <!-- Logo -->
-    <div class="flex flex-col items-center gap-2">
+    <div class="flex items-center gap-2 justify-center">
       <img src="/icon-128.png" alt="QR Code Buddy" class="w-16 h-16" />
       <h1 class="text-2xl font-bold">QR Code Buddy</h1>
     </div>
@@ -115,7 +121,7 @@
     <div class="join w-full max-w-xl mx-auto flex">
       <input class="input input-bordered join-item flex-1" placeholder={dataType === 'url' ? 'Enter URL' : 'Generated Data will appear here'} value={url} oninput={handleInput} />
       <button class="btn join-item" onclick={handleDownload} title="Download">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <Download class="w-5 h-5" />
       </button>
     </div>
     {#if displayQrData && displayQrData !== url}
