@@ -120,7 +120,7 @@
     <!-- Tools -->
     <div class="join w-full max-w-xl mx-auto flex">
       <input class="input input-bordered join-item flex-1" placeholder={dataType === 'url' ? 'Enter URL' : 'Generated Data will appear here'} value={url} oninput={handleInput} />
-      <button class="btn join-item" onclick={handleDownload} title="Download">
+      <button class="btn btn-soft join-item" onclick={handleDownload} title="Download">
         <Download class="w-5 h-5" />
       </button>
     </div>

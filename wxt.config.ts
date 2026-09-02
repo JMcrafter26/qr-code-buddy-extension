@@ -32,11 +32,4 @@ export default defineConfig({
       },
     },
   },
-  webExt: {
-    binaries: {
-      chrome: 'chromium', // Use Chrome Beta instead of regular Chrome
-      firefox: 'firefoxdeveloperedition', // Use Firefox Developer Edition instead of regular Firefox
-      edge: '/path/to/edge', // Open MS Edge when running "wxt -b edge"
-    },
-  },
 });

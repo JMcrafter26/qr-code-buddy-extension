@@ -125,15 +125,15 @@
           <h2 class="text-xl font-bold">Features</h2>
           <div class="grid grid-cols-1 gap-3 text-sm">
             <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
-              <span class="text-lg"><SwatchBook /></span>
+              <span class="text-lg text-primary"><SwatchBook /></span>
               <div><b>Style:</b> 6 dot types, colors, logo, SVG/PNG/WebP/JPG</div>
             </div>
             <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
-              <span class="text-lg"><Link /></span>
+              <span class="text-lg text-primary"><Link /></span>
               <div><b>Data types:</b> URL, text, email, phone, SMS, WiFi, geo, event</div>
             </div>
             <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
-              <span class="text-lg"><ChevronsUp /></span>
+              <span class="text-lg text-primary"><ChevronsUp /></span>
               <div><b>Fast &amp; offline:</b> Instant popup, context menu, no server.</div>
             </div>
           </div>
