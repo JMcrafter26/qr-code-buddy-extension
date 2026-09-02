@@ -14,7 +14,13 @@ export default defineConfig({
   manifest: {
     name: 'QR Code Buddy',
     description: 'The simple QR Code Generator that does the thing and does it well.',
-    permissions: ['activeTab', 'storage', 'contextMenus'],
+    permissions: ['activeTab', 'tabs', 'storage', 'contextMenus'],
+    web_accessible_resources: [
+      {
+        resources: ['welcome.html', 'chunks/*', 'assets/*'],
+        matches: ['<all_urls>'],
+      },
+    ],
     host_permissions: [
       'https://tinyurl.com/*',
       'https://is.gd/*',

@@ -63,24 +63,28 @@
 
   onMount(async () => {
     try {
-      const stored = await settingsItem.getValue();
-      // If no stored value, fallback will be DEFAULT, but we mimic original: if empty open options
-      // Check raw storage without fallback to detect first install
-      const raw = await browser.storage.local.get(null as any);
-      if (Object.keys(raw).length === 0) {
-        browser.runtime.openOptionsPage();
-      }
+      const [stored, tabs] = await Promise.all([
+        settingsItem.getValue(),
+        browser.tabs.query({ active: true, currentWindow: true }).catch(() => [] as any),
+      ]);
       settings = stored;
-      // Get active tab URL
-      const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-      const tabUrl = tabs[0]?.url ?? 'https://www.google.com';
+      const tabUrl = (tabs as any)[0]?.url ?? 'https://www.google.com';
       url = tabUrl;
-      await updateQrData();
+      updateQrData();
     } catch (e) {
       console.error(e);
     } finally {
       isLoadingSettings = false;
     }
+    setTimeout(async () => {
+      try {
+        const raw = await browser.storage.local.get(null as any);
+        if (Object.keys(raw).length === 0) {
+          await settingsItem.setValue($state.snapshot(DEFAULT_SETTINGS) as any);
+          await browser.tabs.create({ url: browser.runtime.getURL('/welcome.html') });
+        }
+      } catch {}
+    }, 500);
   });
 
   function handleInput(e: Event) {
@@ -115,11 +119,7 @@
 
     <!-- QR Preview -->
     <div class="rounded-xl overflow-hidden bg-base-200 p-2">
-      {#if isLoadingSettings}
-        <div class="skeleton w-[280px] h-[280px] rounded-xl"></div>
-      {:else}
-        <QrCanvas bind:this={qrCanvasRef} data={qrData} {settings} size={280} />
-      {/if}
+      <QrCanvas bind:this={qrCanvasRef} data={qrData} {settings} size={280} />
     </div>
 
     <!-- Tools -->
@@ -135,19 +135,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       </button>
     </div>
-    {#if qrData && qrData !== url}
-      <div class="text-xs opacity-70 break-all text-left w-full bg-base-200 p-2 rounded">
-        <span class="font-bold">QR encodes:</span> {qrData}
-        <span class="ml-2 opacity-50">({qrData.length} chars{#if settings.urlShortener === 'hamr'} via hamr{/if})</span>
-      </div>
-    {:else if qrData}
-      <div class="text-xs opacity-50 w-full text-left flex justify-between">
-        <span>QR length: {qrData.length} chars</span>
-        {#if settings.urlShortener === 'hamr' && qrData === url && url.length > 50}
-          <span class="text-warning">hamr didn't shorten (try TinyURL)</span>
-        {/if}
-      </div>
-    {/if}
+
 
     <!-- Footer -->
     <div class="text-center text-xs opacity-70 space-y-1 w-full">

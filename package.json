@@ -11,7 +11,8 @@
     "build": "pnpm build:chrome && pnpm build:firefox",
     "build:chrome": "wxt build -b chrome",
     "build:firefox": "wxt build -b firefox",
-    "zip": "wxt zip",
+    "zip": "pnpm zip:chrome && pnpm zip:firefox",
+    "zip:chrome": "wxt zip -b chrome",
     "zip:firefox": "wxt zip -b firefox",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "postinstall": "wxt prepare"
@@ -31,6 +32,7 @@
     "wxt": "^0.21.4"
   },
   "dependencies": {
+    "@lucide/svelte": "^1.39.0",
     "qr-code-styling": "^1.9.2"
   }
 }

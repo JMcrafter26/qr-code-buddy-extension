@@ -24,7 +24,7 @@
   });
 
   async function save() {
-    await settingsItem.setValue(settings);
+    await settingsItem.setValue($state.snapshot(settings));
   }
 
   // Auto-save on changes
