@@ -107,7 +107,6 @@
             <option value="tinyurl">TinyURL</option>
             <option value="isgd">is.gd</option>
             <option value="bitly">Bitly</option>
-            <option value="jm26">JM26</option>
           </select>
           {#if settings.urlShortener === 'bitly'}
             <div class="alert alert-warning mt-3 py-2 text-sm">Warning: For this service to work, you need to get an API key from the service's website</div>
