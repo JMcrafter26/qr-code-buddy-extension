@@ -22,7 +22,7 @@ const DEFAULT_SETTINGS: QrSettings = {
   cleanUrl: true,
   format: 'png',
   logo: '',
-  urlShortener: 'none',
+  urlShortener: 'hamr',
   api_key: '',
 };
 
