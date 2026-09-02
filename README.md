@@ -13,14 +13,14 @@ The simple QR Code Generator that does the thing and does it well.
 
 ## Features
 
-- 💡 Generate QR codes for the current tab's URL
-- 📷 Download QR code as image
-- 🎨 Customize QR code styling (logo, colors, edge type, ...)
-- 🚫 Remove tracking parameters from URL
-- 🔗 URL shortening support
-- 🖼️ Clean and simple UI
-- 🖱️ Generate from context menu
-- 🙅‍♂️ No tracking or analytics
+- Generate QR codes for the current tab's URL
+- Download QR code as image
+- Customize QR code styling (logo, colors, edge type, ...)
+- Remove tracking parameters from URL
+- URL shortening support
+- Clean and simple UI
+- Generate from context menu
+- No tracking or analytics
 
 ## Installation
 
@@ -73,6 +73,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - <https://github.com/kozakdenys/qr-code-styling> - MIT License
 - <https://github.com/ClearURLs/Addon/> - LGPL-3.0 License
-- <https://github.com/feathericons/feather> - MIT License
+- <https://github.com/feathericons/feather> - MIT License # use lucide icons instead of feather icons, because lucide is a fork of feather and has more icons
 - <https://github.com/SimGus/chrome-extension-v3-starter> - MIT License
 - <https://github.com/kognise/water.css> - MIT License
