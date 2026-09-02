@@ -1,1 +1,1 @@
-export type Shortener = 'none' | 'hamr' | 'tinyurl' | 'isgd' | 'bitly' | 'jm26';
+export type Shortener = 'none' | 'hamr' | 'tinyurl' | 'isgd' | 'bitly';

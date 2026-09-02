@@ -19,7 +19,6 @@ export default defineConfig({
       'https://tinyurl.com/*',
       'https://is.gd/*',
       'https://api-ssl.bitly.com/*',
-      'https://jm26.net/*',
     ],
     browser_specific_settings: {
       gecko: {

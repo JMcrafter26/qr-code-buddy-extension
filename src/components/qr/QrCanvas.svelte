@@ -22,7 +22,7 @@
     }
     // Early check for too long
     if (data.length > 3000) {
-      error = `URL too long for QR code (${data.length} chars). Max ~2953. Try shortening (hamr, TinyURL, is.gd, JM26) or a shorter URL.`;
+      error = `URL too long for QR code (${data.length} chars). Max ~2953. Try shortening (hamr, TinyURL, is.gd) or a shorter URL.`;
       return;
     }
     try {
@@ -39,7 +39,7 @@
       console.error('QR render error', e);
       const msg = String(e?.message || e);
       if (msg.includes('code length overflow') || msg.includes('overflow') || data.length > MAX_QR_LENGTH) {
-        error = `URL too long for QR code (${data.length} chars). Max ~${MAX_QR_LENGTH}. Try shortening via Settings (hamr local, TinyURL, is.gd, JM26) or use a shorter URL.`;
+        error = `URL too long for QR code (${data.length} chars). Max ~${MAX_QR_LENGTH}. Try shortening via Settings (hamr local, TinyURL, is.gd) or use a shorter URL.`;
       } else {
         error = `Failed to generate QR: ${msg}`;
       }
@@ -125,6 +125,7 @@
     </div>
   {:else if data.length > 1800}
     <div class="alert alert-warning py-1 px-2 text-xs max-w-[280px]">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-4 w-4" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.5-.678 2.5-1.759V7.759c0-1.081-.96-1.759-2.5-1.759H5.378c-1.54 0-2.5.678-2.5 1.759v8.48c0 1.081.96 1.759 2.5 1.759z" /></svg>
       Warning: URL is long ({data.length} chars) — may be hard to scan. Try hamr.
     </div>
   {/if}
