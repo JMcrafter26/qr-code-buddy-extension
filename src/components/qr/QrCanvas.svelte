@@ -2,6 +2,7 @@
   import QRCodeStyling from 'qr-code-styling';
   import { buildQrOptions } from '../../utils/qr/qrOptions';
   import type { QrSettings } from '../../utils/storage/settings';
+  import { CircleX, TriangleAlert } from '@lucide/svelte';
 
   let { data, settings, size = 280 }: { data: string; settings: QrSettings; size?: number } = $props();
 
@@ -123,12 +124,12 @@
   </div>
   {#if error}
     <div class="alert alert-error py-2 px-3 text-xs max-w-[280px] break-words">
-      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-4 w-4" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <CircleX class="w-4 h-4" />
       <span>{error}</span>
     </div>
   {:else if data && data.length > 1800 && !isRendering}
     <div class="alert alert-warning py-1 px-2 text-xs max-w-[280px]">
-      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-4 w-4" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.5-.678 2.5-1.759V7.759c0-1.081-.96-1.759-2.5-1.759H5.378c-1.54 0-2.5.678-2.5 1.759v8.48c0 1.081.96 1.759 2.5 1.759z" /></svg>
+      <TriangleAlert class="w-4 h-4" />
       Warning: URL is long ({data.length} chars) — may be hard to scan. Try hamr.
     </div>
   {/if}

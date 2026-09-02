@@ -5,7 +5,7 @@
   import { removeTrackersFromUrl } from '../../utils/url/tracker/cleaner';
   import { getShortUrl } from '../../utils/url/shortener';
   import logo from '../../assets/logo.svg';
-  import { ExternalLink, Settings2 } from '@lucide/svelte';
+  import { Download, ExternalLink, Settings2 } from '@lucide/svelte';
   
 
   let url = $state('https://duckduckgo.com');
@@ -96,7 +96,12 @@
 
   function handleDownload() {
     try {
-      if (qrCanvasRef?.download) qrCanvasRef.download();
+      let hostname = '';
+      try {
+        const u = new URL(url);
+        hostname = u.hostname.replace(/\./g, '-');
+      } catch {}
+      if (qrCanvasRef?.download) qrCanvasRef.download(hostname ? `qr-${hostname}` : 'qr-code');
     } catch (e: any) {
       alert(e?.message || 'Failed to download QR - URL may be too long');
     }
@@ -144,7 +149,7 @@
         oninput={handleInput}
       />
       <button class="btn btn-square join-item" onclick={handleDownload} title="Download QR">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <Download class="w-5 h-5" />
       </button>
     </div>
 
