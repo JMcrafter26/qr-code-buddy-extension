@@ -10,7 +10,7 @@
 
   let url = $state('https://wikipedia.org');
   let settings = $state<QrSettings>(DEFAULT_SETTINGS);
-  let qrData = $state('https://wikipedia.org');
+  let qrData = $state(null as string | null);
   let qrCanvasRef: any = $state(null);
   let isLoadingSettings = $state(true);
 
@@ -41,6 +41,7 @@
     }
     try {
       qrData = await processUrl(url);
+      url = qrData; // update input field with processed url
       // Check for too long after processing
       if (qrData.length > 2800) {
         console.warn(`QR data too long: ${qrData.length} chars`);

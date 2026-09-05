@@ -38,6 +38,7 @@
     }
     try {
       displayQrData = await processUrl(url);
+      url = displayQrData; // update input field with processed url
     } catch (e) {
       console.error('updateQr error', e);
       displayQrData = url;

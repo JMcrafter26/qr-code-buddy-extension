@@ -139,7 +139,7 @@
               <div class="space-y-4">
                 <PartyPopper class="w-12 h-12 text-primary" />
                 <h2 class="text-xl font-bold">Thanks for installing</h2>
-                <p class="text-sm opacity-70">Generate QR codes offline — no tracking, no analytics. Everything stays on your device unless you opt in.</p>
+                <p class="text-sm opacity-70">Generate QR codes offline: no tracking, no analytics. Everything stays on your device by default.</p>
                 <ul class="list-disc list-inside text-sm space-y-1 opacity-80">
                   <li>Click the toolbar icon for instant QR of current tab</li>
                   <li>Right-click any link/selection → Generate QR</li>
