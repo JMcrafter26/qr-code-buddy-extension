@@ -64,12 +64,42 @@
     history.replaceState({}, '', '/qr.html');
   }
 
-  // Auto-save when shortener changes
+  // Auto-save + request optional host permission when shortener changes
+  let permissionError = $state<string | null>(null);
   $effect(() => {
     void settings.urlShortener;
     void settings.cleanUrl;
     void settings.api_key;
-    if (isLoaded) save();
+    if (!isLoaded) return;
+    // Request host permission for network shorteners
+    const hostMap: Record<string, string> = {
+      tinyurl: 'https://tinyurl.com/*',
+      isgd: 'https://is.gd/*',
+      bitly: 'https://api-ssl.bitly.com/*',
+    };
+    const host = hostMap[settings.urlShortener];
+    if (host) {
+      browser.permissions
+        .contains({ origins: [host] })
+        .then((has) => {
+          if (!has) return browser.permissions.request({ origins: [host] });
+          return true;
+        })
+        .then((granted) => {
+          if (granted === false) {
+            permissionError = `Permission for ${host} denied. Shortener will fallback to original URL.`;
+            // Optionally revert to none
+          } else {
+            permissionError = null;
+          }
+        })
+        .catch(() => {
+          permissionError = null; // ignore, fetch will fallback
+        });
+    } else {
+      permissionError = null;
+    }
+    save();
   });
 </script>
 
@@ -147,6 +177,9 @@
                   {#if settings.urlShortener === 'bitly'}
                     <input type="text" placeholder="Bitly API key" class="input input-bordered input-sm mt-2" bind:value={settings.api_key} />
                     {#if !settings.api_key}<p class="text-xs text-warning mt-1">API key required for Bitly</p>{/if}
+                  {/if}
+                  {#if permissionError}
+                    <div class="alert alert-warning py-2 text-xs mt-2">{permissionError}</div>
                   {/if}
                 </div>
                 <div class="alert py-2 text-xs mt-5">

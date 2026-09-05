@@ -27,10 +27,10 @@
     await settingsItem.setValue($state.snapshot(settings));
   }
 
-  // Auto-save on changes
+  // Auto-save + optional host permission request
+  let permissionError: string | null = $state(null);
   $effect(() => {
     if (!isLoaded) return;
-    // Access to trigger save on any change
     void settings.type;
     void settings.color;
     void settings.background;
@@ -39,6 +39,26 @@
     void settings.logo;
     void settings.urlShortener;
     void settings.api_key;
+    const hostMap: Record<string, string> = {
+      tinyurl: 'https://tinyurl.com/*',
+      isgd: 'https://is.gd/*',
+      bitly: 'https://api-ssl.bitly.com/*',
+    };
+    const host = hostMap[settings.urlShortener];
+    if (host) {
+      browser.permissions
+        .contains({ origins: [host] })
+        .then((has) => {
+          if (!has) return browser.permissions.request({ origins: [host] });
+          return true;
+        })
+        .then((granted) => {
+          if (granted === false) {
+            permissionError = `Permission for ${host} denied. Shortener will fallback.`;
+          } else permissionError = null;
+        })
+        .catch(() => (permissionError = null));
+    } else permissionError = null;
     save();
   });
 
@@ -122,6 +142,9 @@
           {/if}
           {#if settings.urlShortener === 'bitly' && !settings.api_key}
             <div class="alert alert-warning mt-2 py-2 text-sm">Warning: For this service to work, you need to get an API key</div>
+          {/if}
+          {#if permissionError}
+            <div class="alert alert-warning py-2 text-xs mt-2">{permissionError}</div>
           {/if}
         </div>
       </div>

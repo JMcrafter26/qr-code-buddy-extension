@@ -11,25 +11,31 @@ export default defineConfig({
       modulePreload: false,
     },
   }),
-  manifest: {
+  manifest: ({ manifestVersion }) => ({
     name: 'QR Code Buddy',
     description: 'The simple QR Code Generator that does the thing and does it well.',
-    permissions: ['activeTab', 'tabs', 'storage', 'contextMenus'],
-    web_accessible_resources: [
-      {
-        resources: ['welcome.html', 'chunks/*', 'assets/*'],
-        matches: ['<all_urls>'],
-      },
-    ],
-    host_permissions: [
-      'https://tinyurl.com/*',
-      'https://is.gd/*',
-      'https://api-ssl.bitly.com/*',
-    ],
+    permissions: ['activeTab', 'storage', 'contextMenus'],
+    // Host permissions are optional to avoid Chrome Web Store thorough review warning.
+    // Requested at runtime only when user enables a network shortener.
+    ...(manifestVersion === 3
+      ? {
+          optional_host_permissions: [
+            'https://tinyurl.com/*',
+            'https://is.gd/*',
+            'https://api-ssl.bitly.com/*',
+          ],
+        }
+      : {
+          optional_permissions: [
+            'https://tinyurl.com/*',
+            'https://is.gd/*',
+            'https://api-ssl.bitly.com/*',
+          ],
+        }),
     browser_specific_settings: {
       gecko: {
         id: 'qr-code-buddy@jm26.net',
       },
     },
-  },
+  }),
 });
