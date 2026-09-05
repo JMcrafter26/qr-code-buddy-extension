@@ -63,9 +63,12 @@
       url = paramUrl;
     } else {
       // Try to get active tab if available? On qr.html we are not popup, so not needed
-      // Fallback to google
-      if (!url) url = 'https://www.google.com';
+      // Fallback to wikipedia
+      if (!url) url = 'https://wikipedia.org';
     }
+    
+    // or if its about:blank
+    if (url === 'about:blank') url = 'https://wikipedia.org';
     await updateQr();
     isLoaded = true;
   });

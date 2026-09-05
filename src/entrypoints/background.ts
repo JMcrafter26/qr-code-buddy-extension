@@ -33,7 +33,7 @@ export default defineBackground(() => {
     } else if (info.pageUrl) {
       url = info.pageUrl as string;
     } else {
-      url = 'https://www.google.com';
+      url = 'https://wikipedia.org';
     }
     browser.tabs.create({
       url: browser.runtime.getURL(`/qr.html?url=${encodeURIComponent(url)}`),
