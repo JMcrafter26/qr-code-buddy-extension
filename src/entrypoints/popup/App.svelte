@@ -8,9 +8,9 @@
   import { Download, ExternalLink, Settings2 } from '@lucide/svelte';
   
 
-  let url = $state('https://duckduckgo.com');
+  let url = $state('https://wikipedia.org');
   let settings = $state<QrSettings>(DEFAULT_SETTINGS);
-  let qrData = $state('https://duckduckgo.com');
+  let qrData = $state('https://wikipedia.org');
   let qrCanvasRef: any = $state(null);
   let isLoadingSettings = $state(true);
 
@@ -70,7 +70,7 @@
         browser.tabs.query({ active: true, currentWindow: true }).catch(() => [] as any),
       ]);
       settings = stored;
-      const tabUrl = (tabs as any)[0]?.url ?? 'https://duckduckgo.com';
+      const tabUrl = (tabs as any)[0]?.url ?? 'https://wikipedia.org';
       url = tabUrl;
       updateQrData();
     } catch (e) {
