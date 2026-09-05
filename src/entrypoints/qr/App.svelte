@@ -9,7 +9,7 @@
   import type { QrDataType } from '../../utils/url/data-payload/types';
   import { Download } from '@lucide/svelte';
 
-  let url = $state('');
+  let input = $state('');
   let displayQrData = $state('');
   let settings = $state<QrSettings>({ ...DEFAULT_SETTINGS });
   let dataType = $state<QrDataType>('url');
@@ -32,22 +32,34 @@
   }
 
   async function updateQr() {
-    if (!url) {
+    if (!input) {
       displayQrData = '';
       return;
     }
+
+    // if input is too long, add a warning, but still process it
+    if (input.length > 2800) {
+      console.warn(`Input too long: ${input.length} chars`);
+    }
+
+    // if input is not a url, we don't process it, just display as is
+    if (dataType !== 'url' || dataType === 'url' && !input.startsWith('http')) {
+      displayQrData = input;
+      return;
+    }
+
     try {
-      displayQrData = await processUrl(url);
-      url = displayQrData; // update input field with processed url
+      displayQrData = await processUrl(input);
+      input = displayQrData; // update input field with processed url
     } catch (e) {
       console.error('updateQr error', e);
-      displayQrData = url;
+      displayQrData = input;
     }
   }
 
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
   $effect(() => {
-    void url;
+    void input;
     void settings.cleanUrl;
     void settings.urlShortener;
     void settings.api_key;
@@ -61,32 +73,32 @@
     const params = new URLSearchParams(window.location.search);
     const paramUrl = params.get('url');
     if (paramUrl) {
-      url = paramUrl;
+      input = paramUrl;
     } else {
       // Try to get active tab if available? On qr.html we are not popup, so not needed
       // Fallback to wikipedia
-      if (!url) url = 'https://wikipedia.org';
+      if (!input) input = 'https://wikipedia.org';
     }
     
     // or if its about:blank
-    if (url === 'about:blank') url = 'https://wikipedia.org';
+    if (input === 'about:blank') input = 'https://wikipedia.org';
     await updateQr();
     isLoaded = true;
   });
 
   function handleDataChange(data: string) {
-    url = data;
+    input = data;
   }
 
   function handleInput(e: Event) {
-    url = (e.target as HTMLInputElement).value;
+    input = (e.target as HTMLInputElement).value;
   }
 
   function handleDownload() {
     try {
       let hostname = '';
       try {
-        const u = new URL(url);
+        const u = new URL(input);
         hostname = u.hostname.replace(/\./g, '-');
       } catch {}
       qrCanvasRef?.download(hostname ? `qr-${hostname}` : 'qr-code');
@@ -123,12 +135,12 @@
 
     <!-- Tools -->
     <div class="join w-full max-w-xl mx-auto flex">
-      <input class="input input-bordered join-item flex-1" placeholder={dataType === 'url' ? 'Enter URL' : 'Generated Data will appear here'} value={url} oninput={handleInput} />
+      <input class="input input-bordered join-item flex-1" placeholder={dataType === 'url' ? 'Enter URL' : 'Generated Data will appear here'} value={input} oninput={handleInput} />
       <button class="btn btn-soft join-item" onclick={handleDownload} title="Download">
         <Download class="w-5 h-5" />
       </button>
     </div>
-    {#if displayQrData && displayQrData !== url}
+    {#if displayQrData && displayQrData !== input}
       <div class="text-xs opacity-70 break-all text-left w-full bg-base-100 p-2 rounded max-w-xl mx-auto">
         <span class="font-bold">QR encodes:</span> {displayQrData}
         <span class="ml-2 opacity-50">({displayQrData.length} chars {#if settings.urlShortener === 'hamr'} via hamr{/if})</span>
