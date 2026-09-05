@@ -5,11 +5,8 @@
 
 The simple QR Code Generator that does the thing and does it well.
 
-> In development
-
-<!-- Firefox: https://www.extensiontest.com/ -->
-
-[![wakatime](https://wakatime.com/badge/github/JMcrafter26/qr-code-buddy-extension.svg)](https://wakatime.com/badge/github/JMcrafter26/qr-code-buddy-extension)
+> [!NOTE]
+> In development, expect a better readme soon
 
 ## Features
 
@@ -69,7 +66,7 @@ But you already knew that, didn't you? (I mean, you're reading the README file, 
 
 ## Credits and License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU GPL V2 License. See the [LICENSE](LICENSE) file for details.
 
 - <https://github.com/kozakdenys/qr-code-styling> - MIT License
 - <https://github.com/ClearURLs/Addon/> - LGPL-3.0 License
