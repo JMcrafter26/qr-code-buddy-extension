@@ -50,7 +50,7 @@
 
     try {
       displayQrData = await processUrl(input);
-      input = displayQrData; // update input field with processed url
+      // input = displayQrData; // update input field with processed url
     } catch (e) {
       console.error('updateQr error', e);
       displayQrData = input;
@@ -126,7 +126,7 @@
     <div class="flex justify-center">
       <div class="bg-base-100 p-4 rounded-xl shadow">
         {#if !isLoaded}
-          <div class="skeleton w-[280px] h-[280px]"></div>
+          <div class="skeleton w-70 h-70"></div>
         {:else}
           <QrCanvas bind:this={qrCanvasRef} data={displayQrData} {settings} size={280} />
         {/if}
@@ -140,12 +140,12 @@
         <Download class="w-5 h-5" />
       </button>
     </div>
-    {#if displayQrData && displayQrData !== input}
+    {#if displayQrData && displayQrData !== input && isLoaded}
       <div class="text-xs opacity-70 break-all text-left w-full bg-base-100 p-2 rounded max-w-xl mx-auto">
-        <span class="font-bold">QR encodes:</span> {displayQrData}
-        <span class="ml-2 opacity-50">({displayQrData.length} chars {#if settings.urlShortener === 'hamr'} via hamr{/if})</span>
+        <span class="font-bold">QR encodes:</span> <span class="select-all">{displayQrData}</span>
+        <span class="ml-2 opacity-50">(saved {input.length - displayQrData.length} chars {#if settings.urlShortener} via {settings.urlShortener}{/if})</span>
       </div>
-    {:else if displayQrData}
+    {:else if displayQrData && isLoaded}
       <div class="text-xs opacity-50 w-full text-center">QR length: {displayQrData.length} chars</div>
     {/if}
 
