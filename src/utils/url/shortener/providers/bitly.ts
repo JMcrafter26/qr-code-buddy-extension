@@ -1,4 +1,7 @@
-export async function shortenWithBitly(url: string, apiKey: string): Promise<string> {
+export async function shortenWithBitly(
+  url: string,
+  apiKey: string,
+): Promise<string> {
   if (!apiKey) {
     console.error('Bitly: No API key');
     return url;

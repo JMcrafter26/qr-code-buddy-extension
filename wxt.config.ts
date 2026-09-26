@@ -13,7 +13,8 @@ export default defineConfig({
   }),
   manifest: ({ manifestVersion }) => ({
     name: 'QR Code Buddy',
-    description: 'The simple QR Code Generator that does the thing and does it well.',
+    description:
+      'The simple QR Code Generator that does the thing and does it well.',
     permissions: ['activeTab', 'storage', 'contextMenus'],
     // Host permissions are optional to avoid Chrome Web Store thorough review warning.
     // Requested at runtime only when user enables a network shortener.

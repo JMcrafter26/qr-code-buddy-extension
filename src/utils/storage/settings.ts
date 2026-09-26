@@ -1,7 +1,8 @@
 import { storage } from '#imports';
 import type { Shortener } from '../url/shortener/types';
 
-export type DotType = 'extra-rounded' | 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square';
+export type DotType =
+  'extra-rounded' | 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square';
 export type ImageFormat = 'png' | 'jpg' | 'webp' | 'svg';
 
 export interface QrSettings {
@@ -36,7 +37,10 @@ export async function getSettings(): Promise<QrSettings> {
   return (await settingsItem.getValue()) ?? DEFAULT_SETTINGS;
 }
 
-export async function updateSetting<K extends keyof QrSettings>(key: K, value: QrSettings[K]): Promise<void> {
+export async function updateSetting<K extends keyof QrSettings>(
+  key: K,
+  value: QrSettings[K],
+): Promise<void> {
   const current = await getSettings();
   await settingsItem.setValue({ ...current, [key]: value });
 }

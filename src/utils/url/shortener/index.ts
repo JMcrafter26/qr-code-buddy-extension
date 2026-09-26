@@ -6,7 +6,11 @@ import { shortenWithBitly } from './providers/bitly';
 
 export type { Shortener };
 
-export async function getShortUrl(url: string, service: Shortener, apiKey = ''): Promise<string> {
+export async function getShortUrl(
+  url: string,
+  service: Shortener,
+  apiKey = '',
+): Promise<string> {
   if (!url) return url;
   switch (service) {
     case 'hamr':
