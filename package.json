@@ -1,13 +1,14 @@
 {
   "name": "qr-code-buddy-extension",
   "description": "The simple QR Code Generator that does the thing and does it well.",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
     "dev:chrome": "wxt -b chrome",
+    "dev:edge": "wxt -b edge",
     "build": "pnpm build:chrome && pnpm build:firefox",
     "build:chrome": "wxt build -b chrome",
     "build:firefox": "wxt build -b firefox",
