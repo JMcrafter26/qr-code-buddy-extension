@@ -5,6 +5,7 @@
   import { removeTrackersFromUrl, ALL_TRACKERS } from '../../utils/url/tracker/cleaner';
   import type { Shortener } from '../../utils/url/shortener/types';
   import Footer from '../../components/layout/Footer.svelte';
+    import RateBanner from '@/components/qr/RateBanner.svelte';
 
   let settings = $state<QrSettings>({ ...DEFAULT_SETTINGS });
   let isLoaded = $state(false);
@@ -228,6 +229,8 @@
     </div>
 
     <p class="text-sm">Settings are saved automatically. <button class="link" onclick={reset}>Reset</button> to default settings.</p>
+
+    <RateBanner alwaysShow={true} />
 
     <Footer {year} />
   </div>

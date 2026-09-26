@@ -33,5 +33,5 @@ You don't have to take my word for any of this. The extension is Free and Open S
 ## Contact & Controller Details
 
 - **Data Controller:** JMcrafter26
-- **Email:** <tricky-supply-dime+qrbuddyprivacy@duck.com>
+- **Email:** <tricky-supply-dime@duck.com>
 - **Repository:** <https://github.com/JMcrafter26/qr-code-buddy-extension>
