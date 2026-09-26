@@ -6,6 +6,7 @@
   import { getShortUrl } from '../../utils/url/shortener';
   import logo from '../../assets/logo.svg';
   import { Download, ExternalLink, Settings2 } from '@lucide/svelte';
+    import RateBanner from '@/components/qr/RateBanner.svelte';
   
 
   let url = $state('https://wikipedia.org');
@@ -153,6 +154,8 @@
         <Download class="w-5 h-5" />
       </button>
     </div>
+
+    <RateBanner />
 
   </div>
 </div>

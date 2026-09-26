@@ -8,6 +8,7 @@
   import { getShortUrl } from '../../utils/url/shortener';
   import type { QrDataType } from '../../utils/url/data-payload/types';
   import { Download } from '@lucide/svelte';
+    import RateBanner from '@/components/qr/RateBanner.svelte';
 
   let input = $state('');
   let displayQrData = $state('');
@@ -157,6 +158,9 @@
         <DataTypeSelector bind:type={dataType} onDataChange={handleDataChange} />
       </div>
     </div>
+
+    <RateBanner />
+
 
     <!-- Footer -->
     <div class="text-center">
