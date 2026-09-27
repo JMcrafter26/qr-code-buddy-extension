@@ -9,6 +9,7 @@
   let step = $state(1);
   let direction = $state(1); // 1 = forward, -1 = backward
   const total = 3;
+  const appVersion = browser.runtime.getManifest().version;
 
   let settings = $state<QrSettings>({ ...DEFAULT_SETTINGS });
   let isLoaded = $state(false);
@@ -229,6 +230,6 @@
 
   <!-- version footer -->
   <div class="absolute bottom-2 text-xs opacity-50">
-    v{import.meta.env.VITE_APP_VERSION} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">Release Notes</a>
+    v{appVersion} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">Release Notes</a>
   </div>
 </div>
