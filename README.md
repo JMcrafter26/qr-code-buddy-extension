@@ -36,6 +36,7 @@ A lightweight, privacy-focused browser extension for generating, customizing, an
 ### Official Stores
 
 <!-- [![Chrome Web Store](https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/available/chrome-web-store/cozy.svg)](https://chromewebstore.google.com/detail/qr-code-buddy/ekmddmgodfefpfpgglaiphhelggfpife/) [![Firefox Add-ons](https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/available/firefox-addons/cozy.svg)](https://addons.mozilla.org/en-US/firefox/addon/qr-code-buddy/) [![Microsoft Edge Add-ons](https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/available/edge-addons/cozy.svg)](https://microsoftedge.microsoft.com/addons/detail/qr-code-buddy/likcomgjkmhmefbhmjkimgnhlenaegcf/) [![Opera Add-ons](https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/available/opera-addons/cozy.svg)](https://addons.opera.com/en/extensions/details/qr-code-buddy/) -->
+
 The easiest way to install QR Code Buddy is through your browser's official extension store using the badges [above](#badges).
 
 ### Manual Installation (From GitHub)
@@ -66,7 +67,7 @@ _(Screenshots coming soon)_
 
 ## Local Development
 
-This extension is built using [WXT](https://www.google.com/search?q=https://wxt.dev/&utm_source=gemini), **Svelte 5**, **Tailwind CSS v4**, and **DaisyUI**.
+This extension is built using [WXT](https://wxt.dev), **Svelte 5**, **Tailwind CSS v4**, and **DaisyUI**.
 
 ### Prerequisites
 
