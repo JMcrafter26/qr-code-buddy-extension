@@ -1,4 +1,8 @@
 import { ALL_TRACKERS, DOMAIN_TRACKERS } from './rules';
+import {
+  CLEARURLS_GLOBAL_RULES,
+  CLEARURLS_PROVIDERS,
+} from './clearurls.generated';
 
 function matchesTracker(parameterName: string, tracker: string): boolean {
   return parameterName.toLowerCase() === tracker.toLowerCase();
@@ -32,6 +36,33 @@ function removeMatchingParameters(
     .join('&');
 }
 
+function getClearUrlsRules(url: string): {
+  rules: string[];
+  rawRules: string[];
+} {
+  const rules: string[] = [...CLEARURLS_GLOBAL_RULES];
+  const rawRules: string[] = [];
+
+  for (const provider of CLEARURLS_PROVIDERS) {
+    try {
+      if (!new RegExp(provider.urlPattern, 'i').test(url)) continue;
+      if (
+        provider.exceptions.some((exception) =>
+          new RegExp(exception, 'i').test(url),
+        )
+      ) {
+        continue;
+      }
+      rules.push(...provider.rules);
+      rawRules.push(...provider.rawRules);
+    } catch {
+      // Ignore an invalid rule from the external rule set.
+    }
+  }
+
+  return { rules, rawRules };
+}
+
 /**
  * Removes known tracking parameters from a URL.
  * Ported from old_code/src/resources/tools.js:209.
@@ -53,7 +84,13 @@ export function removeTrackersFromUrl(
 
   if (!query) return url;
 
+  const clearUrlsRules = getClearUrlsRules(url);
   let cleanedQuery = removeMatchingParameters(query, trackers);
+  cleanedQuery = removeMatchingParameters(
+    cleanedQuery,
+    clearUrlsRules.rules,
+    true,
+  );
 
   // Domain-specific trackers (google, tiktok, etc.)
   try {
@@ -72,6 +109,9 @@ export function removeTrackersFromUrl(
     }
     if (host === 'amazon') {
       prefix = prefix.replace(/\/ref=[^/?#]+/i, '');
+    }
+    for (const rawRule of clearUrlsRules.rawRules) {
+      prefix = prefix.replace(new RegExp(rawRule, 'ig'), '');
     }
   } catch {
     // ignore invalid URL
