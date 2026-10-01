@@ -2,14 +2,14 @@
 import { storage } from '#imports';
 
 const rateRequirements = {
-  count: 30, // number of times the user has used the extension before showing the rate banner
-  days: 365, // number of days since the last time the user rated the extension before showing the rate banner again
+  milestones: [30, 150],
 };
 
 const DEFAULTS = {
   count: 0,
   rated: false,
   lastRated: 0,
+  lastResetMilestone: 0,
 };
 
 const ratingItem = storage.defineItem<Record<string, unknown>>('local:rate', {
@@ -17,10 +17,21 @@ const ratingItem = storage.defineItem<Record<string, unknown>>('local:rate', {
   version: 1,
 });
 
-export async function increaseUsageCount(): Promise<void> {
+export async function increaseUsageCount(): Promise<number> {
   const current = (await ratingItem.getValue()) ?? DEFAULTS;
   const newCount = (current.count as number) + 1;
-  await ratingItem.setValue({ ...current, count: newCount });
+  const milestone = rateRequirements.milestones.find((value) => value === newCount);
+  const lastResetMilestone = (current.lastResetMilestone as number | undefined) ?? 0;
+  const shouldResetRating = milestone !== undefined && milestone > lastResetMilestone;
+
+  await ratingItem.setValue({
+    ...current,
+    count: newCount,
+    rated: shouldResetRating ? false : current.rated,
+    lastResetMilestone: shouldResetRating ? milestone : lastResetMilestone,
+  });
+
+  return newCount;
 }
 
 export async function setRated(): Promise<void> {
@@ -32,20 +43,20 @@ export async function resetRating(): Promise<void> {
   await ratingItem.removeValue();
 }
 
-export async function shouldShowRateBanner(): Promise<boolean> {
+function getReachedMilestone(count: number): number {
+  return [...rateRequirements.milestones].reverse().find((milestone) => count >= milestone) ?? 0;
+}
+
+export async function shouldShowRateBanner(alwaysShow = false): Promise<boolean> {
   const current = (await ratingItem.getValue()) ?? DEFAULTS;
-  const { count, rated, lastRated } = current as {
+  const { count, rated } = current as {
     count: number;
     rated: boolean;
-    lastRated: number;
   };
 
   if (rated) {
-    return (
-      lastRated > 0 &&
-      (Date.now() - lastRated) / (1000 * 60 * 60 * 24) >= rateRequirements.days
-    );
+    return false;
   }
 
-  return count >= rateRequirements.count;
+  return alwaysShow || getReachedMilestone(count) > 0;
 }

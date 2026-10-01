@@ -17,32 +17,26 @@
 	let showSupportInfo = $state(false);
 
 	$effect(() => {
-		increaseUsageCount();
-
         // detect browser and set storeUrl accordingly
 		const ua = navigator.userAgent;
 		if (ua.includes('Firefox')) storeUrl = storeLinks.firefox;
 		else if (ua.includes('Edg/')) storeUrl = storeLinks.edge;
 		else if (ua.includes('OPR/')) storeUrl = storeLinks.opera;
-	});
 
-	$effect(() => {
-		if (alwaysShow) {
-			showRateBanner = true;
-			return;
-		}
-		void shouldShowRateBanner().then((shouldShow) => {
+		void (async () => {
+			await increaseUsageCount();
+			const shouldShow = await shouldShowRateBanner(alwaysShow);
 			showRateBanner = shouldShow;
-		});
+		})();
 	});
 
 
 
-	function handleRatingClick(stars: number) {
+	async function handleRatingClick(stars: number) {
 		showSupportInfo = false;
 		if (stars >= 3) {
 			// open store link
-			setRated();
+			await setRated();
 			window.open(storeUrl, '_blank');
 			rated = true;
 		} else {
