@@ -43,7 +43,13 @@
       return;
     }
     try {
-      const processedUrl = await processUrl(currentUrl);
+      const cleanedUrl = settings.cleanUrl
+        ? removeTrackersFromUrl(currentUrl)
+        : currentUrl;
+      if (cleanedUrl !== currentUrl) {
+        url = cleanedUrl;
+      }
+      const processedUrl = await processUrl(cleanedUrl);
       if (requestId !== updateSequence) return;
       qrData = processedUrl;
       // Check for too long after processing
