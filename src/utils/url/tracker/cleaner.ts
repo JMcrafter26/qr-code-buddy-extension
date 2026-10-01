@@ -1,11 +1,36 @@
 import { ALL_TRACKERS, DOMAIN_TRACKERS } from './rules';
 
-const TRACKER_REGEXES_BY_TRACKER = new Map<string, RegExp>(
-  ALL_TRACKERS.map((tracker) => [
-    tracker,
-    new RegExp(`((^|&)${tracker}=[^&#]*)`, 'ig'),
-  ]),
-);
+function matchesTracker(parameterName: string, tracker: string): boolean {
+  return parameterName.toLowerCase() === tracker.toLowerCase();
+}
+
+function removeMatchingParameters(
+  query: string,
+  trackers: string[],
+  usePatterns = false,
+): string {
+  return query
+    .split('&')
+    .filter((parameter) => {
+      const equalsIndex = parameter.indexOf('=');
+      const encodedName =
+        equalsIndex === -1 ? parameter : parameter.slice(0, equalsIndex);
+      let parameterName = encodedName;
+
+      try {
+        parameterName = decodeURIComponent(encodedName.replace(/\+/g, ' '));
+      } catch {
+        // Keep the raw name when a malformed escape is present.
+      }
+
+      return !trackers.some((tracker) =>
+        usePatterns
+          ? new RegExp(`^${tracker}$`, 'i').test(parameterName)
+          : matchesTracker(parameterName, tracker),
+      );
+    })
+    .join('&');
+}
 
 /**
  * Removes known tracking parameters from a URL.
@@ -17,44 +42,44 @@ export function removeTrackersFromUrl(
 ): string {
   if (!url) return url;
 
-  const urlPieces = url.split('?');
-  if (urlPieces.length === 1) return url;
+  const queryStart = url.indexOf('?');
+  if (queryStart === -1) return url;
 
-  // Ensure query part exists even if hash present: preserve fragment handling via URL parsing after
-  // We keep original split logic but handle Trackers list separately
-  let query = urlPieces[1] ?? '';
+  const fragmentStart = url.indexOf('#', queryStart);
+  const queryEnd = fragmentStart === -1 ? url.length : fragmentStart;
+  let prefix = url.slice(0, queryStart);
+  const query = url.slice(queryStart + 1, queryEnd);
+  const fragment = fragmentStart === -1 ? '' : url.slice(fragmentStart);
 
-  // For custom tracker lists, use dynamic regex; for default use precompiled
-  const usePrecompiled = trackers === ALL_TRACKERS;
-  for (const tracker of trackers) {
-    const regex = usePrecompiled
-      ? TRACKER_REGEXES_BY_TRACKER.get(tracker)!
-      : new RegExp(`((^|&)${tracker}=[^&#]*)`, 'ig');
-    query = query.replace(regex, '');
-  }
+  if (!query) return url;
+
+  let cleanedQuery = removeMatchingParameters(query, trackers);
 
   // Domain-specific trackers (google, tiktok, etc.)
   try {
-    let host = new URL(url).hostname.replace(/^www\./, '');
-    host = host.split('.').slice(0, -1).join('.');
-    if (host.includes('.')) {
-      host = host.split('.').slice(1).join('.');
-    }
+    const host =
+      new URL(url).hostname
+        .replace(/^www\./, '')
+        .split('.')
+        .at(-2) ?? '';
     const domainTrackers = DOMAIN_TRACKERS[host];
     if (domainTrackers) {
-      for (const tracker of domainTrackers) {
-        query = query.replace(new RegExp(`((^|&)${tracker}=[^&#]*)`, 'ig'), '');
-      }
+      cleanedQuery = removeMatchingParameters(
+        cleanedQuery,
+        domainTrackers,
+        true,
+      );
+    }
+    if (host === 'amazon') {
+      prefix = prefix.replace(/\/ref=[^/?#]+/i, '');
     }
   } catch {
     // ignore invalid URL
   }
 
-  while (query.startsWith('&')) query = query.slice(1);
-  // Clean up double && leftovers and dangling ? or &
-  query = query.replace(/&&+/g, '&').replace(/^&|&$/g, '');
-
-  return query ? `${urlPieces[0]!}?${query}` : urlPieces[0]!;
+  return cleanedQuery
+    ? `${prefix}?${cleanedQuery}${fragment}`
+    : `${prefix}${fragment}`;
 }
 
 export { ALL_TRACKERS };

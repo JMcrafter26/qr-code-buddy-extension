@@ -11,12 +11,13 @@
 
   let url = $state('https://wikipedia.org');
   let settings = $state<QrSettings>(DEFAULT_SETTINGS);
-  let qrData = $state(null as string | null);
+  let qrData = $state('');
   let qrCanvasRef: any = $state(null);
   let isLoadingSettings = $state(true);
 
   // Debounce handling for shortener
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  let updateSequence = 0;
 
   async function processUrl(raw: string) {
     let processed = raw;
@@ -35,21 +36,24 @@
     return processed;
   }
 
-  async function updateQrData() {
-    if (!url) {
+  async function updateQrData(requestId = ++updateSequence) {
+    const currentUrl = url;
+    if (!currentUrl) {
       qrData = '';
       return;
     }
     try {
-      qrData = await processUrl(url);
-      url = qrData; // update input field with processed url
+      const processedUrl = await processUrl(currentUrl);
+      if (requestId !== updateSequence) return;
+      qrData = processedUrl;
       // Check for too long after processing
       if (qrData.length > 2800) {
         console.warn(`QR data too long: ${qrData.length} chars`);
       }
     } catch (e) {
+      if (requestId !== updateSequence) return;
       console.error('updateQrData error', e);
-      qrData = url; // fallback
+      qrData = currentUrl; // fallback
     }
   }
 
@@ -59,9 +63,10 @@
     void settings.cleanUrl;
     void settings.urlShortener;
     void settings.api_key;
+    const requestId = ++updateSequence;
     if (debounceTimer) clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-      updateQrData();
+      updateQrData(requestId);
     }, 300);
   });
 

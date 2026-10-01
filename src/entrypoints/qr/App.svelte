@@ -16,6 +16,7 @@
   let dataType = $state<QrDataType>('url');
   let qrCanvasRef: any = $state(null);
   let isLoaded = $state(false);
+  let updateSequence = 0;
 
   async function processUrl(raw: string): Promise<string> {
     let processed = raw;
@@ -32,29 +33,33 @@
     return processed;
   }
 
-  async function updateQr() {
-    if (!input) {
+  async function updateQr(requestId = ++updateSequence) {
+    const currentInput = input;
+    if (!currentInput) {
       displayQrData = '';
       return;
     }
 
     // if input is too long, add a warning, but still process it
-    if (input.length > 2800) {
-      console.warn(`Input too long: ${input.length} chars`);
+    if (currentInput.length > 2800) {
+      console.warn(`Input too long: ${currentInput.length} chars`);
     }
 
     // if input is not a url, we don't process it, just display as is
-    if (dataType !== 'url' || dataType === 'url' && !input.startsWith('http')) {
-      displayQrData = input;
+    if (dataType !== 'url' || (dataType === 'url' && !currentInput.startsWith('http'))) {
+      displayQrData = currentInput;
       return;
     }
 
     try {
-      displayQrData = await processUrl(input);
+      const processedUrl = await processUrl(currentInput);
+      if (requestId !== updateSequence) return;
+      displayQrData = processedUrl;
       // input = displayQrData; // update input field with processed url
     } catch (e) {
+      if (requestId !== updateSequence) return;
       console.error('updateQr error', e);
-      displayQrData = input;
+      displayQrData = currentInput;
     }
   }
 
@@ -65,8 +70,9 @@
     void settings.urlShortener;
     void settings.api_key;
     void dataType;
+    const requestId = ++updateSequence;
     if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => updateQr(), 300);
+    debounceTimer = setTimeout(() => updateQr(requestId), 300);
   });
 
   onMount(async () => {
