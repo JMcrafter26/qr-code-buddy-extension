@@ -67,8 +67,6 @@ _(Screenshots coming soon)_
 
 ## Local Development
 
-This extension is built using [WXT](https://wxt.dev), **Svelte 5**, **Tailwind CSS v4**, and **DaisyUI**.
-
 ### Prerequisites
 
 - Node.js
@@ -80,6 +78,7 @@ Clone the repository and install dependencies:
 
 ```bash
 pnpm install
+pnpm postinstall
 ```
 
 Start the development server with Hot Module Replacement (HMR):
@@ -118,5 +117,6 @@ This project is open-source and licensed under the **GNU GPL v2 License**. See t
 
 - QR code generation is powered by [qr-code-styling](https://github.com/kozakdenys/qr-code-styling)
 - Icons are provided by [Lucide](https://lucide.dev/)
+- Cleaning URLs of tracking parameters is powered by [ClearURLs](https://github.com/ClearURLs/rules)
 - The extension is built using **WXT**, **Svelte 5**, **Tailwind CSS**, and **DaisyUI 5**.
 - Special thanks to [@JMcrafter26](https://github.com/JMcrafter26) - (me :\) ) for creating and maintaining this project.
