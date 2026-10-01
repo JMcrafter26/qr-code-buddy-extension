@@ -334,3 +334,6 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+
+src/utils/url/tracker/clearurls.generated.ts

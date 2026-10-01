@@ -1,7 +1,7 @@
 {
   "name": "qr-code-buddy-extension",
   "description": "The simple QR Code Generator that does the thing and does it well.",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "scripts": {
