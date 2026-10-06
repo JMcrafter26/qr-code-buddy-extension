@@ -63,7 +63,13 @@ If you prefer to sideload the extension or test the latest beta:
 
 ## Screenshots
 
-_(Screenshots coming soon)_
+<details>
+ <summary>Click to expand</summary>
+ <img width="14063" height="9375" alt="1" src="https://github.com/user-attachments/assets/979c4d16-666d-4222-85af-3db6914acb64" />
+ <img width="14063" height="9375" alt="2" src="https://github.com/user-attachments/assets/598d9124-e08b-4df2-afcd-2ee9c2ccb240" />
+ <img width="1280" height="853" alt="3" src="https://github.com/user-attachments/assets/82bd80ea-e964-4109-8d88-af8a35bab443" />
+ <img width="1280" height="853" alt="4" src="https://github.com/user-attachments/assets/05bc9745-3e75-47fe-a69e-91540fd37639" />
+</details>
 
 ## Local Development
 
@@ -119,4 +125,4 @@ This project is open-source and licensed under the **GNU GPL v2 License**. See t
 - Icons are provided by [Lucide](https://lucide.dev/)
 - Cleaning URLs of tracking parameters is powered by [ClearURLs](https://github.com/ClearURLs/rules)
 - The extension is built using **WXT**, **Svelte 5**, **Tailwind CSS**, and **DaisyUI 5**.
-- Special thanks to [@JMcrafter26](https://github.com/JMcrafter26) - (me :\) ) for creating and maintaining this project.
+- Special thanks to [50/50](https://github.com/50n50) for creating the screenshots in this repo
