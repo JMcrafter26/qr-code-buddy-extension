@@ -5,6 +5,7 @@
   import { removeTrackersFromUrl, ALL_TRACKERS } from '../../utils/url/tracker/cleaner';
   import { detectBrowser } from '../../utils/browser/detect';
   import Footer from '../../components/layout/Footer.svelte';
+  import QrCanvas from '../../components/qr/QrCanvas.svelte';
     import RateBanner from '@/components/qr/RateBanner.svelte';
   import {
     Ban,
@@ -213,6 +214,18 @@
             </div>
 
             <div class="space-y-6 p-5 sm:p-6">
+              <div class="max-sm:sticky max-sm:top-2 max-sm:z-10 flex items-center gap-3 rounded-xl border border-base-300 bg-base-100/95 p-2.5 shadow-sm backdrop-blur">
+                <div class="shrink-0 rounded-lg bg-base-200 p-1">
+                  <QrCanvas data="https://wikipedia.org" {settings} size={120} faviconUrl="https://wikipedia.org/static/favicon/wikipedia.ico" />
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-medium">Live preview</h3>
+                  </div>
+                  <p class="mt-1 text-xs text-base-content/60">This is how your QR will look with the current settings.</p>
+                </div>
+              </div>
+
               <div class="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label for="qr-type" class="mb-2 block text-sm font-medium">Dot style</label>
@@ -225,15 +238,7 @@
                     <option value="square">Square</option>
                   </select>
                 </div>
-                <div>
-                  <label for="save-format" class="mb-2 block text-sm font-medium">Save format</label>
-                  <select id="save-format" class="select select-bordered w-full" bind:value={settings.format}>
-                    <option value="png">PNG</option>
-                    <option value="jpg">JPG</option>
-                    <option value="webp">WEBP</option>
-                    <option value="svg">SVG</option>
-                  </select>
-                </div>
+
               </div>
 
               <div>
@@ -242,7 +247,7 @@
                     <h3 class="font-medium">Color palette</h3>
                     <p class="mt-1 text-sm text-base-content/60">Use enough contrast for reliable scanning.</p>
                   </div>
-                  {#if isLowContrast}<span class="badge badge-warning gap-1"><CircleHelp class="h-3.5 w-3.5" />Low contrast</span>{/if}
+                  {#if isLowContrast}<span class="badge badge-warning gap-1 h-auto"><CircleQuestionMark class="h-3.5 w-3.5" />Low contrast</span>{/if}
                 </div>
                 <div class="grid gap-3 sm:grid-cols-2">
                   <label class="flex items-center gap-3 rounded-xl border border-base-300 p-3" for="qr-color">
@@ -289,6 +294,16 @@
                 {:else if settings.logoMode === 'favicon'}
                   <div class="mt-3 flex items-center gap-2 px-1 text-xs text-base-content/60"><Earth class="h-3.5 w-3.5 shrink-0 text-primary" /><span>Uses the current tab icon when available. No extra permission or network service is required.</span></div>
                 {/if}
+              </div>
+
+              <div>
+                <label for="save-format" class="mb-2 block text-sm font-medium">Save format</label>
+                <select id="save-format" class="select select-bordered w-full" bind:value={settings.format}>
+                  <option value="png">PNG</option>
+                  <option value="jpg">JPG</option>
+                  <option value="webp">WEBP</option>
+                  <option value="svg">SVG</option>
+                </select>
               </div>
             </div>
           </div>
