@@ -1,16 +1,16 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings, type DotType, type ImageFormat } from '../../utils/storage/settings';
+  import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { getContrastRatio } from '../../utils/color/contrast';
   import { removeTrackersFromUrl, ALL_TRACKERS } from '../../utils/url/tracker/cleaner';
   import { detectBrowser } from '../../utils/browser/detect';
-  import type { Shortener } from '../../utils/url/shortener/types';
   import Footer from '../../components/layout/Footer.svelte';
     import RateBanner from '@/components/qr/RateBanner.svelte';
   import {
     Ban,
     Check,
     CircleHelp,
+    CircleQuestionMark,
     Download,
     Earth,
     Image,
@@ -172,24 +172,26 @@
                 <div>
                   <select id="url-shortener" class="select select-bordered w-full" bind:value={settings.urlShortener}>
                     <option value="none">None</option>
-                    <option value="hamr">hamr (local)</option>
+                    <option value="hamr">hamr (local, recommended)</option>
                     <option value="tinyurl">TinyURL</option>
                     <option value="isgd">is.gd</option>
                     <option value="bitly">Bitly</option>
                   </select>
-                  {#if settings.urlShortener === 'bitly'}
-                    <div class="alert alert-warning mt-3 items-start py-2 text-sm"><CircleHelp class="mt-0.5 h-4 w-4 shrink-0" /><span>Bitly needs an API key from its website.</span></div>
-                    <input type="text" placeholder="Enter Bitly API key" class="input input-bordered mt-2 w-full" bind:value={settings.api_key} />
-                  {:else if settings.urlShortener !== 'none'}
+                  {#if settings.urlShortener !== 'hamr' && settings.urlShortener !== 'none'}
                     <p class="mt-2 text-xs text-base-content/60">The selected service may send the URL to a third party.</p>
-                    {#if settings.urlShortener === 'hamr'}
-                      <p class="mt-1 text-xs text-base-content/60">hamr runs locally and falls back when the result is longer.</p>
+
+                    {#if settings.urlShortener === 'bitly'}
+                      <p class="mt-2 text-xs text-base-content/60">Bitly requires an API key to shorten URLs.</p>
+                      <p class="mt-1 text-xs text-base-content/60">Get one at <a href="https://app.bitly.com/settings/api/" target="_blank" rel="noopener noreferrer" class="link link-primary">https://app.bitly.com/settings/api/</a></p>
+                    <input type="text" placeholder="Enter Bitly API key" class="input input-bordered mt-2 w-full" bind:value={settings.api_key} />
                     {/if}
+                  {:else if settings.urlShortener === 'hamr'}
+                      <p class="mt-2 text-xs text-base-content/60">hamr runs locally and falls back when the result is longer.</p>
                   {:else}
                     <p class="mt-2 text-xs text-base-content/60">The original URL will be encoded as-is.</p>
                   {/if}
                   {#if settings.urlShortener === 'bitly' && !settings.api_key}
-                    <div class="alert alert-warning mt-2 py-2 text-xs">An API key is required for Bitly.</div>
+                    <div class="alert alert-warning mt-2 py-2 text-xs"><CircleQuestionMark class="h-4 w-4"/>The API key cannot be empty</div>
                   {/if}
                   {#if permissionError}
                     <div class="alert alert-warning mt-2 py-2 text-xs">{permissionError}</div>

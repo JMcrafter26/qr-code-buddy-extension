@@ -48,6 +48,10 @@ function getReachedMilestone(count: number): number {
 }
 
 export async function shouldShowRateBanner(alwaysShow = false): Promise<boolean> {
+  if (alwaysShow) {
+    return true;
+  }
+
   const current = (await ratingItem.getValue()) ?? DEFAULTS;
   const { count, rated } = current as {
     count: number;
@@ -58,5 +62,5 @@ export async function shouldShowRateBanner(alwaysShow = false): Promise<boolean>
     return false;
   }
 
-  return alwaysShow || getReachedMilestone(count) > 0;
+  return getReachedMilestone(count) > 0;
 }
