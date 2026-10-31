@@ -6,6 +6,7 @@
   import type { Shortener } from '../../utils/url/shortener/types';
   import Footer from '../../components/layout/Footer.svelte';
     import RateBanner from '@/components/qr/RateBanner.svelte';
+    import { Ban, Earth, Globe2, Image } from '@lucide/svelte';
 
   let settings = $state<QrSettings>({ ...DEFAULT_SETTINGS });
   let isLoaded = $state(false);
@@ -189,27 +190,104 @@
           </div>
         </div>
 
+        
+        
+
         <div class="form-control">
-          <label class="label"><span class="label-text font-medium">Logo source</span></label>
-          <div class="flex flex-col gap-2">
-            <label class="label cursor-pointer justify-start gap-3">
-              <input type="radio" class="radio radio-primary" name="logo-mode" value="none" bind:group={settings.logoMode} />
-              <span class="label-text">None</span>
+          <div class="flex items-start justify-between gap-4 mb-3">
+            <div>
+              <span class="label-text font-medium">Logo source</span>
+              <p class="text-sm opacity-60 mt-1">
+                Choose what appears in the center of the QR code.
+              </p>
+            </div>
+            <span class="badge badge-ghost badge-sm shrink-0">Optional</span>
+          </div>
+
+          <div class="flex w-full gap-1 rounded-lg border border-base-300 bg-base-200 p-1">
+            <label
+              class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-2 focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs"
+              class:border-primary={settings.logoMode === 'none'}
+              class:bg-base-100={settings.logoMode === 'none'}
+              class:text-primary={settings.logoMode === 'none'}
+              class:ring-primary={settings.logoMode === 'none'}
+            >
+              <input
+                type="radio"
+                class="sr-only"
+                name="logo-mode"
+                value="none"
+                bind:group={settings.logoMode}
+              />
+              <Ban class="w-4 h-4 shrink-0" />
+              <span>None</span>
             </label>
-            <label class="label cursor-pointer justify-start gap-3">
-              <input type="radio" class="radio radio-primary" name="logo-mode" value="custom" bind:group={settings.logoMode} />
-              <span class="label-text">Custom logo</span>
+
+            <label
+              class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-2 focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs"
+              class:border-primary={settings.logoMode === 'custom'}
+              class:bg-base-100={settings.logoMode === 'custom'}
+              class:text-primary={settings.logoMode === 'custom'}
+              class:ring-primary={settings.logoMode === 'custom'}
+            >
+              <input
+                type="radio"
+                class="sr-only"
+                name="logo-mode"
+                value="custom"
+                bind:group={settings.logoMode}
+              />
+              <Image class="w-4 h-4 shrink-0" />
+              <span>Custom</span>
             </label>
-            <label class="label cursor-pointer justify-start gap-3">
-              <input type="radio" class="radio radio-primary" name="logo-mode" value="favicon" bind:group={settings.logoMode} />
-              <span class="label-text">Current tab favicon</span>
+
+            <label
+              class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-2 focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs"
+              class:border-primary={settings.logoMode === 'favicon'}
+              class:bg-base-100={settings.logoMode === 'favicon'}
+              class:text-primary={settings.logoMode === 'favicon'}
+              class:ring-primary={settings.logoMode === 'favicon'}
+            >
+              <input
+                type="radio"
+                class="sr-only"
+                name="logo-mode"
+                value="favicon"
+                bind:group={settings.logoMode}
+              />
+              <Earth class="w-4 h-4 shrink-0" />
+              <span>Tab icon</span>
             </label>
           </div>
+
           {#if settings.logoMode === 'custom'}
-            <input type="url" placeholder="Enter URL" class="input input-bordered w-full mt-2" bind:value={settings.logo} />
-            <p class="text-sm opacity-60 mt-1">Enter the URL for the logo in the middle of the QR Code.</p>
+            <div
+              class="mt-3 p-3 rounded-lg bg-base-200/70 border border-base-300"
+            >
+              <label class="label p-0 mb-2" for="custom-logo-url"
+                ><span class="label-text text-sm font-medium">Image URL</span
+                ></label
+              >
+              <input
+                id="custom-logo-url"
+                type="url"
+                placeholder="https://example.com/logo.png"
+                class="input input-bordered w-full bg-base-100"
+                bind:value={settings.logo}
+              />
+              <p class="text-xs opacity-60 mt-2">
+                The image should allow cross-origin loading to appear in
+                downloaded QR codes.
+              </p>
+            </div>
           {:else if settings.logoMode === 'favicon'}
-            <p class="text-sm opacity-60 mt-1">Uses the current tab favicon when available. No additional permission is required.</p>
+            <div class="flex items-center gap-2 text-xs opacity-60 mt-3 px-1">
+              <Earth class="w-3.5 h-3.5 shrink-0" />
+              <span
+                >Uses the current tab icon when available. No extra permission
+                or network service is required.</span
+              >
+            </div>
           {/if}
         </div>
 
@@ -254,3 +332,4 @@
     <Footer {year} />
   </div>
 </div>
+
