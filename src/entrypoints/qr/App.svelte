@@ -3,7 +3,7 @@
   import QrCanvas from '../../components/qr/QrCanvas.svelte';
   import DataTypeSelector from '../../components/data-types/DataTypeSelector.svelte';
   import Footer from '../../components/layout/Footer.svelte';
-  import { settingsItem, DEFAULT_SETTINGS, type QrSettings } from '../../utils/storage/settings';
+  import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { removeTrackersFromUrl } from '../../utils/url/tracker/cleaner';
   import { getShortUrl } from '../../utils/url/shortener';
   import type { QrDataType } from '../../utils/url/data-payload/types';
@@ -16,6 +16,8 @@
   let dataType = $state<QrDataType>('url');
   let qrCanvasRef: any = $state(null);
   let isLoaded = $state(false);
+  let faviconUrl = $state('');
+  let initialInput = '';
   let updateSequence = 0;
 
   async function processUrl(raw: string): Promise<string> {
@@ -81,11 +83,13 @@
   });
 
   onMount(async () => {
-    settings = await settingsItem.getValue();
+    settings = normalizeSettings(await settingsItem.getValue());
     const params = new URLSearchParams(window.location.search);
     const paramUrl = params.get('url');
+    faviconUrl = params.get('favicon') ?? '';
     if (paramUrl) {
       input = paramUrl;
+      initialInput = paramUrl;
     } else {
       // Try to get active tab if available? On qr.html we are not popup, so not needed
       // Fallback to wikipedia
@@ -104,6 +108,7 @@
 
   function handleInput(e: Event) {
     input = (e.target as HTMLInputElement).value;
+    if (input !== initialInput) faviconUrl = '';
   }
 
   function handleDownload() {
@@ -140,7 +145,7 @@
         {#if !isLoaded}
           <div class="skeleton w-70 h-70"></div>
         {:else}
-          <QrCanvas bind:this={qrCanvasRef} data={displayQrData} {settings} size={280} />
+          <QrCanvas bind:this={qrCanvasRef} data={displayQrData} {settings} {faviconUrl} size={280} />
         {/if}
       </div>
     </div>

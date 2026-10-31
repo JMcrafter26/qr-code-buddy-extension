@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { settingsItem, DEFAULT_SETTINGS, type QrSettings, type DotType, type ImageFormat } from '../../utils/storage/settings';
+  import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings, type DotType, type ImageFormat } from '../../utils/storage/settings';
   import { getContrastRatio } from '../../utils/color/contrast';
   import { removeTrackersFromUrl, ALL_TRACKERS } from '../../utils/url/tracker/cleaner';
   import type { Shortener } from '../../utils/url/shortener/types';
@@ -19,7 +19,7 @@
 
   onMount(() => {
     settingsItem.getValue().then((stored) => {
-      settings = stored;
+      settings = normalizeSettings(stored);
       isLoaded = true;
     });
   });
@@ -38,6 +38,7 @@
     void settings.cleanUrl;
     void settings.format;
     void settings.logo;
+    void settings.logoMode;
     void settings.urlShortener;
     void settings.api_key;
     const hostMap: Record<string, string> = {
@@ -189,9 +190,27 @@
         </div>
 
         <div class="form-control">
-          <label class="label"><span class="label-text font-medium">Logo</span></label>
-          <input type="url" placeholder="Enter URL" class="input input-bordered w-full" bind:value={settings.logo} />
-          <p class="text-sm opacity-60 mt-1">Enter URL for the logo in the middle of the QR Code (you can upload to <a href="https://imgur.com/upload" target="_blank" class="link">imgur</a> and paste the link here)</p>
+          <label class="label"><span class="label-text font-medium">Logo source</span></label>
+          <div class="flex flex-col gap-2">
+            <label class="label cursor-pointer justify-start gap-3">
+              <input type="radio" class="radio radio-primary" name="logo-mode" value="none" bind:group={settings.logoMode} />
+              <span class="label-text">None</span>
+            </label>
+            <label class="label cursor-pointer justify-start gap-3">
+              <input type="radio" class="radio radio-primary" name="logo-mode" value="custom" bind:group={settings.logoMode} />
+              <span class="label-text">Custom logo</span>
+            </label>
+            <label class="label cursor-pointer justify-start gap-3">
+              <input type="radio" class="radio radio-primary" name="logo-mode" value="favicon" bind:group={settings.logoMode} />
+              <span class="label-text">Current tab favicon</span>
+            </label>
+          </div>
+          {#if settings.logoMode === 'custom'}
+            <input type="url" placeholder="Enter URL" class="input input-bordered w-full mt-2" bind:value={settings.logo} />
+            <p class="text-sm opacity-60 mt-1">Enter the URL for the logo in the middle of the QR Code.</p>
+          {:else if settings.logoMode === 'favicon'}
+            <p class="text-sm opacity-60 mt-1">Uses the current tab favicon when available. No additional permission is required.</p>
+          {/if}
         </div>
 
         <div class="form-control">

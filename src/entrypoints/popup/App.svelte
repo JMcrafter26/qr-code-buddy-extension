@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import QrCanvas from '../../components/qr/QrCanvas.svelte';
-  import { settingsItem, DEFAULT_SETTINGS, type QrSettings } from '../../utils/storage/settings';
+  import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { removeTrackersFromUrl } from '../../utils/url/tracker/cleaner';
   import { getShortUrl } from '../../utils/url/shortener';
   import logo from '../../assets/logo.svg';
@@ -14,6 +14,7 @@
   let qrData = $state('');
   let qrCanvasRef: any = $state(null);
   let isLoadingSettings = $state(true);
+  let faviconUrl = $state('');
 
   // Debounce handling for shortener
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -82,8 +83,10 @@
         settingsItem.getValue(),
         browser.tabs.query({ active: true, currentWindow: true }).catch(() => [] as any),
       ]);
-      settings = stored;
-      const tabUrl = (tabs as any)[0]?.url ?? 'https://wikipedia.org';
+      settings = normalizeSettings(stored);
+      const activeTab = (tabs as any)[0];
+      faviconUrl = activeTab?.favIconUrl ?? '';
+      const tabUrl = activeTab?.url ?? 'https://wikipedia.org';
       url = tabUrl;
       updateQrData();
     } catch (e) {
@@ -125,7 +128,10 @@
   }
 
   function openQrPage() {
-    browser.tabs.create({ url: browser.runtime.getURL('/qr.html') + `?url=${encodeURIComponent(url)}` });
+    const favicon = settings.logoMode === 'favicon' && faviconUrl
+      ? `&favicon=${encodeURIComponent(faviconUrl)}`
+      : '';
+    browser.tabs.create({ url: browser.runtime.getURL('/qr.html') + `?url=${encodeURIComponent(url)}${favicon}` });
   }
 </script>
 
@@ -149,7 +155,7 @@
 
     <!-- QR Preview -->
     <div class="rounded-xl overflow-hidden bg-base-200 p-2">
-      <QrCanvas bind:this={qrCanvasRef} data={qrData} {settings} size={280} />
+      <QrCanvas bind:this={qrCanvasRef} data={qrData} {settings} {faviconUrl} size={280} />
     </div>
 
     <!-- Tools -->

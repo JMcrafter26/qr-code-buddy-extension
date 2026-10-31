@@ -4,7 +4,7 @@
   import type { QrSettings } from '../../utils/storage/settings';
   import { CircleX, TriangleAlert } from '@lucide/svelte';
 
-  let { data, settings, size = 280 }: { data: string; settings: QrSettings; size?: number } = $props();
+  let { data, settings, faviconUrl = '', size = 280 }: { data: string; settings: QrSettings; faviconUrl?: string; size?: number } = $props();
 
   let container: HTMLDivElement | undefined = $state(undefined);
   let qrInstance: InstanceType<typeof QRCodeStyling> | null = null;
@@ -15,8 +15,37 @@
   // We'll consider > 2000 chars as warning, but actual overflow is caught via exception
   const MAX_QR_LENGTH = 2000;
 
-  function render() {
+  let renderSequence = 0;
+
+  function loadImage(url: string): Promise<string | null> {
+    return new Promise((resolve) => {
+      const image = new Image();
+      const timeout = setTimeout(() => {
+        image.src = '';
+        resolve(null);
+      }, 2500);
+      image.crossOrigin = 'anonymous';
+      image.onload = () => {
+        clearTimeout(timeout);
+        resolve(url);
+      };
+      image.onerror = () => {
+        clearTimeout(timeout);
+        resolve(null);
+      };
+      image.src = url;
+    });
+  }
+
+  async function resolveLogo(): Promise<string | undefined> {
+    if (settings.logoMode === 'custom') return settings.logo || undefined;
+    if (settings.logoMode !== 'favicon' || !faviconUrl) return undefined;
+    return (await loadImage(faviconUrl)) ?? undefined;
+  }
+
+  async function render() {
     if (!container) return;
+    const sequence = ++renderSequence;
     isRendering = true;
     container.innerHTML = '';
     error = null;
@@ -31,7 +60,9 @@
       return;
     }
     try {
-      const options = buildQrOptions(data, settings, size);
+      const logo = await resolveLogo();
+      if (sequence !== renderSequence) return;
+      const options = buildQrOptions(data, settings, size, 'canvas', logo);
       qrInstance = new QRCodeStyling(options as any);
       qrInstance.append(container);
       if (!container.innerHTML || container.innerHTML.trim() === '') {
@@ -43,7 +74,20 @@
       if (msg.includes('code length overflow') || msg.includes('overflow') || data.length > MAX_QR_LENGTH) {
         error = `URL too long for QR code (${data.length} chars). Max ~${MAX_QR_LENGTH}. Try shortening via Settings (hamr local, TinyURL, is.gd) or use a shorter URL.`;
       } else {
-        error = `Failed to generate QR: ${msg}`;
+        if (settings.logoMode === 'favicon') {
+          try {
+            container.innerHTML = '';
+            const options = buildQrOptions(data, settings, size, 'canvas', '');
+            qrInstance = new QRCodeStyling(options as any);
+            qrInstance.append(container);
+            error = null;
+          } catch (fallbackError) {
+            console.error('QR render fallback error', fallbackError);
+            error = `Failed to generate QR: ${msg}`;
+          }
+        } else {
+          error = `Failed to generate QR: ${msg}`;
+        }
       }
     } finally {
       isRendering = false;
@@ -57,11 +101,13 @@
     void settings.background;
     void settings.type;
     void settings.logo;
+    void settings.logoMode;
+    void faviconUrl;
     void size;
     queueMicrotask(() => render());
   });
 
-  export function download(filename: string = 'qr-code') {
+  export async function download(filename: string = 'qr-code') {
     if (!data) return;
     if (error) {
       alert(error);
@@ -73,7 +119,8 @@
       throw new Error(msg);
     }
     try {
-      const downloadOptions = buildQrOptions(data, settings, 500);
+      const logo = await resolveLogo();
+      const downloadOptions = buildQrOptions(data, settings, 500, 'canvas', logo);
       const qr = new QRCodeStyling(downloadOptions as any);
       let name = 'qr-code';
       let extension: string = settings.format || 'png';
@@ -87,7 +134,13 @@
       } catch {
         name = filename;
       }
-      qr.download({ name, extension } as any);
+      try {
+        await qr.download({ name, extension } as any);
+      } catch (downloadError) {
+        if (settings.logoMode !== 'favicon') throw downloadError;
+        const fallback = new QRCodeStyling(buildQrOptions(data, settings, 500, 'canvas', '') as any);
+        await fallback.download({ name, extension } as any);
+      }
     } catch (e: any) {
       const msg = String(e?.message || e);
       if (msg.includes('overflow')) {
