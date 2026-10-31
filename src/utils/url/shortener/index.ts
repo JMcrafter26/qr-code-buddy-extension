@@ -6,7 +6,7 @@ import { shortenWithBitly } from './providers/bitly';
 
 export type { Shortener };
 
-const SHORTENER_TIMEOUT_MS = 5000;
+const SHORTENER_TIMEOUT_MS = 8000;
 
 export async function getShortUrl(
   url: string,

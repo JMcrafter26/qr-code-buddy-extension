@@ -1,22 +1,63 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
   import QRCodeStyling from 'qr-code-styling';
   import { buildQrOptions } from '../../utils/qr/qrOptions';
   import { getLoadedFavicon, loadFavicon } from '../../utils/qr/favicon';
   import type { QrSettings } from '../../utils/storage/settings';
   import { CircleX, TriangleAlert } from '@lucide/svelte';
 
-  let { data, settings, faviconUrl = '', size = 280 }: { data: string; settings: QrSettings; faviconUrl?: string; size?: number } = $props();
+  let { data, settings, faviconUrl = '', size = 280, isProcessing = false }: { data: string; settings: QrSettings; faviconUrl?: string; size?: number; isProcessing?: boolean } = $props();
 
   let container: HTMLDivElement | undefined = $state(undefined);
   let qrInstance: InstanceType<typeof QRCodeStyling> | null = null;
   let error = $state<string | null>(null);
   let isRendering = $state(true);
+  let showSpinner = $state(false);
+  let showSlowQrMessage = $state(false);
+  let showSlowShortenerMessage = $state(false);
+  let spinnerTimer: ReturnType<typeof setTimeout> | null = null;
+  let slowQrTimer: ReturnType<typeof setTimeout> | null = null;
+  let slowShortenerTimer: ReturnType<typeof setTimeout> | null = null;
 
   // QR code capacity: ~2953 bytes max for version 40 with EC L, but with styling we use lower
   // We'll consider > 2000 chars as warning, but actual overflow is caught via exception
   const MAX_QR_LENGTH = 2000;
 
   let renderSequence = 0;
+
+  $effect(() => {
+    void isRendering;
+    if (spinnerTimer) clearTimeout(spinnerTimer);
+    showSpinner = false;
+    if (isRendering) spinnerTimer = setTimeout(() => (showSpinner = true), 1000);
+    return () => {
+      if (spinnerTimer) clearTimeout(spinnerTimer);
+    };
+  });
+
+  $effect(() => {
+    void isRendering;
+    if (slowQrTimer) clearTimeout(slowQrTimer);
+    showSlowQrMessage = false;
+    if (isRendering) slowQrTimer = setTimeout(() => (showSlowQrMessage = true), 3000);
+    return () => {
+      if (slowQrTimer) clearTimeout(slowQrTimer);
+    };
+  });
+
+  $effect(() => {
+    void isProcessing;
+    if (slowShortenerTimer) clearTimeout(slowShortenerTimer);
+    showSlowShortenerMessage = false;
+    if (isProcessing) slowShortenerTimer = setTimeout(() => (showSlowShortenerMessage = true), 3000);
+    return () => {
+      if (slowShortenerTimer) clearTimeout(slowShortenerTimer);
+    };
+  });
+
+  function waitForPaint(): Promise<void> {
+    return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+  }
 
   async function resolveLogo(): Promise<string | undefined> {
     if (settings.logoMode === 'custom') return settings.logo || undefined;
@@ -41,6 +82,8 @@
       return;
     }
     try {
+      await waitForPaint();
+      if (sequence !== renderSequence) return;
       const options = buildQrOptions(data, settings, size, 'canvas');
       const instance = new QRCodeStyling(options as any);
       qrInstance = instance;
@@ -154,18 +197,18 @@
 
 <div class="flex flex-col items-center gap-2">
   <div
-    bind:this={container}
-    class="qr-canvas flex items-center justify-center overflow-hidden rounded-xl bg-base-200 relative"
+    class="relative isolate flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-base-200"
     class:placeholder={!data && !error}
     style:width="{size}px"
     style:height="{size}px"
   >
-    {#if isRendering}
-      <span class="loading loading-spinner loading-lg opacity-60 absolute"></span>
-    {:else if !data && !error}
-      <span class="loading loading-spinner loading-lg opacity-30"></span>
+    <div bind:this={container} class="qr-canvas absolute inset-0 h-full w-full"></div>
+    {#if showSpinner}
+      <div in:fade={{ duration: 350 }} class="absolute inset-0 z-10 flex items-center justify-center bg-base-200/80">
+        <span class="loading loading-spinner loading-lg opacity-70"></span>
+      </div>
     {:else if error}
-      <div class="p-4 text-center text-sm text-error max-w-[280px] break-words">
+      <div class="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 text-center text-sm text-error max-w-[280px] break-words">
         <span class="font-bold">Error:</span> {error}
       </div>
     {/if}
@@ -179,6 +222,16 @@
     <div class="alert alert-warning py-1 px-2 text-xs max-w-[280px]">
       <TriangleAlert class="w-4 h-4" />
       Warning: URL is long ({data.length} chars) — may be hard to scan. Try hamr.
+    </div>
+  {/if}
+  {#if showSlowQrMessage && !error}
+    <div in:fade={{ duration: 500 }} class="flex items-center justify-center text-center text-xs text-base-content/60">
+      QR generation is taking longer than usual.
+    </div>
+  {/if}
+  {#if showSlowShortenerMessage && !error}
+    <div in:fade={{ duration: 500 }} class="flex items-center justify-center text-center text-xs text-base-content/60">
+      Waiting for the URL shortening service. This may be an external service delay.
     </div>
   {/if}
 </div>

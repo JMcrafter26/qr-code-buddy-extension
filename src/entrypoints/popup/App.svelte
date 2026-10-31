@@ -18,6 +18,7 @@
   let faviconUrl = $state('');
   let isInitialized = $state(false);
   let isFirstUpdate = true;
+  let isProcessingUrl = $state(false);
 
   // Debounce handling for shortener
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -44,8 +45,10 @@
     const currentUrl = url;
     if (!currentUrl) {
       qrData = '';
+      if (requestId === updateSequence) isProcessingUrl = false;
       return;
     }
+    isProcessingUrl = true;
     try {
       const cleanedUrl = settings.cleanUrl
         ? removeTrackersFromUrl(currentUrl)
@@ -64,6 +67,8 @@
       if (requestId !== updateSequence) return;
       console.error('updateQrData error', e);
       qrData = currentUrl; // fallback
+    } finally {
+      if (requestId === updateSequence) isProcessingUrl = false;
     }
   }
 
@@ -162,7 +167,14 @@
 
     <!-- QR Preview -->
     <div class="rounded-xl overflow-hidden bg-base-200 p-2">
-      <QrCanvas bind:this={qrCanvasRef} data={qrData} {settings} {faviconUrl} size={280} />
+      <QrCanvas
+        bind:this={qrCanvasRef}
+        data={qrData}
+        {settings}
+        {faviconUrl}
+        isProcessing={isProcessingUrl}
+        size={280}
+      />
     </div>
 
     <!-- Tools -->

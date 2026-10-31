@@ -22,6 +22,7 @@
   let updateSequence = 0;
   let isInitialized = $state(false);
   let isFirstUpdate = true;
+  let isProcessingUrl = $state(false);
 
   async function processUrl(raw: string): Promise<string> {
     let processed = raw;
@@ -42,8 +43,11 @@
     const currentInput = input;
     if (!currentInput) {
       displayQrData = '';
+      if (requestId === updateSequence) isProcessingUrl = false;
       return;
     }
+
+    isProcessingUrl = true;
 
     // if input is too long, add a warning, but still process it
     if (currentInput.length > 2800) {
@@ -53,6 +57,7 @@
     // if input is not a url, we don't process it, just display as is
     if (dataType !== 'url' || (dataType === 'url' && !currentInput.startsWith('http'))) {
       displayQrData = currentInput;
+      if (requestId === updateSequence) isProcessingUrl = false;
       return;
     }
 
@@ -70,6 +75,8 @@
       if (requestId !== updateSequence) return;
       console.error('updateQr error', e);
       displayQrData = currentInput;
+    } finally {
+      if (requestId === updateSequence) isProcessingUrl = false;
     }
   }
 
@@ -152,7 +159,14 @@
         {#if !isLoaded}
           <div class="skeleton w-70 h-70"></div>
         {:else}
-          <QrCanvas bind:this={qrCanvasRef} data={displayQrData} {settings} {faviconUrl} size={280} />
+          <QrCanvas
+            bind:this={qrCanvasRef}
+            data={displayQrData}
+            {settings}
+            {faviconUrl}
+            isProcessing={isProcessingUrl}
+            size={280}
+          />
         {/if}
       </div>
     </div>
