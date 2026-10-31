@@ -41,7 +41,9 @@
       return;
     }
     try {
-      const options = buildQrOptions(data, settings, size, 'canvas');
+      const logo = await resolveLogo();
+      if (sequence !== renderSequence) return;
+      const options = buildQrOptions(data, settings, size, 'canvas', logo);
       const instance = new QRCodeStyling(options as any);
       qrInstance = instance;
       instance.append(container);
@@ -49,16 +51,6 @@
         error = null;
       }
       if (sequence === renderSequence) isRendering = false;
-
-      if (settings.logoMode === 'favicon' && faviconUrl) {
-        const logo = await resolveLogo();
-        if (sequence !== renderSequence || !logo || qrInstance !== instance) return;
-        try {
-          instance.update(buildQrOptions(data, settings, size, 'canvas', logo) as any);
-        } catch (logoError) {
-          console.warn('Favicon QR enhancement failed; keeping plain QR', logoError);
-        }
-      }
     } catch (e: any) {
       console.error('QR render error', e);
       const msg = String(e?.message || e);

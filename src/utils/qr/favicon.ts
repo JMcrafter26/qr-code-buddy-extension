@@ -1,4 +1,4 @@
-const FAVICON_LOAD_TIMEOUT = 800;
+const FAVICON_LOAD_TIMEOUT = 400;
 const faviconLoads = new Map<string, Promise<string | null>>();
 const faviconResults = new Map<string, string | null>();
 
