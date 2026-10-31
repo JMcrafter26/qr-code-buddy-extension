@@ -3,6 +3,7 @@
   import QrCanvas from '../../components/qr/QrCanvas.svelte';
   import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { removeTrackersFromUrl } from '../../utils/url/tracker/cleaner';
+  import { preloadFavicon } from '../../utils/qr/favicon';
   import { getShortUrl } from '../../utils/url/shortener';
   import logo from '../../assets/logo.svg';
   import { Download, ExternalLink, Settings2 } from '@lucide/svelte';
@@ -15,6 +16,8 @@
   let qrCanvasRef: any = $state(null);
   let isLoadingSettings = $state(true);
   let faviconUrl = $state('');
+  let isInitialized = $state(false);
+  let isFirstUpdate = true;
 
   // Debounce handling for shortener
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -70,11 +73,14 @@
     void settings.cleanUrl;
     void settings.urlShortener;
     void settings.api_key;
+    if (!isInitialized) return;
     const requestId = ++updateSequence;
     if (debounceTimer) clearTimeout(debounceTimer);
+    const delay = isFirstUpdate ? 0 : 300;
+    isFirstUpdate = false;
     debounceTimer = setTimeout(() => {
       updateQrData(requestId);
-    }, 300);
+    }, delay);
   });
 
   onMount(async () => {
@@ -86,9 +92,10 @@
       settings = normalizeSettings(stored);
       const activeTab = (tabs as any)[0];
       faviconUrl = activeTab?.favIconUrl ?? '';
+      if (settings.logoMode === 'favicon') preloadFavicon(faviconUrl);
       const tabUrl = activeTab?.url ?? 'https://wikipedia.org';
       url = tabUrl;
-      updateQrData();
+      isInitialized = true;
     } catch (e) {
       console.error(e);
     } finally {

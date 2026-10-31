@@ -1,6 +1,7 @@
 <script lang="ts">
   import QRCodeStyling from 'qr-code-styling';
   import { buildQrOptions } from '../../utils/qr/qrOptions';
+  import { getLoadedFavicon, loadFavicon } from '../../utils/qr/favicon';
   import type { QrSettings } from '../../utils/storage/settings';
   import { CircleX, TriangleAlert } from '@lucide/svelte';
 
@@ -17,30 +18,10 @@
 
   let renderSequence = 0;
 
-  function loadImage(url: string): Promise<string | null> {
-    return new Promise((resolve) => {
-      const image = new Image();
-      const timeout = setTimeout(() => {
-        image.src = '';
-        resolve(null);
-      }, 2500);
-      image.crossOrigin = 'anonymous';
-      image.onload = () => {
-        clearTimeout(timeout);
-        resolve(url);
-      };
-      image.onerror = () => {
-        clearTimeout(timeout);
-        resolve(null);
-      };
-      image.src = url;
-    });
-  }
-
   async function resolveLogo(): Promise<string | undefined> {
     if (settings.logoMode === 'custom') return settings.logo || undefined;
     if (settings.logoMode !== 'favicon' || !faviconUrl) return undefined;
-    return (await loadImage(faviconUrl)) ?? undefined;
+    return (await loadFavicon(faviconUrl)) ?? undefined;
   }
 
   async function render() {
@@ -60,13 +41,23 @@
       return;
     }
     try {
-      const logo = await resolveLogo();
-      if (sequence !== renderSequence) return;
-      const options = buildQrOptions(data, settings, size, 'canvas', logo);
-      qrInstance = new QRCodeStyling(options as any);
-      qrInstance.append(container);
+      const options = buildQrOptions(data, settings, size, 'canvas');
+      const instance = new QRCodeStyling(options as any);
+      qrInstance = instance;
+      instance.append(container);
       if (!container.innerHTML || container.innerHTML.trim() === '') {
         error = null;
+      }
+      if (sequence === renderSequence) isRendering = false;
+
+      if (settings.logoMode === 'favicon' && faviconUrl) {
+        const logo = await resolveLogo();
+        if (sequence !== renderSequence || !logo || qrInstance !== instance) return;
+        try {
+          instance.update(buildQrOptions(data, settings, size, 'canvas', logo) as any);
+        } catch (logoError) {
+          console.warn('Favicon QR enhancement failed; keeping plain QR', logoError);
+        }
       }
     } catch (e: any) {
       console.error('QR render error', e);
@@ -90,7 +81,7 @@
         }
       }
     } finally {
-      isRendering = false;
+      if (sequence === renderSequence) isRendering = false;
     }
   }
 
@@ -119,7 +110,11 @@
       throw new Error(msg);
     }
     try {
-      const logo = await resolveLogo();
+      const logo = settings.logoMode === 'favicon' && faviconUrl
+        ? getLoadedFavicon(faviconUrl) ?? undefined
+        : settings.logoMode === 'custom'
+          ? settings.logo || undefined
+          : undefined;
       const downloadOptions = buildQrOptions(data, settings, 500, 'canvas', logo);
       const qr = new QRCodeStyling(downloadOptions as any);
       let name = 'qr-code';

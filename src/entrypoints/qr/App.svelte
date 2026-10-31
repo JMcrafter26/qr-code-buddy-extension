@@ -5,6 +5,7 @@
   import Footer from '../../components/layout/Footer.svelte';
   import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { removeTrackersFromUrl } from '../../utils/url/tracker/cleaner';
+  import { preloadFavicon } from '../../utils/qr/favicon';
   import { getShortUrl } from '../../utils/url/shortener';
   import type { QrDataType } from '../../utils/url/data-payload/types';
   import { Download } from '@lucide/svelte';
@@ -19,6 +20,8 @@
   let faviconUrl = $state('');
   let initialInput = '';
   let updateSequence = 0;
+  let isInitialized = $state(false);
+  let isFirstUpdate = true;
 
   async function processUrl(raw: string): Promise<string> {
     let processed = raw;
@@ -77,9 +80,12 @@
     void settings.urlShortener;
     void settings.api_key;
     void dataType;
+    if (!isInitialized) return;
     const requestId = ++updateSequence;
     if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => updateQr(requestId), 300);
+    const delay = isFirstUpdate ? 0 : 300;
+    isFirstUpdate = false;
+    debounceTimer = setTimeout(() => updateQr(requestId), delay);
   });
 
   onMount(async () => {
@@ -87,6 +93,7 @@
     const params = new URLSearchParams(window.location.search);
     const paramUrl = params.get('url');
     faviconUrl = params.get('favicon') ?? '';
+    if (settings.logoMode === 'favicon') preloadFavicon(faviconUrl);
     if (paramUrl) {
       input = paramUrl;
       initialInput = paramUrl;
@@ -98,7 +105,7 @@
     
     // or if its about:blank
     if (input === 'about:blank') input = 'https://wikipedia.org';
-    await updateQr();
+    isInitialized = true;
     isLoaded = true;
   });
 
