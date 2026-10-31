@@ -100,7 +100,7 @@
     const params = new URLSearchParams(window.location.search);
     const paramUrl = params.get('url');
     faviconUrl = params.get('favicon') ?? '';
-    if (settings.logoMode === 'favicon') preloadFavicon(faviconUrl);
+    if (settings.logoMode === 'favicon') preloadFavicon(faviconUrl, settings.background);
     if (paramUrl) {
       input = paramUrl;
       initialInput = paramUrl;

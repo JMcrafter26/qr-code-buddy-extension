@@ -97,7 +97,7 @@
       settings = normalizeSettings(stored);
       const activeTab = (tabs as any)[0];
       faviconUrl = activeTab?.favIconUrl ?? '';
-      if (settings.logoMode === 'favicon') preloadFavicon(faviconUrl);
+      if (settings.logoMode === 'favicon') preloadFavicon(faviconUrl, settings.background);
       const tabUrl = activeTab?.url ?? 'https://wikipedia.org';
       url = tabUrl;
       isInitialized = true;

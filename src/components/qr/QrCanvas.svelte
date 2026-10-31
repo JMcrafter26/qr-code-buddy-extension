@@ -62,7 +62,7 @@
   async function resolveLogo(): Promise<string | undefined> {
     if (settings.logoMode === 'custom') return settings.logo || undefined;
     if (settings.logoMode !== 'favicon' || !faviconUrl) return undefined;
-    return (await loadFavicon(faviconUrl)) ?? undefined;
+    return (await loadFavicon(faviconUrl, settings.background)) ?? undefined;
   }
 
   async function render() {
@@ -154,7 +154,7 @@
     }
     try {
       const logo = settings.logoMode === 'favicon' && faviconUrl
-        ? getLoadedFavicon(faviconUrl) ?? undefined
+        ? getLoadedFavicon(faviconUrl, settings.background) ?? undefined
         : settings.logoMode === 'custom'
           ? settings.logo || undefined
           : undefined;
