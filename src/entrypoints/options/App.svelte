@@ -3,6 +3,7 @@
   import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings, type DotType, type ImageFormat } from '../../utils/storage/settings';
   import { getContrastRatio } from '../../utils/color/contrast';
   import { removeTrackersFromUrl, ALL_TRACKERS } from '../../utils/url/tracker/cleaner';
+  import { detectBrowser } from '../../utils/browser/detect';
   import type { Shortener } from '../../utils/url/shortener/types';
   import Footer from '../../components/layout/Footer.svelte';
     import RateBanner from '@/components/qr/RateBanner.svelte';
@@ -23,6 +24,7 @@
 
   let settings = $state<QrSettings>({ ...DEFAULT_SETTINGS });
   let isLoaded = $state(false);
+  let isFirefox = $state(detectBrowser() === 'firefox');
 
   // Debug
   let dirtyUrl = $state('');
@@ -91,7 +93,7 @@
 
   async function handleExport() {
     const data = await browser.storage.local.get(null as any);
-    importExport = JSON.stringify(data, null, 2);
+    importExport = JSON.stringify(data, null);
   }
 
   async function handleImport() {
@@ -105,7 +107,7 @@
       alert('Settings imported');
       location.reload();
     } catch (e) {
-      alert('Invalid JSON');
+      alert('Invalid JSON: ' + String(e));
     }
   }
 
@@ -120,11 +122,13 @@
             <p class="text-xs font-semibold uppercase tracking-[0.16em] text-base-content/50">Workspace</p>
             <p class="mt-1 text-sm text-base-content/70">Shape the QR codes you make.</p>
           </div>
-          <ul class="menu menu-sm w-full rounded-box border border-base-300 bg-base-100 p-2">
-            <li><a href="#url-settings" class="active"><Link2 class="h-4 w-4" />URL & delivery</a></li>
-            <li><a href="#qr-settings"><SlidersHorizontal class="h-4 w-4" />QR appearance</a></li>
-            <li><a href="#data-tools"><Settings2 class="h-4 w-4" />Data tools</a></li>
-          </ul>
+          {#if !isFirefox}
+            <ul class="menu menu-sm w-full rounded-box border border-base-300 bg-base-100 p-2">
+              <li><a href="#url-settings" class="active"><Link2 class="h-4 w-4" />URL & delivery</a></li>
+              <li><a href="#qr-settings"><SlidersHorizontal class="h-4 w-4" />QR appearance</a></li>
+              <li><a href="#data-tools"><Settings2 class="h-4 w-4" />Data tools</a></li>
+            </ul>
+          {/if}
           <div class="alert border border-primary/20 bg-primary/5 p-3 text-xs text-base-content/70">
             <CircleHelp class="h-4 w-4 shrink-0 text-primary" />
             <span>Changes are saved as you make them.</span>
@@ -133,11 +137,13 @@
       </aside>
 
       <main class="min-w-0 space-y-5">
-        <div class="tabs tabs-boxed w-full bg-base-100 p-1 lg:hidden">
-          <a href="#url-settings" class="tab tab-active flex-1 gap-1 text-xs"><Link2 class="h-3.5 w-3.5" />URL</a>
-          <a href="#qr-settings" class="tab flex-1 gap-1 text-xs"><SlidersHorizontal class="h-3.5 w-3.5" />QR</a>
-          <a href="#data-tools" class="tab flex-1 gap-1 text-xs"><Settings2 class="h-3.5 w-3.5" />Tools</a>
-        </div>
+        {#if !isFirefox}
+          <div class="tabs tabs-boxed w-full bg-base-100 p-1 lg:hidden">
+            <a href="#url-settings" class="tab tab-active flex-1 gap-1 text-xs"><Link2 class="h-3.5 w-3.5" />URL</a>
+            <a href="#qr-settings" class="tab flex-1 gap-1 text-xs"><SlidersHorizontal class="h-3.5 w-3.5" />QR</a>
+            <a href="#data-tools" class="tab flex-1 gap-1 text-xs"><Settings2 class="h-3.5 w-3.5" />Tools</a>
+          </div>
+        {/if}
 
         <section id="url-settings" class="card scroll-mt-24 border border-base-300 bg-base-100">
           <div class="card-body gap-0 p-0">
@@ -286,16 +292,17 @@
           </div>
         </section>
 
-        <section id="data-tools" class="card scroll-mt-24 border border-base-300 bg-base-100">
-          <div class="card-body gap-0 p-0">
-            <div class="flex items-start gap-3 border-b border-base-300 px-5 py-4 sm:px-6">
-              <div class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent/10 text-accent"><Settings2 class="h-5 w-5" /></div>
-              <div>
-                <h2 class="card-title text-base sm:text-lg">Data tools</h2>
-                <p class="mt-1 text-sm text-base-content/60">Clean a URL manually or move your settings to another install.</p>
-              </div>
+        <section id="data-tools" class="collapse collapse-arrow scroll-mt-24 border border-base-300 bg-base-100">
+          <input type="checkbox" />
+          <div class="collapse-title flex items-start gap-3 px-5 py-4 pr-12 sm:px-6">
+            <div class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent/10 text-accent"><Settings2 class="h-5 w-5" /></div>
+            <div>
+              <h2 class="card-title text-base sm:text-lg">Data tools</h2>
+              <p class="mt-1 text-sm text-base-content/60">Clean a URL manually or move your settings to another install.</p>
             </div>
-            <div class="space-y-6 p-5 sm:p-6">
+          </div>
+          <div class="collapse-content px-5 pb-5 sm:px-6">
+            <div class="space-y-6 border-t border-base-300 pt-5">
               <div>
                 <label for="dirty-url" class="mb-2 block text-sm font-medium">URL cleaner</label>
                 <textarea id="dirty-url" class="textarea textarea-bordered min-h-24 w-full" placeholder="Paste a URL with tracking parameters" rows="3" bind:value={dirtyUrl}></textarea>
@@ -313,13 +320,15 @@
           </div>
         </section>
 
-        <div class="flex flex-col items-start justify-between gap-3 border-t border-base-300 pt-4 text-sm text-base-content/60 sm:flex-row sm:items-center">
-          <span>Settings save automatically.</span>
+        <div class="flex justify-between gap-2 rounded-xl border border-base-300 bg-base-100 p-4 text-xs text-base-content/60 ">
+          <span class="flex items-center gap-1"><Check class="h-3.5 w-3.5 shrink-0 text-success" />All changes are saved automatically.</span>
           <button class="btn btn-ghost btn-sm gap-2 text-error" onclick={reset}><RotateCcw class="h-4 w-4" />Reset all settings</button>
         </div>
 
-        <RateBanner alwaysShow={true} />
-        <Footer {year} />
+        <div class="justify-center space-y-4 text-center text-sm text-base-content/60">
+          <RateBanner alwaysShow={true} />
+          <Footer {year} />
+        </div>
       </main>
     </div>
   </div>
