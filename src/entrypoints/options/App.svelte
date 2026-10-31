@@ -215,7 +215,7 @@
 
             <div class="space-y-6 p-5 sm:p-6">
               <div class="max-sm:sticky max-sm:top-2 max-sm:z-10 flex items-center gap-3 rounded-xl border border-base-300 bg-base-100/95 p-2.5 shadow-sm backdrop-blur">
-                <div class="shrink-0 rounded-lg bg-base-200 p-1">
+                <div class="shrink-0 rounded-3xl bg-base-200 p-1">
                   <QrCanvas data="https://wikipedia.org" {settings} size={120} faviconUrl="https://wikipedia.org/static/favicon/wikipedia.ico" />
                 </div>
                 <div class="min-w-0">

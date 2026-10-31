@@ -40,7 +40,9 @@ export async function getSettings(): Promise<QrSettings> {
   return normalizeSettings(await settingsItem.getValue());
 }
 
-export function normalizeSettings(settings: Partial<QrSettings> | null | undefined): QrSettings {
+export function normalizeSettings(
+  settings: Partial<QrSettings> | null | undefined,
+): QrSettings {
   const merged = { ...DEFAULT_SETTINGS, ...(settings ?? {}) };
   if (!settings?.logoMode && settings?.logo) merged.logoMode = 'custom';
   return merged;

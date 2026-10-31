@@ -20,9 +20,13 @@ const ratingItem = storage.defineItem<Record<string, unknown>>('local:rate', {
 export async function increaseUsageCount(): Promise<number> {
   const current = (await ratingItem.getValue()) ?? DEFAULTS;
   const newCount = (current.count as number) + 1;
-  const milestone = rateRequirements.milestones.find((value) => value === newCount);
-  const lastResetMilestone = (current.lastResetMilestone as number | undefined) ?? 0;
-  const shouldResetRating = milestone !== undefined && milestone > lastResetMilestone;
+  const milestone = rateRequirements.milestones.find(
+    (value) => value === newCount,
+  );
+  const lastResetMilestone =
+    (current.lastResetMilestone as number | undefined) ?? 0;
+  const shouldResetRating =
+    milestone !== undefined && milestone > lastResetMilestone;
 
   await ratingItem.setValue({
     ...current,
@@ -44,10 +48,16 @@ export async function resetRating(): Promise<void> {
 }
 
 function getReachedMilestone(count: number): number {
-  return [...rateRequirements.milestones].reverse().find((milestone) => count >= milestone) ?? 0;
+  return (
+    [...rateRequirements.milestones]
+      .reverse()
+      .find((milestone) => count >= milestone) ?? 0
+  );
 }
 
-export async function shouldShowRateBanner(alwaysShow = false): Promise<boolean> {
+export async function shouldShowRateBanner(
+  alwaysShow = false,
+): Promise<boolean> {
   if (alwaysShow) {
     return true;
   }

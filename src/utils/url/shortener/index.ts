@@ -16,15 +16,15 @@ export async function getShortUrl(
   if (!url || service === 'none') return url;
   const shortening = (() => {
     switch (service) {
-    case 'hamr':
-      return shortenWithHamr(url);
-    case 'tinyurl':
-      return shortenWithTinyUrl(url);
-    case 'isgd':
-      return shortenWithIsGd(url);
-    case 'bitly':
-      return shortenWithBitly(url, apiKey);
-    default:
+      case 'hamr':
+        return shortenWithHamr(url);
+      case 'tinyurl':
+        return shortenWithTinyUrl(url);
+      case 'isgd':
+        return shortenWithIsGd(url);
+      case 'bitly':
+        return shortenWithBitly(url, apiKey);
+      default:
         return Promise.resolve(url);
     }
   })();

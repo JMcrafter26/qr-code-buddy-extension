@@ -47,7 +47,8 @@ export function buildQrOptions(
     },
   };
 
-  const logo = logoOverride ?? (settings.logoMode === 'custom' ? settings.logo : '');
+  const logo =
+    logoOverride ?? (settings.logoMode === 'custom' ? settings.logo : '');
   if (logo) opts.image = logo;
 
   return opts;

@@ -10,7 +10,9 @@ function cacheKey(url: string, background: string): string {
   return `${url}\n${background}`;
 }
 
-function hexToRgbChannels(hex: string): { r: number; g: number; b: number } | null {
+function hexToRgbChannels(
+  hex: string,
+): { r: number; g: number; b: number } | null {
   const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!match) return null;
   return {
@@ -21,7 +23,15 @@ function hexToRgbChannels(hex: string): { r: number; g: number; b: number } | nu
 }
 
 // WCAG relative luminance, normalized to 0..1.
-function relativeLuminance({ r, g, b }: { r: number; g: number; b: number }): number {
+function relativeLuminance({
+  r,
+  g,
+  b,
+}: {
+  r: number;
+  g: number;
+  b: number;
+}): number {
   const channel = (value: number) => {
     const srgb = value / 255;
     return srgb <= 0.03928 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
@@ -38,7 +48,9 @@ function contrastRatio(
   return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
 
-function getMonochromeColor(image: HTMLImageElement): { r: number; g: number; b: number } | null {
+function getMonochromeColor(
+  image: HTMLImageElement,
+): { r: number; g: number; b: number } | null {
   const canvas = document.createElement('canvas');
   canvas.width = ANALYSIS_SIZE;
   canvas.height = ANALYSIS_SIZE;
@@ -51,12 +63,20 @@ function getMonochromeColor(image: HTMLImageElement): { r: number; g: number; b:
 
   for (let index = 0; index < pixels.length; index += 4) {
     if (pixels[index + 3]! < 64) continue;
-    visible.push({ r: pixels[index]!, g: pixels[index + 1]!, b: pixels[index + 2]! });
+    visible.push({
+      r: pixels[index]!,
+      g: pixels[index + 1]!,
+      b: pixels[index + 2]!,
+    });
   }
   if (visible.length < 8) return null;
 
   const average = visible.reduce(
-    (sum, pixel) => ({ r: sum.r + pixel.r, g: sum.g + pixel.g, b: sum.b + pixel.b }),
+    (sum, pixel) => ({
+      r: sum.r + pixel.r,
+      g: sum.g + pixel.g,
+      b: sum.b + pixel.b,
+    }),
     { r: 0, g: 0, b: 0 },
   );
   average.r /= visible.length;
@@ -64,12 +84,17 @@ function getMonochromeColor(image: HTMLImageElement): { r: number; g: number; b:
   average.b /= visible.length;
 
   const spread = Math.max(
-    ...visible.map((pixel) => Math.hypot(pixel.r - average.r, pixel.g - average.g, pixel.b - average.b)),
+    ...visible.map((pixel) =>
+      Math.hypot(pixel.r - average.r, pixel.g - average.g, pixel.b - average.b),
+    ),
   );
   return spread <= MONOCHROME_SPREAD ? average : null;
 }
 
-function createLogoDataUrl(image: HTMLImageElement, background: string): string | null {
+function createLogoDataUrl(
+  image: HTMLImageElement,
+  background: string,
+): string | null {
   const monochrome = getMonochromeColor(image);
   const output = document.createElement('canvas');
   output.width = image.naturalWidth;
@@ -80,11 +105,17 @@ function createLogoDataUrl(image: HTMLImageElement, background: string): string 
 
   if (monochrome) {
     const backgroundRgb = hexToRgbChannels(background);
-    const contrast = backgroundRgb ? contrastRatio(monochrome, backgroundRgb) : MIN_CONTRAST;
+    const contrast = backgroundRgb
+      ? contrastRatio(monochrome, backgroundRgb)
+      : MIN_CONTRAST;
     if (backgroundRgb && contrast < MIN_CONTRAST) {
       const black = { r: 0, g: 0, b: 0 };
       const white = { r: 255, g: 255, b: 255 };
-      const target = contrastRatio(black, backgroundRgb) >= contrastRatio(white, backgroundRgb) ? black : white;
+      const target =
+        contrastRatio(black, backgroundRgb) >=
+        contrastRatio(white, backgroundRgb)
+          ? black
+          : white;
       const pixels = context.getImageData(0, 0, output.width, output.height);
       for (let index = 0; index < pixels.data.length; index += 4) {
         if (pixels.data[index + 3]! === 0) continue;
@@ -99,7 +130,10 @@ function createLogoDataUrl(image: HTMLImageElement, background: string): string 
   return output.toDataURL('image/png');
 }
 
-export function loadFavicon(url: string, background = DEFAULT_BACKGROUND): Promise<string | null> {
+export function loadFavicon(
+  url: string,
+  background = DEFAULT_BACKGROUND,
+): Promise<string | null> {
   const key = cacheKey(url, background);
   const cached = faviconLoads.get(key);
   if (cached) return cached;
@@ -135,10 +169,16 @@ export function loadFavicon(url: string, background = DEFAULT_BACKGROUND): Promi
   return cachedLoad;
 }
 
-export function preloadFavicon(url: string, background = DEFAULT_BACKGROUND): void {
+export function preloadFavicon(
+  url: string,
+  background = DEFAULT_BACKGROUND,
+): void {
   if (url) void loadFavicon(url, background);
 }
 
-export function getLoadedFavicon(url: string, background = DEFAULT_BACKGROUND): string | null | undefined {
+export function getLoadedFavicon(
+  url: string,
+  background = DEFAULT_BACKGROUND,
+): string | null | undefined {
   return faviconResults.get(cacheKey(url, background));
 }

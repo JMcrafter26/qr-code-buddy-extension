@@ -82,7 +82,9 @@ export default defineBackground(() => {
       ? `&favicon=${encodeURIComponent(tab.favIconUrl)}`
       : '';
     browser.tabs.create({
-      url: browser.runtime.getURL(`/qr.html?url=${encodeURIComponent(url)}${favicon}`),
+      url: browser.runtime.getURL(
+        `/qr.html?url=${encodeURIComponent(url)}${favicon}`,
+      ),
     });
   });
 });
