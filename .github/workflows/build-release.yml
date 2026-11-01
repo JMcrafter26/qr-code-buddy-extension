@@ -93,6 +93,7 @@ jobs:
         with:
           name: qr-code-buddy-extension-${{ steps.version.outputs.version }}
           path: .output/*.zip
+          include-hidden-files: true
           if-no-files-found: error
 
       - name: Create GitHub release
