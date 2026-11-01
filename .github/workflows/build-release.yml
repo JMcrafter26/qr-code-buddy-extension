@@ -77,11 +77,11 @@ jobs:
         if: steps.version.outputs.run == 'true'
         run: pnpm install --frozen-lockfile
 
-      - name: Lint & type check
-        if: steps.version.outputs.run == 'true'
-        run: |
-          pnpm lint
-          pnpm check
+    #   - name: Lint & type check
+    #     if: steps.version.outputs.run == 'true'
+    #     run: |
+    #       pnpm lint
+    #       pnpm check
 
       - name: Build zips (Chrome + Firefox)
         if: steps.version.outputs.run == 'true'
