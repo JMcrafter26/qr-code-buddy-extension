@@ -6,23 +6,39 @@ import { shortenWithBitly } from './providers/bitly';
 
 export type { Shortener };
 
+const SHORTENER_TIMEOUT_MS = 8000;
+
 export async function getShortUrl(
   url: string,
   service: Shortener,
   apiKey = '',
 ): Promise<string> {
-  if (!url) return url;
-  switch (service) {
-    case 'hamr':
-      return shortenWithHamr(url);
-    case 'tinyurl':
-      return shortenWithTinyUrl(url);
-    case 'isgd':
-      return shortenWithIsGd(url);
-    case 'bitly':
-      return shortenWithBitly(url, apiKey);
-    case 'none':
-    default:
-      return url;
+  if (!url || service === 'none') return url;
+  const shortening = (() => {
+    switch (service) {
+      case 'hamr':
+        return shortenWithHamr(url);
+      case 'tinyurl':
+        return shortenWithTinyUrl(url);
+      case 'isgd':
+        return shortenWithIsGd(url);
+      case 'bitly':
+        return shortenWithBitly(url, apiKey);
+      default:
+        return Promise.resolve(url);
+    }
+  })();
+
+  let timeoutId: ReturnType<typeof setTimeout>;
+  const timeout = new Promise<string>((resolve) => {
+    timeoutId = setTimeout(() => resolve(url), SHORTENER_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([shortening, timeout]);
+  } catch {
+    return url;
+  } finally {
+    clearTimeout(timeoutId!);
   }
 }

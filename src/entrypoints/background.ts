@@ -67,7 +67,7 @@ export default defineBackground(() => {
     }
   });
 
-  browser.contextMenus.onClicked.addListener((info) => {
+  browser.contextMenus.onClicked.addListener((info, tab) => {
     let url: string;
     if (info.selectionText) {
       url = info.selectionText as string;
@@ -78,8 +78,13 @@ export default defineBackground(() => {
     } else {
       url = 'https://wikipedia.org';
     }
+    const favicon = tab?.favIconUrl
+      ? `&favicon=${encodeURIComponent(tab.favIconUrl)}`
+      : '';
     browser.tabs.create({
-      url: browser.runtime.getURL(`/qr.html?url=${encodeURIComponent(url)}`),
+      url: browser.runtime.getURL(
+        `/qr.html?url=${encodeURIComponent(url)}${favicon}`,
+      ),
     });
   });
 });

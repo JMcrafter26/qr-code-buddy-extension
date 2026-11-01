@@ -1,0 +1,104 @@
+name: Build & Release
+
+on:
+  # Runs on pushes to main that touch package.json (the version check below
+  # then decides whether the "version" field actually changed)
+  push:
+    branches: [main]
+    paths: [package.json]
+    # Runs for every new version tag, e.g. v2.2.0
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write # needed to create GitHub releases
+
+concurrency:
+  group: build-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Decide whether the rest of the job should run
+      - name: Detect version change
+        id: version
+        env:
+          EVENT: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          NEW=$(jq -r .version package.json)
+          echo "version=$NEW" >> "$GITHUB_OUTPUT"
+
+          if [ "$EVENT" = "workflow_dispatch" ] || [ "$REF_TYPE" = "tag" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Branch push: compare version with the previous commit
+          OLD=$(git show "$BEFORE:package.json" 2>/dev/null | jq -r .version || echo "")
+          echo "Old version: '$OLD' / New version: '$NEW'"
+
+          if [ "$OLD" != "$NEW" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Version unchanged, skipping."
+          fi
+
+      # On tags, make sure the tag matches package.json
+      - name: Verify tag matches package.json version
+        if: steps.version.outputs.run == 'true' && github.ref_type == 'tag'
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          if [ "$TAG" != "${{ steps.version.outputs.version }}" ]; then
+            echo "::error::Tag ($GITHUB_REF_NAME) does not match package.json version (${{ steps.version.outputs.version }})"
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v4
+        if: steps.version.outputs.run == 'true'
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        if: steps.version.outputs.run == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.version.outputs.run == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint & type check
+        if: steps.version.outputs.run == 'true'
+        run: |
+          pnpm lint
+          pnpm check
+
+      - name: Build zips (Chrome + Firefox)
+        if: steps.version.outputs.run == 'true'
+        run: pnpm zip
+
+      - name: Upload artifacts
+        if: steps.version.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: qr-code-buddy-extension-${{ steps.version.outputs.version }}
+          path: .output/*.zip
+          if-no-files-found: error
+
+      - name: Create GitHub release
+        if: steps.version.outputs.run == 'true' && github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: .output/*.zip
+          generate_release_notes: true
+          draft: true

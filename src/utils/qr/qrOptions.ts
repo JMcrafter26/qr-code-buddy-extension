@@ -27,6 +27,7 @@ export function buildQrOptions(
   settings: QrSettings,
   size = 280,
   type: 'canvas' | 'svg' = 'canvas',
+  logoOverride?: string,
 ): QrStylingOptions {
   const opts: QrStylingOptions = {
     width: size,
@@ -46,7 +47,9 @@ export function buildQrOptions(
     },
   };
 
-  if (settings.logo) opts.image = settings.logo;
+  const logo =
+    logoOverride ?? (settings.logoMode === 'custom' ? settings.logo : '');
+  if (logo) opts.image = logo;
 
   return opts;
 }

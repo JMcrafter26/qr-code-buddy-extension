@@ -4,6 +4,7 @@ import type { Shortener } from '../url/shortener/types';
 export type DotType =
   'extra-rounded' | 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square';
 export type ImageFormat = 'png' | 'jpg' | 'webp' | 'svg';
+export type LogoMode = 'none' | 'custom' | 'favicon';
 
 export interface QrSettings {
   type: DotType;
@@ -12,6 +13,7 @@ export interface QrSettings {
   cleanUrl: boolean;
   format: ImageFormat;
   logo: string;
+  logoMode: LogoMode;
   urlShortener: Shortener;
   api_key: string;
 }
@@ -23,6 +25,7 @@ const DEFAULT_SETTINGS: QrSettings = {
   cleanUrl: true,
   format: 'png',
   logo: '',
+  logoMode: 'favicon',
   urlShortener: 'hamr',
   api_key: '',
 };
@@ -34,7 +37,15 @@ export const settingsItem = storage.defineItem<QrSettings>('local:settings', {
 
 // Helpers
 export async function getSettings(): Promise<QrSettings> {
-  return (await settingsItem.getValue()) ?? DEFAULT_SETTINGS;
+  return normalizeSettings(await settingsItem.getValue());
+}
+
+export function normalizeSettings(
+  settings: Partial<QrSettings> | null | undefined,
+): QrSettings {
+  const merged = { ...DEFAULT_SETTINGS, ...(settings ?? {}) };
+  if (!settings?.logoMode && settings?.logo) merged.logoMode = 'custom';
+  return merged;
 }
 
 export async function updateSetting<K extends keyof QrSettings>(

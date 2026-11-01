@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import QrCanvas from '../../components/qr/QrCanvas.svelte';
-  import { settingsItem, DEFAULT_SETTINGS, type QrSettings } from '../../utils/storage/settings';
+  import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { removeTrackersFromUrl } from '../../utils/url/tracker/cleaner';
+  import { preloadFavicon } from '../../utils/qr/favicon';
   import { getShortUrl } from '../../utils/url/shortener';
   import logo from '../../assets/logo.svg';
   import { Download, ExternalLink, Settings2 } from '@lucide/svelte';
@@ -14,6 +15,10 @@
   let qrData = $state('');
   let qrCanvasRef: any = $state(null);
   let isLoadingSettings = $state(true);
+  let faviconUrl = $state('');
+  let isInitialized = $state(false);
+  let isFirstUpdate = true;
+  let isProcessingUrl = $state(false);
 
   // Debounce handling for shortener
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -40,8 +45,10 @@
     const currentUrl = url;
     if (!currentUrl) {
       qrData = '';
+      if (requestId === updateSequence) isProcessingUrl = false;
       return;
     }
+    isProcessingUrl = true;
     try {
       const cleanedUrl = settings.cleanUrl
         ? removeTrackersFromUrl(currentUrl)
@@ -60,6 +67,8 @@
       if (requestId !== updateSequence) return;
       console.error('updateQrData error', e);
       qrData = currentUrl; // fallback
+    } finally {
+      if (requestId === updateSequence) isProcessingUrl = false;
     }
   }
 
@@ -69,11 +78,14 @@
     void settings.cleanUrl;
     void settings.urlShortener;
     void settings.api_key;
+    if (!isInitialized) return;
     const requestId = ++updateSequence;
     if (debounceTimer) clearTimeout(debounceTimer);
+    const delay = isFirstUpdate ? 0 : 300;
+    isFirstUpdate = false;
     debounceTimer = setTimeout(() => {
       updateQrData(requestId);
-    }, 300);
+    }, delay);
   });
 
   onMount(async () => {
@@ -82,10 +94,13 @@
         settingsItem.getValue(),
         browser.tabs.query({ active: true, currentWindow: true }).catch(() => [] as any),
       ]);
-      settings = stored;
-      const tabUrl = (tabs as any)[0]?.url ?? 'https://wikipedia.org';
+      settings = normalizeSettings(stored);
+      const activeTab = (tabs as any)[0];
+      faviconUrl = activeTab?.favIconUrl ?? '';
+      if (settings.logoMode === 'favicon') preloadFavicon(faviconUrl, settings.background);
+      const tabUrl = activeTab?.url ?? 'https://wikipedia.org';
       url = tabUrl;
-      updateQrData();
+      isInitialized = true;
     } catch (e) {
       console.error(e);
     } finally {
@@ -125,7 +140,10 @@
   }
 
   function openQrPage() {
-    browser.tabs.create({ url: browser.runtime.getURL('/qr.html') + `?url=${encodeURIComponent(url)}` });
+    const favicon = settings.logoMode === 'favicon' && faviconUrl
+      ? `&favicon=${encodeURIComponent(faviconUrl)}`
+      : '';
+    browser.tabs.create({ url: browser.runtime.getURL('/qr.html') + `?url=${encodeURIComponent(url)}${favicon}` });
   }
 </script>
 
@@ -149,7 +167,14 @@
 
     <!-- QR Preview -->
     <div class="rounded-xl overflow-hidden bg-base-200 p-2">
-      <QrCanvas bind:this={qrCanvasRef} data={qrData} {settings} size={280} />
+      <QrCanvas
+        bind:this={qrCanvasRef}
+        data={qrData}
+        {settings}
+        {faviconUrl}
+        isProcessing={isProcessingUrl}
+        size={280}
+      />
     </div>
 
     <!-- Tools -->

@@ -2,9 +2,8 @@
   import { onMount } from 'svelte';
   import { fly } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
-  import { settingsItem, DEFAULT_SETTINGS, type QrSettings } from '../../utils/storage/settings';
-  import type { Shortener } from '../../utils/url/shortener/types';
-  import { PartyPopper, SwatchBook, Link, ChevronsUp, ChevronRight, ChevronLeft } from '@lucide/svelte';
+  import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
+  import { PartyPopper, SwatchBook, ChevronsUp, ChevronRight, ChevronLeft } from '@lucide/svelte';
 
   let step = $state(1);
   let direction = $state(1); // 1 = forward, -1 = backward
@@ -15,7 +14,7 @@
   let isLoaded = $state(false);
 
   onMount(async () => {
-    settings = await settingsItem.getValue();
+    settings = normalizeSettings(await settingsItem.getValue());
     isLoaded = true;
   });
 
@@ -70,6 +69,7 @@
   $effect(() => {
     void settings.urlShortener;
     void settings.cleanUrl;
+    void settings.logoMode;
     void settings.api_key;
     if (!isLoaded) return;
     // Request host permission for network shorteners
@@ -164,8 +164,8 @@
                 <div class="form-control">
                   <label class="label"><span class="label-text font-medium">URL shortener</span></label>
                   <select class="select select-bordered select-sm" bind:value={settings.urlShortener}>
-                    <option value="none">None (recommended)</option>
-                    <option value="hamr" selected>hamr - local, no network</option>
+                    <option value="none">None</option>
+                    <option value="hamr" selected>hamr (local, recommended)</option>
                     <option value="tinyurl">TinyURL</option>
                     <option value="isgd">is.gd</option>
                     <option value="bitly">Bitly (needs API key)</option>
@@ -190,15 +190,27 @@
             {:else if step === 3}
               <div class="space-y-4">
                 <h2 class="text-xl font-bold">Features</h2>
+                <label class="flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition {settings.logoMode === 'favicon' ? 'border-primary bg-primary/5' : 'border-base-300'}">
+                  <input
+                    type="checkbox"
+                    class="toggle toggle-primary toggle-sm"
+                    checked={settings.logoMode === 'favicon'}
+                    onchange={(event) => (settings.logoMode = (event.currentTarget as HTMLInputElement).checked ? 'favicon' : 'none')}
+                  />
+                  <span class="text-sm">
+                    <span class="block font-medium">Use the current tab icon as the QR logo</span>
+                    <span class="block text-xs opacity-60">Enabled by default. No extra permission or external favicon service is used.</span>
+                  </span>
+                </label>
                 <div class="grid grid-cols-1 gap-3 text-sm">
                   <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><SwatchBook /></span>
                     <div><b>Style:</b> 6 dot types, colors, logo, SVG/PNG/WebP/JPG</div>
                   </div>
-                  <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
+                  <!-- <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><Link /></span>
                     <div><b>Data types:</b> URL, text, email, phone, SMS, WiFi, geo, event</div>
-                  </div>
+                  </div> -->
                   <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><ChevronsUp /></span>
                     <div><b>Fast &amp; offline:</b> Instant popup, context menu, no server.</div>

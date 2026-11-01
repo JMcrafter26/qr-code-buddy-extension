@@ -2,6 +2,7 @@
 	let {alwaysShow = false} = $props();
     import { Heart, Mail } from "@lucide/svelte";
 	import { setRated, shouldShowRateBanner, increaseUsageCount } from "@/utils/storage/rating";
+	import { detectBrowser } from "@/utils/browser/detect";
 
 	const storeLinks = {
 		chrome: 'https://chromewebstore.google.com/detail/qr-code-buddy/ekmddmgodfefpfpgglaiphhelggfpife/reviews',
@@ -18,10 +19,13 @@
 
 	$effect(() => {
         // detect browser and set storeUrl accordingly
-		const ua = navigator.userAgent;
-		if (ua.includes('Firefox')) storeUrl = storeLinks.firefox;
-		else if (ua.includes('Edg/')) storeUrl = storeLinks.edge;
-		else if (ua.includes('OPR/')) storeUrl = storeLinks.opera;
+		const browser = detectBrowser();
+		if (browser in storeLinks) {
+			storeUrl = storeLinks[browser as keyof typeof storeLinks];
+		} else {
+			storeUrl = storeLinks.chrome;
+		}
+		
 
 		void (async () => {
 			await increaseUsageCount();
