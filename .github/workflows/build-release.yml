@@ -9,6 +9,11 @@ on:
     # Runs for every new version tag, e.g. v2.2.0
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      create_release:
+        description: "Create a draft release with the built zips"
+        type: boolean
+        default: false
 
 permissions:
   contents: write # needed to create GitHub releases
@@ -97,9 +102,12 @@ jobs:
           if-no-files-found: error
 
       - name: Create GitHub release
-        if: steps.version.outputs.run == 'true' && github.ref_type == 'tag'
+        if: steps.version.outputs.run == 'true' && (github.ref_type == 'tag' || inputs.create_release)
         uses: softprops/action-gh-release@v2
         with:
+          # Tag builds use the pushed tag; manual runs use v<package.json version>
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', steps.version.outputs.version) }}
+          target_commitish: ${{ github.sha }}
           files: .output/*.zip
           generate_release_notes: true
           draft: true
