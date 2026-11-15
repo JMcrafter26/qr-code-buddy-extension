@@ -64,11 +64,11 @@
     };
     const host = hostMap[settings.urlShortener];
     if (host) {
-      // eslint-disable-next-line no-undef
+
       browser.permissions
         .contains({ origins: [host] })
         .then((has) => {
-          // eslint-disable-next-line no-undef
+    
           if (!has) return browser.permissions.request({ origins: [host] });
           return true;
         })
@@ -103,9 +103,9 @@
     if (!importExport) return;
     try {
       const parsed = JSON.parse(importExport);
-      // eslint-disable-next-line no-undef
+
       await browser.storage.local.clear();
-      // eslint-disable-next-line no-undef
+
       await browser.storage.local.set(parsed);
       const updated = await settingsItem.getValue();
       settings = updated;

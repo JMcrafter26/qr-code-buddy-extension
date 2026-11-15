@@ -74,7 +74,6 @@
       displayQrData = processedUrl;
     } catch (e) {
       if (requestId !== updateSequence) return;
-      // eslint-disable-next-line no-console
       console.error('updateQr error', e);
       displayQrData = currentInput;
     } finally {

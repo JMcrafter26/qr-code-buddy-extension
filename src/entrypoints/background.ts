@@ -39,7 +39,6 @@ export default defineBackground(() => {
             active: true,
           });
         } catch (e) {
-          // eslint-disable-next-line no-console
           console.error('welcome open failed', e);
         }
       }

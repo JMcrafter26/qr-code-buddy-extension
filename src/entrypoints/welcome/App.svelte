@@ -54,7 +54,7 @@
     save();
     window.close();
     setTimeout(() => {
-      // eslint-disable-next-line no-undef
+
       try { browser.tabs.getCurrent().then((t) => { if (t?.id) browser.tabs.remove(t.id); }); } catch {}
     }, 100);
   }
@@ -83,11 +83,11 @@
     };
     const host = hostMap[settings.urlShortener];
     if (host) {
-      // eslint-disable-next-line no-undef
+
       browser.permissions
         .contains({ origins: [host] })
         .then((has) => {
-          // eslint-disable-next-line no-undef
+    
           if (!has) return browser.permissions.request({ origins: [host] });
           return true;
         })

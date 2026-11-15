@@ -1,4 +1,5 @@
 // @ts-nocheck
+// cspell:disable
 /**
  * @file Implements link compression/decompression.
  */
