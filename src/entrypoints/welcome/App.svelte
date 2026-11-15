@@ -4,6 +4,7 @@
   import { cubicOut } from 'svelte/easing';
   import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { PartyPopper, SwatchBook, ChevronsUp, ChevronRight, ChevronLeft } from '@lucide/svelte';
+  import { i18n } from '#i18n';
 
   let step = $state(1);
   let direction = $state(1); // 1 = forward, -1 = backward
@@ -88,7 +89,8 @@
         })
         .then((granted) => {
           if (granted === false) {
-            permissionError = `Permission for ${host} denied. Shortener will fallback to original URL.`;
+            // permissionError = `Permission for ${host} denied. Shortener will fallback to original URL.`;
+            permissionError = `${i18n.t('welcome.step2.permissionDenied', { host })}`;
             // Optionally revert to none
           } else {
             permissionError = null;
@@ -111,10 +113,11 @@
       <div class="flex items-center gap-3 mb-2">
         <img src="/icon-48.png" alt="" class="w-10 h-10 rounded" />
         <div>
-          <h1 class="font-bold leading-none">QR Code Buddy</h1>
+          <h1 class="font-bold leading-none">{i18n.t('app.title')}</h1>
           <!-- <p class="text-xs opacity-60">Welcome — 3 quick steps</p> -->
         </div>
-        <div class="ml-auto text-xs opacity-50">Step {step}/{total}</div>
+        <!-- <div class="ml-auto text-xs opacity-50">Step {step}/{total}</div> -->
+        <div class="ml-auto text-xs opacity-50">{i18n.t('welcome.step', { step, total })}</div>
       </div>
 
       <!-- Dots pagination -->
@@ -123,7 +126,7 @@
           <button
             class="w-2 h-2 rounded-full transition-all {i + 1 === step ? 'bg-primary w-6' : 'bg-base-300'}"
             onclick={() => goToStep(i + 1)}
-            aria-label="Go to step {i+1}"
+            aria-label={i18n.t('welcome.goToStep', { step: i + 1 })}
           ></button>
         {/each}
       </div>
@@ -139,57 +142,61 @@
             {#if step === 1}
               <div class="space-y-4">
                 <PartyPopper class="w-12 h-12 text-primary" />
-                <h2 class="text-xl font-bold">Thanks for installing</h2>
-                <p class="text-sm opacity-70">Generate QR codes offline: no tracking, no analytics. Everything stays on your device by default.</p>
+                <h2 class="text-xl font-bold">{i18n.t('welcome.step1.title')}</h2>
+                <p class="text-sm opacity-70">{i18n.t('welcome.step1.description')}</p>
                 <ul class="list-disc list-inside text-sm space-y-1 opacity-80">
-                  <li>Click the toolbar icon for instant QR of current tab</li>
-                  <li>Right-click any link/selection → Generate QR</li>
-                  <li>Customize colors, logo, and dot style</li>
+                  <li>{i18n.t('welcome.step1.listItem1')}</li>
+                  <li>{i18n.t('welcome.step1.listItem2')}</li>
+                  <li>{i18n.t('welcome.step1.listItem3')}</li>
                 </ul>
-                <p class="text-xs opacity-50">See <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/blob/main/privacy-policy.md" target="_blank" class="link">Privacy Policy</a></p>
+                <p class="text-xs opacity-50">
+                  {i18n.t('welcome.step1.seePrivacyPolicy')}
+                  <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/blob/main/privacy-policy.md" target="_blank" class="link">{i18n.t('welcome.step1.privacyPolicy')}</a>
+                </p>
               </div>
             {:else if step === 2}
               <div class="space-y-4">
-                <h2 class="text-xl font-bold">URL handling</h2>
-                <p class="text-sm opacity-70">Choose how URLs are prepared before QR encoding.</p>
+                <h2 class="text-xl font-bold">{i18n.t('welcome.step2.title')}</h2>
+                <p class="text-sm opacity-70">{i18n.t('welcome.step2.description')}</p>
 
                 <label class="flex items-center gap-3 p-3 rounded-lg border {settings.cleanUrl ? 'border-primary bg-primary/5' : 'border-base-200'} cursor-pointer">
                   <input type="checkbox" class="toggle toggle-primary toggle-sm" bind:checked={settings.cleanUrl} />
                   <div class="text-sm">
-                    <div class="font-medium">Clean tracking params</div>
-                    <div class="text-xs opacity-60">Remove utm_, fbclid, gclid, etc.</div>
+                    <div class="font-medium">{i18n.t('welcome.step2.cleanUrlLabel')}</div>
+                    <div class="text-xs opacity-60">{i18n.t('welcome.step2.cleanUrlDescription')}</div>
                   </div>
                 </label>
 
                 <div class="form-control">
-                  <label class="label"><span class="label-text font-medium">URL shortener</span></label>
+                  <label class="label"><span class="label-text font-medium">{i18n.t('welcome.step2.urlShortenerLabel')}</span></label>
                   <select class="select select-bordered select-sm" bind:value={settings.urlShortener}>
-                    <option value="none">None</option>
-                    <option value="hamr" selected>hamr (local, recommended)</option>
-                    <option value="tinyurl">TinyURL</option>
-                    <option value="isgd">is.gd</option>
-                    <option value="bitly">Bitly (needs API key)</option>
+                    <option value="none">{i18n.t('welcome.step2.urlShortener.none.name')}</option>
+                    <option value="hamr" selected>{i18n.t('welcome.step2.urlShortener.hamr')}</option>
+                    <option value="tinyurl">{i18n.t('welcome.step2.urlShortener.tinyurl')}</option>
+                    <option value="isgd">{i18n.t('welcome.step2.urlShortener.isgd')}</option>
+                    <option value="bitly">{i18n.t('welcome.step2.urlShortener.bitly')}</option>
                   </select>
                   <p class="text-xs opacity-60 mt-1">
-                    {#if settings.urlShortener === 'none'}No request leaves your browser.
-                    {:else if settings.urlShortener === 'hamr'}Local compression, does not send data to any server.
-                    {:else}External service will see the URL. Only enabled if you choose it.{/if}
+                    {#if settings.urlShortener === 'none'}{i18n.t('welcome.step2.urlShortener.none.description')}
+                    {:else if settings.urlShortener === 'hamr'}{i18n.t('welcome.step2.urlShortener.hamrDescription')}
+                    {:else}{i18n.t('welcome.step2.urlShortener.defaultDescription')}{/if}
                   </p>
                   {#if settings.urlShortener === 'bitly'}
-                    <input type="text" placeholder="Bitly API key" class="input input-bordered input-sm mt-2" bind:value={settings.api_key} />
-                    {#if !settings.api_key}<p class="text-xs text-warning mt-1">API key required for Bitly</p>{/if}
+                    <input type="text" placeholder="{i18n.t('welcome.step2.urlShortener.bitlyPlaceholder')}" class="input input-bordered input-sm mt-2" bind:value={settings.api_key} />
+                    <!-- {#if !settings.api_key}<p class="text-xs text-warning mt-1">API key required for Bitly</p>{/if} -->
+                    {#if !settings.api_key}<p class="text-xs text-warning mt-1">{i18n.t('welcome.step2.urlShortener.bitlyDescription')}</p>{/if}
                   {/if}
                   {#if permissionError}
                     <div class="alert alert-warning py-2 text-xs mt-2">{permissionError}</div>
                   {/if}
                 </div>
                 <div class="alert py-2 text-xs mt-5">
-                  Settings are saved automatically. You can change them anytime in Settings.
+                  {i18n.t('welcome.step2.autoSaveDescription')}
                 </div>
               </div>
             {:else if step === 3}
               <div class="space-y-4">
-                <h2 class="text-xl font-bold">Features</h2>
+                <h2 class="text-xl font-bold">{i18n.t('welcome.step3.title')}</h2>
                 <label class="flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition {settings.logoMode === 'favicon' ? 'border-primary bg-primary/5' : 'border-base-300'}">
                   <input
                     type="checkbox"
@@ -198,14 +205,14 @@
                     onchange={(event) => (settings.logoMode = (event.currentTarget as HTMLInputElement).checked ? 'favicon' : 'none')}
                   />
                   <span class="text-sm">
-                    <span class="block font-medium">Use the current tab icon as the QR logo</span>
-                    <span class="block text-xs opacity-60">Enabled by default. No extra permission or external favicon service is used.</span>
+                    <span class="block font-medium">{i18n.t('welcome.step3.faviconLabel')}</span>
+                    <span class="block text-xs opacity-60">{i18n.t('welcome.step3.faviconDescription')}</span>
                   </span>
                 </label>
                 <div class="grid grid-cols-1 gap-3 text-sm">
                   <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><SwatchBook /></span>
-                    <div><b>Style:</b> 6 dot types, colors, logo, SVG/PNG/WebP/JPG</div>
+                    <div><b>{i18n.t('welcome.step3.styleLabel')}:</b> {i18n.t('welcome.step3.styleDescription')}</div>
                   </div>
                   <!-- <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><Link /></span>
@@ -213,11 +220,11 @@
                   </div> -->
                   <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><ChevronsUp /></span>
-                    <div><b>Fast &amp; offline:</b> Instant popup, context menu, no server.</div>
+                    <div><b>{i18n.t('welcome.step3.fastOfflineLabel')}:</b> {i18n.t('welcome.step3.fastOfflineDescription')}</div>
                   </div>
                 </div>
                 <div class="alert py-2 text-xs">
-                  That's it! You are now ready to use QR Code Buddy. Click "Done" to close this window and start generating QR codes.
+                  {i18n.t('welcome.step3.completeDescription')}
                 </div>
               </div>
             {/if}
@@ -230,10 +237,10 @@
         <button class="btn btn-ghost btn-sm" onclick={prev} disabled={step===1}><ChevronLeft /></button>
         <div class="flex gap-2">
           {#if step < total}
-            <button class="btn btn-primary btn-sm" onclick={next}>Next <ChevronRight /></button>
+            <button class="btn btn-primary btn-sm" onclick={next}>{i18n.t('welcome.navigation.next')} <ChevronRight /></button>
           {:else}
-            <button class="btn btn-ghost btn-sm" onclick={openSettings}>Settings</button>
-            <button class="btn btn-primary btn-sm" onclick={openQRPage}>Done</button>
+            <button class="btn btn-ghost btn-sm" onclick={openSettings}>{i18n.t('app.settings.title')}</button>
+            <button class="btn btn-primary btn-sm" onclick={openQRPage}>{i18n.t('welcome.navigation.done')}</button>
           {/if}
         </div>
       </div>
@@ -242,6 +249,6 @@
 
   <!-- version footer -->
   <div class="absolute bottom-2 text-xs opacity-50">
-    v{appVersion} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">Release Notes</a>
+    v{appVersion} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">{i18n.t('welcome.releaseNotes')}</a>
   </div>
 </div>

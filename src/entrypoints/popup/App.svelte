@@ -132,7 +132,7 @@
       } catch {}
       if (qrCanvasRef?.download) qrCanvasRef.download(hostname ? `qr-${hostname}` : 'qr-code');
     } catch (e: any) {
-      alert(e?.message || 'Failed to download QR - URL may be too long');
+      alert(e?.message || i18n.t('popup.downloadError'));
     }
   }
 
@@ -154,13 +154,13 @@
     <div class="flex items-center justify-between w-full">
       <div class="flex items-center gap-2">
         <img src={logo} alt="" class="w-8 h-8 rounded" />
-        <h1 class="font-bold text-lg leading-none">QR Code Buddy</h1>
+        <h1 class="font-bold text-lg leading-none">{i18n.t('app.title')}</h1>
       </div>
       <div class="flex items-center gap-2">
-        <button class="btn btn-ghost btn-circle btn-sm" onclick={openQrPage} title="Open QR page">
+        <button class="btn btn-ghost btn-circle btn-sm" onclick={openQrPage} title="{i18n.t('popup.openQrPage')}">
           <ExternalLink class="w-5 h-5" />
         </button>
-      <button class="btn btn-ghost btn-circle btn-sm" onclick={openOptions} title="Settings">
+      <button class="btn btn-ghost btn-circle btn-sm" onclick={openOptions} title="{i18n.t('app.settings.title')}">
         <Settings2 class="w-5 h-5" />
       </button>
       </div>
@@ -183,11 +183,11 @@
       <input
         type="text"
         class="input input-bordered join-item flex-1 text-sm"
-        placeholder="Enter URL"
+        placeholder="{i18n.t('popup.enterUrl')}"
         value={url}
         oninput={handleInput}
       />
-      <button class="btn btn-square join-item" onclick={handleDownload} title="Download QR">
+      <button class="btn btn-square join-item" onclick={handleDownload} title="{i18n.t('popup.downloadQr')}">
         <Download class="w-5 h-5" />
       </button>
     </div>

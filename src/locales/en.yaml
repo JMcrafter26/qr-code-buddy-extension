@@ -1,2 +1,60 @@
-# <srcDir>/locales/en.json
 helloWorld: Hello world!
+app:
+  title: QR Code Buddy
+  settings:
+    title: Settings
+welcome:
+  step: Step {step}/{total}
+  goToStep: Go to step {step}
+  step1:
+    title: Thanks for installing
+    description: >-
+      Generate QR codes offline: no tracking, no analytics. Everything stays on
+      your device by default.
+    listItem1: Click the toolbar icon for instant QR of current tab
+    listItem2: Right-click any link/selection → Generate QR
+    listItem3: Customize colors, logo, and dot style
+    seePrivacyPolicy: See
+    privacyPolicy: Privacy Policy
+  step2:
+    title: URL handling
+    description: Choose how URLs are prepared before QR encoding.
+    cleanUrlLabel: Clean tracking params
+    cleanUrlDescription: Remove utm_, fbclid, gclid, etc.
+    urlShortenerLabel: URL shortener
+    urlShortener:
+      hamr: amr (local, recommended)
+      tinyurl: TinyURL
+      isgd: is.gd
+      bitly: Bitly (needs API key)
+      hamrDescription: Local compression, does not send data to any server.
+      defaultDescription: External service will see the URL. Only enabled if you choose it.
+      bitlyPlaceholder: Bitly API key
+      bitlyDescription: API key required for Bitly
+      none:
+        name: None
+        description: No request leaves your browser.
+    autoSaveDescription: Settings are saved automatically. You can change them anytime in Settings.
+    permissionDenied: Permission for {host} denied. Shortener will fallback to original URL.
+  step3:
+    title: Features
+    faviconLabel: Use the current tab icon as the QR logo
+    faviconDescription: >-
+      Enabled by default. No extra permission or external favicon service is
+      used.
+    styleLabel: Style
+    styleDescription: 6 dot types, colors, logo, SVG/PNG/WebP/JPG
+    fastOfflineLabel: Fast & offline
+    fastOfflineDescription: Instant popup, context menu, no server.
+    completeDescription: >-
+      That's it! You are now ready to use QR Code Buddy. Click "Done" to close
+      this window and start generating QR codes.
+  navigation:
+    next: Next
+    done: Done
+  releaseNotes: Release Notes
+popup:
+  openQrPage: Open QR Page
+  enterUrl: Enter URL
+  downloadQr: Download QR Code
+  downloadError: Failed to download QR - URL may be too long
