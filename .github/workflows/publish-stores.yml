@@ -1,0 +1,140 @@
+name: Publish to Extension Stores
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to publish (leave empty for latest release)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-stores-${{ github.event.release.tag_name || inputs.release_tag || 'latest' }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    # Always allow manual runs; for release events, skip prereleases
+    if: ${{ github.event_name == 'workflow_dispatch' || !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Resolve target release tag
+        id: target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_TAG: ${{ github.event.release.tag_name }}
+          INPUT_TAG: ${{ inputs.release_tag }}
+        run: |
+          if [ -n "$EVENT_TAG" ]; then
+            TAG="$EVENT_TAG"
+          elif [ -n "$INPUT_TAG" ]; then
+            TAG="$INPUT_TAG"
+          else
+            TAG=$(gh release view --repo "$REPO" --json tagName -q .tagName)
+          fi
+
+          if [ -z "$TAG" ]; then
+            echo "::error::Could not determine a release tag to publish."
+            exit 1
+          fi
+
+          echo "Resolved release tag: $TAG"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout release commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.tag }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download release zips (or build from commit if missing)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.target.outputs.tag }}
+        run: |
+          mkdir -p .output
+          gh release download "$TAG" --pattern "*.zip" --dir .output || true
+
+          if [ -z "$(ls -A .output/*.zip 2>/dev/null)" ]; then
+            echo "No zip assets found on release $TAG — building from commit..."
+            pnpm zip
+          else
+            echo "Using zip assets attached to release $TAG:"
+            ls -lh .output/*.zip
+          fi
+
+      - name: Submit to browser stores
+        env:
+          # Pass secrets into the shell first so we only export non-empty ones
+          _CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          _CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          _CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          _CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          _CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+          _FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+          _FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          _FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+
+          _EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+          _EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
+          _EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
+
+          _OPERA_PACKAGE_ID: ${{ secrets.OPERA_PACKAGE_ID }}
+          _OPERA_SESSION_ID: ${{ secrets.OPERA_SESSION_ID }}
+        run: |
+          ARGS=()
+
+          if [ -n "$_CHROME_EXTENSION_ID" ]; then
+            export CHROME_EXTENSION_ID="$_CHROME_EXTENSION_ID"
+            export CHROME_PUBLISHER_ID="$_CHROME_PUBLISHER_ID"
+            export CHROME_CLIENT_ID="$_CHROME_CLIENT_ID"
+            export CHROME_CLIENT_SECRET="$_CHROME_CLIENT_SECRET"
+            export CHROME_REFRESH_TOKEN="$_CHROME_REFRESH_TOKEN"
+            ARGS+=(--chrome-zip .output/*-chrome.zip)
+          fi
+
+          if [ -n "$_FIREFOX_EXTENSION_ID" ]; then
+            export FIREFOX_EXTENSION_ID="$_FIREFOX_EXTENSION_ID"
+            export FIREFOX_JWT_ISSUER="$_FIREFOX_JWT_ISSUER"
+            export FIREFOX_JWT_SECRET="$_FIREFOX_JWT_SECRET"
+            ARGS+=(--firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip)
+          fi
+
+          if [ -n "$_EDGE_PRODUCT_ID" ]; then
+            export EDGE_PRODUCT_ID="$_EDGE_PRODUCT_ID"
+            export EDGE_CLIENT_ID="$_EDGE_CLIENT_ID"
+            export EDGE_API_KEY="$_EDGE_API_KEY"
+            ARGS+=(--edge-zip .output/*-chrome.zip)
+          fi
+
+          if [ -n "$_OPERA_PACKAGE_ID" ]; then
+            export OPERA_PACKAGE_ID="$_OPERA_PACKAGE_ID"
+            export OPERA_SESSION_ID="$_OPERA_SESSION_ID"
+            ARGS+=(--opera-zip .output/*-chrome.zip)
+          fi
+
+          if [ ${#ARGS[@]} -eq 0 ]; then
+            echo "::error::No store secrets configured. Add at least one store's credentials to GitHub Actions secrets."
+            exit 1
+          fi
+
+          pnpm wxt submit "${ARGS[@]}"

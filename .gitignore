@@ -397,4 +397,10 @@ Backups.backupdb
 .MobileBackups.trash
 MobileBackups.trash
 tmbootpicker.efi
-src/utils/url/tracker/clearurls.generated.ts
+
+*.dev.*
+*.dev
+*.temp
+*.temp.*
+*.tmp
+*.tmp.*
