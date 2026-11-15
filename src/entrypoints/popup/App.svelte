@@ -154,13 +154,13 @@
     <div class="flex items-center justify-between w-full">
       <div class="flex items-center gap-2">
         <img src={logo} alt="" class="w-8 h-8 rounded" />
-        <h1 class="font-bold text-lg leading-none">{i18n.t('app.title')}</h1>
+        <h1 class="font-bold text-lg leading-none">{i18n.t('common.appName')}</h1>
       </div>
       <div class="flex items-center gap-2">
         <button class="btn btn-ghost btn-circle btn-sm" onclick={openQrPage} title="{i18n.t('popup.openQrPage')}">
           <ExternalLink class="w-5 h-5" />
         </button>
-      <button class="btn btn-ghost btn-circle btn-sm" onclick={openOptions} title="{i18n.t('app.settings.title')}">
+      <button class="btn btn-ghost btn-circle btn-sm" onclick={openOptions} title="{i18n.t('common.actions.settings')}">
         <Settings2 class="w-5 h-5" />
       </button>
       </div>

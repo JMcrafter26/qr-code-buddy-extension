@@ -90,7 +90,7 @@
         .then((granted) => {
           if (granted === false) {
             // permissionError = `Permission for ${host} denied. Shortener will fallback to original URL.`;
-            permissionError = `${i18n.t('welcome.step2.permissionDenied', { host })}`;
+            permissionError = `${i18n.t('welcome.urlHandling.permissionDenied', { host })}`;
             // Optionally revert to none
           } else {
             permissionError = null;
@@ -113,11 +113,11 @@
       <div class="flex items-center gap-3 mb-2">
         <img src="/icon-48.png" alt="" class="w-10 h-10 rounded" />
         <div>
-          <h1 class="font-bold leading-none">{i18n.t('app.title')}</h1>
+          <h1 class="font-bold leading-none">{i18n.t('common.appName')}</h1>
           <!-- <p class="text-xs opacity-60">Welcome — 3 quick steps</p> -->
         </div>
         <!-- <div class="ml-auto text-xs opacity-50">Step {step}/{total}</div> -->
-        <div class="ml-auto text-xs opacity-50">{i18n.t('welcome.step', { step, total })}</div>
+        <div class="ml-auto text-xs opacity-50">{i18n.t('common.navigation.step', { step, total })}</div>
       </div>
 
       <!-- Dots pagination -->
@@ -126,7 +126,7 @@
           <button
             class="w-2 h-2 rounded-full transition-all {i + 1 === step ? 'bg-primary w-6' : 'bg-base-300'}"
             onclick={() => goToStep(i + 1)}
-            aria-label={i18n.t('welcome.goToStep', { step: i + 1 })}
+            aria-label={i18n.t('common.navigation.goToStep', { step: i + 1 })}
           ></button>
         {/each}
       </div>
@@ -142,61 +142,61 @@
             {#if step === 1}
               <div class="space-y-4">
                 <PartyPopper class="w-12 h-12 text-primary" />
-                <h2 class="text-xl font-bold">{i18n.t('welcome.step1.title')}</h2>
-                <p class="text-sm opacity-70">{i18n.t('welcome.step1.description')}</p>
+                <h2 class="text-xl font-bold">{i18n.t('welcome.intro.title')}</h2>
+                <p class="text-sm opacity-70">{i18n.t('welcome.intro.description')}</p>
                 <ul class="list-disc list-inside text-sm space-y-1 opacity-80">
-                  <li>{i18n.t('welcome.step1.listItem1')}</li>
-                  <li>{i18n.t('welcome.step1.listItem2')}</li>
-                  <li>{i18n.t('welcome.step1.listItem3')}</li>
+                  <li>{i18n.t('welcome.intro.benefits.instantQr')}</li>
+                  <li>{i18n.t('welcome.intro.benefits.contextMenu')}</li>
+                  <li>{i18n.t('welcome.intro.benefits.customization')}</li>
                 </ul>
                 <p class="text-xs opacity-50">
-                  {i18n.t('welcome.step1.seePrivacyPolicy')}
-                  <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/blob/main/privacy-policy.md" target="_blank" class="link">{i18n.t('welcome.step1.privacyPolicy')}</a>
+                  {i18n.t('common.links.see')}
+                  <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/blob/main/privacy-policy.md" target="_blank" class="link">{i18n.t('common.links.privacyPolicy')}</a>
                 </p>
               </div>
             {:else if step === 2}
               <div class="space-y-4">
-                <h2 class="text-xl font-bold">{i18n.t('welcome.step2.title')}</h2>
-                <p class="text-sm opacity-70">{i18n.t('welcome.step2.description')}</p>
+                <h2 class="text-xl font-bold">{i18n.t('welcome.urlHandling.title')}</h2>
+                <p class="text-sm opacity-70">{i18n.t('welcome.urlHandling.description')}</p>
 
                 <label class="flex items-center gap-3 p-3 rounded-lg border {settings.cleanUrl ? 'border-primary bg-primary/5' : 'border-base-200'} cursor-pointer">
                   <input type="checkbox" class="toggle toggle-primary toggle-sm" bind:checked={settings.cleanUrl} />
                   <div class="text-sm">
-                    <div class="font-medium">{i18n.t('welcome.step2.cleanUrlLabel')}</div>
-                    <div class="text-xs opacity-60">{i18n.t('welcome.step2.cleanUrlDescription')}</div>
+                    <div class="font-medium">{i18n.t('welcome.urlHandling.fields.tracking.label')}</div>
+                    <div class="text-xs opacity-60">{i18n.t('welcome.urlHandling.fields.tracking.description')}</div>
                   </div>
                 </label>
 
                 <div class="form-control">
-                  <label class="label"><span class="label-text font-medium">{i18n.t('welcome.step2.urlShortenerLabel')}</span></label>
+                  <label class="label"><span class="label-text font-medium">{i18n.t('welcome.urlHandling.fields.shortener.label')}</span></label>
                   <select class="select select-bordered select-sm" bind:value={settings.urlShortener}>
-                    <option value="none">{i18n.t('welcome.step2.urlShortener.none.name')}</option>
-                    <option value="hamr" selected>{i18n.t('welcome.step2.urlShortener.hamr')}</option>
-                    <option value="tinyurl">{i18n.t('welcome.step2.urlShortener.tinyurl')}</option>
-                    <option value="isgd">{i18n.t('welcome.step2.urlShortener.isgd')}</option>
-                    <option value="bitly">{i18n.t('welcome.step2.urlShortener.bitly')}</option>
+                    <option value="none">{i18n.t('welcome.urlHandling.fields.shortener.options.none.label')}</option>
+                    <option value="hamr" selected>{i18n.t('welcome.urlHandling.fields.shortener.options.hamr.label')}</option>
+                    <option value="tinyurl">{i18n.t('welcome.urlHandling.fields.shortener.options.tinyurl.label')}</option>
+                    <option value="isgd">{i18n.t('welcome.urlHandling.fields.shortener.options.isgd.label')}</option>
+                    <option value="bitly">{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.label')}</option>
                   </select>
                   <p class="text-xs opacity-60 mt-1">
-                    {#if settings.urlShortener === 'none'}{i18n.t('welcome.step2.urlShortener.none.description')}
-                    {:else if settings.urlShortener === 'hamr'}{i18n.t('welcome.step2.urlShortener.hamrDescription')}
-                    {:else}{i18n.t('welcome.step2.urlShortener.defaultDescription')}{/if}
+                    {#if settings.urlShortener === 'none'}{i18n.t('welcome.urlHandling.fields.shortener.options.none.description')}
+                    {:else if settings.urlShortener === 'hamr'}{i18n.t('welcome.urlHandling.fields.shortener.options.hamr.description')}
+                    {:else}{i18n.t('welcome.urlHandling.fields.shortener.externalDescription')}{/if}
                   </p>
                   {#if settings.urlShortener === 'bitly'}
-                    <input type="text" placeholder="{i18n.t('welcome.step2.urlShortener.bitlyPlaceholder')}" class="input input-bordered input-sm mt-2" bind:value={settings.api_key} />
+                    <input type="text" placeholder="{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.apiKeyPlaceholder')}" class="input input-bordered input-sm mt-2" bind:value={settings.api_key} />
                     <!-- {#if !settings.api_key}<p class="text-xs text-warning mt-1">API key required for Bitly</p>{/if} -->
-                    {#if !settings.api_key}<p class="text-xs text-warning mt-1">{i18n.t('welcome.step2.urlShortener.bitlyDescription')}</p>{/if}
+                    {#if !settings.api_key}<p class="text-xs text-warning mt-1">{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.apiKeyRequired')}</p>{/if}
                   {/if}
                   {#if permissionError}
                     <div class="alert alert-warning py-2 text-xs mt-2">{permissionError}</div>
                   {/if}
                 </div>
                 <div class="alert py-2 text-xs mt-5">
-                  {i18n.t('welcome.step2.autoSaveDescription')}
+                  {i18n.t('welcome.urlHandling.autoSaveDescription')}
                 </div>
               </div>
             {:else if step === 3}
               <div class="space-y-4">
-                <h2 class="text-xl font-bold">{i18n.t('welcome.step3.title')}</h2>
+                <h2 class="text-xl font-bold">{i18n.t('welcome.features.title')}</h2>
                 <label class="flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition {settings.logoMode === 'favicon' ? 'border-primary bg-primary/5' : 'border-base-300'}">
                   <input
                     type="checkbox"
@@ -205,14 +205,14 @@
                     onchange={(event) => (settings.logoMode = (event.currentTarget as HTMLInputElement).checked ? 'favicon' : 'none')}
                   />
                   <span class="text-sm">
-                    <span class="block font-medium">{i18n.t('welcome.step3.faviconLabel')}</span>
-                    <span class="block text-xs opacity-60">{i18n.t('welcome.step3.faviconDescription')}</span>
+                    <span class="block font-medium">{i18n.t('welcome.features.favicon.label')}</span>
+                    <span class="block text-xs opacity-60">{i18n.t('welcome.features.favicon.description')}</span>
                   </span>
                 </label>
                 <div class="grid grid-cols-1 gap-3 text-sm">
                   <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><SwatchBook /></span>
-                    <div><b>{i18n.t('welcome.step3.styleLabel')}:</b> {i18n.t('welcome.step3.styleDescription')}</div>
+                    <div><b>{i18n.t('welcome.features.style.label')}:</b> {i18n.t('welcome.features.style.description')}</div>
                   </div>
                   <!-- <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><Link /></span>
@@ -220,11 +220,11 @@
                   </div> -->
                   <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><ChevronsUp /></span>
-                    <div><b>{i18n.t('welcome.step3.fastOfflineLabel')}:</b> {i18n.t('welcome.step3.fastOfflineDescription')}</div>
+                    <div><b>{i18n.t('welcome.features.performance.label')}:</b> {i18n.t('welcome.features.performance.description')}</div>
                   </div>
                 </div>
                 <div class="alert py-2 text-xs">
-                  {i18n.t('welcome.step3.completeDescription')}
+                  {i18n.t('welcome.features.completionMessage')}
                 </div>
               </div>
             {/if}
@@ -237,10 +237,10 @@
         <button class="btn btn-ghost btn-sm" onclick={prev} disabled={step===1}><ChevronLeft /></button>
         <div class="flex gap-2">
           {#if step < total}
-            <button class="btn btn-primary btn-sm" onclick={next}>{i18n.t('welcome.navigation.next')} <ChevronRight /></button>
+            <button class="btn btn-primary btn-sm" onclick={next}>{i18n.t('common.actions.next')} <ChevronRight /></button>
           {:else}
-            <button class="btn btn-ghost btn-sm" onclick={openSettings}>{i18n.t('app.settings.title')}</button>
-            <button class="btn btn-primary btn-sm" onclick={openQRPage}>{i18n.t('welcome.navigation.done')}</button>
+            <button class="btn btn-ghost btn-sm" onclick={openSettings}>{i18n.t('common.actions.settings')}</button>
+            <button class="btn btn-primary btn-sm" onclick={openQRPage}>{i18n.t('common.actions.done')}</button>
           {/if}
         </div>
       </div>
@@ -249,6 +249,6 @@
 
   <!-- version footer -->
   <div class="absolute bottom-2 text-xs opacity-50">
-    v{appVersion} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">{i18n.t('welcome.releaseNotes')}</a>
+    v{appVersion} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">{i18n.t('common.links.releaseNotes')}</a>
   </div>
 </div>

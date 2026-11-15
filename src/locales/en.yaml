@@ -1,58 +1,70 @@
 helloWorld: Hello world!
-app:
-  title: QR Code Buddy
-  settings:
-    title: Settings
+common:
+  appName: QR Code Buddy
+  actions:
+    settings: Settings
+    next: Next
+    done: Done
+  navigation:
+    step: Step {step}/{total}
+    goToStep: Go to step {step}
+  links:
+    see: See
+    privacyPolicy: Privacy Policy
+    releaseNotes: Release Notes
 welcome:
-  step: Step {step}/{total}
-  goToStep: Go to step {step}
-  step1:
+  intro:
     title: Thanks for installing
     description: >-
       Generate QR codes offline: no tracking, no analytics. Everything stays on
       your device by default.
-    listItem1: Click the toolbar icon for instant QR of current tab
-    listItem2: Right-click any link/selection → Generate QR
-    listItem3: Customize colors, logo, and dot style
-    seePrivacyPolicy: See
-    privacyPolicy: Privacy Policy
-  step2:
+    benefits:
+      instantQr: Click the toolbar icon for instant QR of current tab
+      contextMenu: Right-click any link/selection → Generate QR
+      customization: Customize colors, logo, and dot style
+  urlHandling:
     title: URL handling
     description: Choose how URLs are prepared before QR encoding.
-    cleanUrlLabel: Clean tracking params
-    cleanUrlDescription: Remove utm_, fbclid, gclid, etc.
-    urlShortenerLabel: URL shortener
-    urlShortener:
-      hamr: amr (local, recommended)
-      tinyurl: TinyURL
-      isgd: is.gd
-      bitly: Bitly (needs API key)
-      hamrDescription: Local compression, does not send data to any server.
-      defaultDescription: External service will see the URL. Only enabled if you choose it.
-      bitlyPlaceholder: Bitly API key
-      bitlyDescription: API key required for Bitly
-      none:
-        name: None
-        description: No request leaves your browser.
+    fields:
+      tracking:
+        label: Clean tracking params
+        description: Remove utm_, fbclid, gclid, etc.
+      shortener:
+        label: URL shortener
+        externalDescription: External service will see the URL. Only enabled if you choose it.
+        options:
+          none:
+            label: None
+            description: No request leaves your browser.
+          hamr:
+            label: amr (local, recommended)
+            description: Local compression, does not send data to any server.
+          tinyurl:
+            label: TinyURL
+          isgd:
+            label: is.gd
+          bitly:
+            label: Bitly (needs API key)
+            apiKeyPlaceholder: Bitly API key
+            apiKeyRequired: API key required for Bitly
     autoSaveDescription: Settings are saved automatically. You can change them anytime in Settings.
     permissionDenied: Permission for {host} denied. Shortener will fallback to original URL.
-  step3:
+  features:
     title: Features
-    faviconLabel: Use the current tab icon as the QR logo
-    faviconDescription: >-
-      Enabled by default. No extra permission or external favicon service is
-      used.
-    styleLabel: Style
-    styleDescription: 6 dot types, colors, logo, SVG/PNG/WebP/JPG
-    fastOfflineLabel: Fast & offline
-    fastOfflineDescription: Instant popup, context menu, no server.
-    completeDescription: >-
+    favicon:
+      label: Use the current tab icon as the QR logo
+      description: >-
+        Enabled by default. No extra permission or external favicon service is
+        used.
+    style:
+      label: Style
+      description: 6 dot types, colors, logo, SVG/PNG/WebP/JPG
+    performance:
+      label: Fast & offline
+      description: Instant popup, context menu, no server.
+    completionMessage: >-
       That's it! You are now ready to use QR Code Buddy. Click "Done" to close
       this window and start generating QR codes.
-  navigation:
-    next: Next
-    done: Done
-  releaseNotes: Release Notes
 popup:
   openQrPage: Open QR Page
   enterUrl: Enter URL
