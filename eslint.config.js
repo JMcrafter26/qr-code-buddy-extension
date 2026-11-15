@@ -45,6 +45,9 @@ export default [
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
+      globals: {
+        browser: 'readonly',
+      },
     },
     plugins: {
       lube,
@@ -53,7 +56,7 @@ export default [
     rules: {
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/require-await': 'error',
-      'no-console': 'error',
+      'no-console': 'off',
       // 'lube/svelte-naming-convention': ['error', { fixSameNames: true }],
       '@typescript-eslint/naming-convention': [
         'error',
@@ -145,7 +148,13 @@ export default [
       'vitest-xhtml-environment.ts',
       // documentation can contain invalid examples
       'documentation',
+      // temporary files and output from build scripts
       'tmp/**',
+      'build/**',
+      'dist/**',
+      '.output/**',
+      // generated files
+      '*.generated.ts',
     ],
   },
 ];

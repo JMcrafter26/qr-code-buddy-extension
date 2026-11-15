@@ -1,3 +1,4 @@
+// cspell:ignore CLEARURLS
 import { ALL_TRACKERS, DOMAIN_TRACKERS } from './rules';
 import {
   CLEARURLS_GLOBAL_RULES,

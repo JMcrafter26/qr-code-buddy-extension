@@ -1,4 +1,4 @@
-// persistant count of how many times the user has used the extension, and if they have rated it yet
+// persistent count of how many times the user has used the extension, and if they have rated it yet
 import { storage } from '#imports';
 
 const rateRequirements = {

@@ -15,7 +15,7 @@ export interface QrSettings {
   logo: string;
   logoMode: LogoMode;
   urlShortener: Shortener;
-  api_key: string;
+  apiKey: string;
 }
 
 const DEFAULT_SETTINGS: QrSettings = {
@@ -27,12 +27,16 @@ const DEFAULT_SETTINGS: QrSettings = {
   logo: '',
   logoMode: 'favicon',
   urlShortener: 'hamr',
-  api_key: '',
+  apiKey: '',
 };
 
 export const settingsItem = storage.defineItem<QrSettings>('local:settings', {
   fallback: DEFAULT_SETTINGS,
-  version: 1,
+  version: 2,
+  migrations: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    2: migrateSettings,
+  },
 });
 
 // Helpers
@@ -62,6 +66,17 @@ export async function saveSettings(settings: QrSettings): Promise<void> {
 
 export async function resetSettings(): Promise<void> {
   await settingsItem.removeValue();
+}
+
+function migrateSettings(settings: QrSettings): QrSettings {
+  // @ts-expect-error legacy property migration
+  if (settings.api_key) {
+    // @ts-expect-error legacy property migration
+    settings.apiKey = settings.api_key;
+    // @ts-expect-error legacy property migration
+    delete settings.api_key;
+  }
+  return settings;
 }
 
 export { DEFAULT_SETTINGS };

@@ -32,10 +32,10 @@
     }
     if (settings.urlShortener !== 'none') {
       const beforeLen = processed.length;
-      const shortened = await getShortUrl(processed, settings.urlShortener, settings.api_key);
+      const shortened = await getShortUrl(processed, settings.urlShortener, settings.apiKey);
       // Debug hamr
       if (settings.urlShortener === 'hamr') {
-        console.log(`[hamr] ${beforeLen} -> ${shortened.length} ${shortened}`);
+        // console.log(`[hamr] ${beforeLen} -> ${shortened.length} ${shortened.slice(0,60)}`);
       }
       processed = shortened;
     }
@@ -78,7 +78,7 @@
     void url;
     void settings.cleanUrl;
     void settings.urlShortener;
-    void settings.api_key;
+    void settings.apiKey;
     if (!isInitialized) return;
     const requestId = ++updateSequence;
     if (debounceTimer) clearTimeout(debounceTimer);
@@ -93,6 +93,7 @@
     try {
       const [stored, tabs] = await Promise.all([
         settingsItem.getValue(),
+  
         browser.tabs.query({ active: true, currentWindow: true }).catch(() => [] as any),
       ]);
       settings = normalizeSettings(stored);
@@ -109,9 +110,11 @@
     }
     setTimeout(async () => {
       try {
+  
         const raw = await browser.storage.local.get(null as any);
         if (Object.keys(raw).length === 0) {
           await settingsItem.setValue($state.snapshot(DEFAULT_SETTINGS) as any);
+    
           await browser.tabs.create({ url: browser.runtime.getURL('/welcome.html') });
         }
       } catch {}
@@ -137,6 +140,7 @@
   }
 
   function openOptions() {
+     
     browser.runtime.openOptionsPage();
   }
 
@@ -144,6 +148,7 @@
     const favicon = settings.logoMode === 'favicon' && faviconUrl
       ? `&favicon=${encodeURIComponent(faviconUrl)}`
       : '';
+     
     browser.tabs.create({ url: browser.runtime.getURL('/qr.html') + `?url=${encodeURIComponent(url)}${favicon}` });
   }
 </script>

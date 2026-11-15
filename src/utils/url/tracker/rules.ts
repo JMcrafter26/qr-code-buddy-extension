@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+// cspell:disable
 export const TRACKERS_BY_ROOT: Record<string, string[]> = {
   utm_: [
     'source',

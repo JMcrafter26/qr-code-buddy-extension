@@ -10,9 +10,12 @@ export async function shortenWithBitly(
     const res = await fetch('https://api-ssl.bitly.com/v4/shorten', {
       method: 'POST',
       headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'Content-Type': 'application/json',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         Authorization: `Bearer ${apiKey}`,
       },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       body: JSON.stringify({ long_url: url }),
     });
     if (!res.ok) return url;

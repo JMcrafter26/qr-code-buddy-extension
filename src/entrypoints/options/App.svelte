@@ -10,7 +10,6 @@
   import {
     Ban,
     Check,
-    CircleHelp,
     CircleQuestionMark,
     Download,
     Earth,
@@ -57,7 +56,7 @@
     void settings.logo;
     void settings.logoMode;
     void settings.urlShortener;
-    void settings.api_key;
+    void settings.apiKey;
     const hostMap: Record<string, string> = {
       tinyurl: 'https://tinyurl.com/*',
       isgd: 'https://is.gd/*',
@@ -65,9 +64,11 @@
     };
     const host = hostMap[settings.urlShortener];
     if (host) {
+
       browser.permissions
         .contains({ origins: [host] })
         .then((has) => {
+    
           if (!has) return browser.permissions.request({ origins: [host] });
           return true;
         })
@@ -93,6 +94,7 @@
   }
 
   async function handleExport() {
+     
     const data = await browser.storage.local.get(null as any);
     importExport = JSON.stringify(data, null);
   }
@@ -101,7 +103,9 @@
     if (!importExport) return;
     try {
       const parsed = JSON.parse(importExport);
+
       await browser.storage.local.clear();
+
       await browser.storage.local.set(parsed);
       const updated = await settingsItem.getValue();
       settings = updated;
@@ -131,7 +135,7 @@
             </ul>
           {/if}
           <div class="alert border border-primary/20 bg-primary/5 p-3 text-xs text-base-content/70">
-            <CircleHelp class="h-4 w-4 shrink-0 text-primary" />
+            <CircleQuestionMark class="h-4 w-4 shrink-0 text-primary" />
             <span>Changes are saved as you make them.</span>
           </div>
         </div>
@@ -184,14 +188,14 @@
                     {#if settings.urlShortener === 'bitly'}
                       <p class="mt-2 text-xs text-base-content/60">Bitly requires an API key to shorten URLs.</p>
                       <p class="mt-1 text-xs text-base-content/60">Get one at <a href="https://app.bitly.com/settings/api/" target="_blank" rel="noopener noreferrer" class="link link-primary">https://app.bitly.com/settings/api/</a></p>
-                    <input type="text" placeholder="Enter Bitly API key" class="input input-bordered mt-2 w-full" bind:value={settings.api_key} />
+                    <input type="text" placeholder="Enter Bitly API key" class="input input-bordered mt-2 w-full" bind:value={settings.apiKey} />
                     {/if}
                   {:else if settings.urlShortener === 'hamr'}
                       <p class="mt-2 text-xs text-base-content/60">hamr runs locally and falls back when the result is longer.</p>
                   {:else}
                     <p class="mt-2 text-xs text-base-content/60">The original URL will be encoded as-is.</p>
                   {/if}
-                  {#if settings.urlShortener === 'bitly' && !settings.api_key}
+                  {#if settings.urlShortener === 'bitly' && !settings.apiKey}
                     <div class="alert alert-warning mt-2 py-2 text-xs"><CircleQuestionMark class="h-4 w-4"/>The API key cannot be empty</div>
                   {/if}
                   {#if permissionError}
@@ -271,15 +275,15 @@
                 </div>
 
                 <div class="flex w-full gap-1 rounded-lg border border-base-300 bg-base-200 p-1">
-                  <label class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-2 focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs" class:border-primary={settings.logoMode === 'none'} class:bg-base-100={settings.logoMode === 'none'} class:text-primary={settings.logoMode === 'none'} class:ring-primary={settings.logoMode === 'none'}>
+                  <label class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs" class:border-primary={settings.logoMode === 'none'} class:bg-base-100={settings.logoMode === 'none'} class:text-primary={settings.logoMode === 'none'} class:ring-primary={settings.logoMode === 'none'}>
                     <input type="radio" class="sr-only" name="logo-mode" value="none" bind:group={settings.logoMode} />
                     <Ban class="h-4 w-4 shrink-0" /><span>None</span>
                   </label>
-                  <label class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-2 focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs" class:border-primary={settings.logoMode === 'custom'} class:bg-base-100={settings.logoMode === 'custom'} class:text-primary={settings.logoMode === 'custom'} class:ring-primary={settings.logoMode === 'custom'}>
+                  <label class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs" class:border-primary={settings.logoMode === 'custom'} class:bg-base-100={settings.logoMode === 'custom'} class:text-primary={settings.logoMode === 'custom'} class:ring-primary={settings.logoMode === 'custom'}>
                     <input type="radio" class="sr-only" name="logo-mode" value="custom" bind:group={settings.logoMode} />
                     <Image class="h-4 w-4 shrink-0" /><span>Custom</span>
                   </label>
-                  <label class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-2 focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs" class:border-primary={settings.logoMode === 'favicon'} class:bg-base-100={settings.logoMode === 'favicon'} class:text-primary={settings.logoMode === 'favicon'} class:ring-primary={settings.logoMode === 'favicon'}>
+                  <label class="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-2.5 py-2.5 text-sm text-base-content/70 ring-2 ring-transparent transition hover:text-base-content focus-within:outline focus-within:outline-primary/45 focus-within:outline-offset-1 max-[420px]:gap-1 max-[420px]:px-1 max-[420px]:text-xs" class:border-primary={settings.logoMode === 'favicon'} class:bg-base-100={settings.logoMode === 'favicon'} class:text-primary={settings.logoMode === 'favicon'} class:ring-primary={settings.logoMode === 'favicon'}>
                     <input type="radio" class="sr-only" name="logo-mode" value="favicon" bind:group={settings.logoMode} />
                     <Earth class="h-4 w-4 shrink-0" /><span>Tab icon</span>
                   </label>

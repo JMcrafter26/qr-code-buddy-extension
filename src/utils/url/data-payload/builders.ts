@@ -1,5 +1,6 @@
 import type { QrPayload } from './types';
 
+// cspell:ignore SMSTO VCAL VEVENT DTSTART VCARD
 export function buildQrData(payload: QrPayload): string {
   switch (payload.kind) {
     case 'url':

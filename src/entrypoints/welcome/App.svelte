@@ -9,6 +9,7 @@
   let step = $state(1);
   let direction = $state(1); // 1 = forward, -1 = backward
   const total = 3;
+   
   const appVersion = browser.runtime.getManifest().version;
 
   let settings = $state<QrSettings>({ ...DEFAULT_SETTINGS });
@@ -46,6 +47,7 @@
   }
 
   function openSettings() {
+     
     try { browser.runtime.openOptionsPage(); } catch { (globalThis as any).chrome?.runtime?.openOptionsPage?.(); }
   }
 
@@ -53,6 +55,7 @@
     save();
     window.close();
     setTimeout(() => {
+
       try { browser.tabs.getCurrent().then((t) => { if (t?.id) browser.tabs.remove(t.id); }); } catch {}
     }, 100);
   }
@@ -71,7 +74,7 @@
     void settings.urlShortener;
     void settings.cleanUrl;
     void settings.logoMode;
-    void settings.api_key;
+    void settings.apiKey;
     if (!isLoaded) return;
     // Request host permission for network shorteners
     const hostMap: Record<string, string> = {
@@ -81,9 +84,11 @@
     };
     const host = hostMap[settings.urlShortener];
     if (host) {
+
       browser.permissions
         .contains({ origins: [host] })
         .then((has) => {
+    
           if (!has) return browser.permissions.request({ origins: [host] });
           return true;
         })
@@ -122,7 +127,7 @@
 
       <!-- Dots pagination -->
       <div class="flex justify-center gap-2 my-3">
-        {#each Array(total) as _, i}
+        {#each Array(total) as _, i (i)}
           <button
             class="w-2 h-2 rounded-full transition-all {i + 1 === step ? 'bg-primary w-6' : 'bg-base-300'}"
             onclick={() => goToStep(i + 1)}
@@ -132,7 +137,7 @@
       </div>
 
       <!-- Steps Container with Woosh Transition -->
-      <div class="grid grid-cols-1 grid-rows-1 min-h-[290px]">
+      <div class="grid grid-cols-1 grid-rows-1 min-h-72.5">
         {#key step}
           <div
             class="col-start-1 row-start-1 space-y-4"
@@ -168,8 +173,8 @@
                 </label>
 
                 <div class="form-control">
-                  <label class="label"><span class="label-text font-medium">{i18n.t('welcome.urlHandling.fields.shortener.label')}</span></label>
-                  <select class="select select-bordered select-sm" bind:value={settings.urlShortener}>
+                  <label class="label" for="urlShortener"><span class="label-text font-medium">{i18n.t('welcome.urlHandling.fields.shortener.label')}</span></label>
+                  <select class="select select-bordered select-sm" bind:value={settings.urlShortener} id="urlShortener">
                     <option value="none">{i18n.t('welcome.urlHandling.fields.shortener.options.none.label')}</option>
                     <option value="hamr" selected>{i18n.t('welcome.urlHandling.fields.shortener.options.hamr.label')}</option>
                     <option value="tinyurl">{i18n.t('welcome.urlHandling.fields.shortener.options.tinyurl.label')}</option>
@@ -182,9 +187,8 @@
                     {:else}{i18n.t('welcome.urlHandling.fields.shortener.externalDescription')}{/if}
                   </p>
                   {#if settings.urlShortener === 'bitly'}
-                    <input type="text" placeholder="{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.apiKeyPlaceholder')}" class="input input-bordered input-sm mt-2" bind:value={settings.api_key} />
-                    <!-- {#if !settings.api_key}<p class="text-xs text-warning mt-1">API key required for Bitly</p>{/if} -->
-                    {#if !settings.api_key}<p class="text-xs text-warning mt-1">{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.apiKeyRequired')}</p>{/if}
+                    <input type="text" placeholder="{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.apiKeyPlaceholder')}" class="input input-bordered input-sm mt-2" bind:value={settings.apiKey} />
+                    {#if !settings.apiKey}<p class="text-xs text-warning mt-1">{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.apiKeyRequired')}</p>{/if}
                   {/if}
                   {#if permissionError}
                     <div class="alert alert-warning py-2 text-xs mt-2">{permissionError}</div>

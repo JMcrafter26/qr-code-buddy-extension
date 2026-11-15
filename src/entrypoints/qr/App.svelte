@@ -31,9 +31,9 @@
     }
     if (dataType === 'url' && settings.urlShortener !== 'none') {
       const before = processed.length;
-      processed = await getShortUrl(processed, settings.urlShortener, settings.api_key);
+      processed = await getShortUrl(processed, settings.urlShortener, settings.apiKey);
       if (settings.urlShortener === 'hamr') {
-        console.log(`[hamr] ${before} -> ${processed.length} ${processed.slice(0,60)}`);
+        // console.log(`[hamr] ${before} -> ${processed.length} ${processed.slice(0,60)}`);
       }
     }
     return processed;
@@ -51,7 +51,8 @@
 
     // if input is too long, add a warning, but still process it
     if (currentInput.length > 2800) {
-      console.warn(`Input too long: ${currentInput.length} chars`);
+      // console.warn(`Input too long: ${currentInput.length} chars`);
+      alert(`Warning: Input is very long (${currentInput.length} chars). QR code may not be scannable.`);
     }
 
     // if input is not a url, we don't process it, just display as is
@@ -85,7 +86,7 @@
     void input;
     void settings.cleanUrl;
     void settings.urlShortener;
-    void settings.api_key;
+    void settings.apiKey;
     void dataType;
     if (!isInitialized) return;
     const requestId = ++updateSequence;
@@ -139,6 +140,7 @@
   }
 
   function openSettings() {
+     
     browser.runtime.openOptionsPage();
   }
 

@@ -64,8 +64,8 @@
 </script>
 
 <div class="form-control w-full gap-2">
-  <label class="label"><span class="label-text font-medium">Data Type</span></label>
-  <select class="select select-bordered w-full" bind:value={type}>
+  <label class="label" for="dataTypeSelector"><span class="label-text font-medium">Data Type</span></label>
+  <select class="select select-bordered w-full" bind:value={type} id="dataTypeSelector">
     <option value="url">URL</option>
     <option value="text">Text</option>
     <option value="email">Email</option>
