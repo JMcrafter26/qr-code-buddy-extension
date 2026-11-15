@@ -1,4 +1,3 @@
-
 export async function shortenWithBitly(
   url: string,
   apiKey: string,

@@ -3,7 +3,7 @@ import { compareVersions, isAtLeast } from '../utils/version/compare';
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(async (details) => {
     try {
-       browser.contextMenus.create({
+      browser.contextMenus.create({
         id: 'contextMenu',
         title: 'Generate QR Code',
         contexts: ['page', 'selection', 'link'],
