@@ -9,7 +9,8 @@
   import { getShortUrl } from '../../utils/url/shortener';
   import type { QrDataType } from '../../utils/url/data-payload/types';
   import { Download } from '@lucide/svelte';
-    import RateBanner from '@/components/qr/RateBanner.svelte';
+  import RateBanner from '@/components/qr/RateBanner.svelte';
+  import { i18n } from '#i18n';
 
   let input = $state('');
   let displayQrData = $state('');
@@ -135,7 +136,7 @@
       } catch {}
       qrCanvasRef?.download(hostname ? `qr-${hostname}` : 'qr-code');
     } catch (e: any) {
-      alert(e?.message || 'Failed to download - URL may be too long');
+      alert(e?.message || i18n.t('qr.downloadError'));
     }
   }
 
@@ -151,8 +152,8 @@
   <div class="w-full max-w-xl space-y-6">
     <!-- Logo -->
     <div class="flex items-center gap-2 justify-center">
-      <img src="/icon-128.png" alt="QR Code Buddy" class="w-16 h-16" />
-      <h1 class="text-2xl font-bold">QR Code Buddy</h1>
+      <img src="/icon-128.png" alt="{i18n.t('common.appName')}" class="w-16 h-16" />
+      <h1 class="text-2xl font-bold">{i18n.t('common.appName')}</h1>
     </div>
 
     <!-- QR -->
@@ -175,24 +176,24 @@
 
     <!-- Tools -->
     <div class="join w-full max-w-xl mx-auto flex">
-      <input class="input input-bordered join-item flex-1" placeholder={dataType === 'url' ? 'Enter URL' : 'Generated Data will appear here'} value={input} oninput={handleInput} />
-      <button class="btn btn-soft join-item" onclick={handleDownload} title="Download">
+      <input class="input input-bordered join-item flex-1" placeholder={dataType === 'url' ? i18n.t('qr.input.urlPlaceholder') : i18n.t('qr.input.generatedDataPlaceholder')} value={input} oninput={handleInput} />
+      <button class="btn btn-soft join-item" onclick={handleDownload} title={i18n.t('common.actions.download')}>
         <Download class="w-5 h-5" />
       </button>
     </div>
     {#if displayQrData && displayQrData !== input && isLoaded&& settings.urlShortener != "none"}
       <div class="text-xs opacity-70 break-all text-left w-full bg-base-100 p-2 rounded max-w-xl mx-auto">
-        <span class="font-bold">QR encodes:</span> <span class="select-all">{displayQrData}</span>
-        <span class="ml-2 opacity-50">(saved {input.length - displayQrData.length} chars {#if settings.urlShortener} via {settings.urlShortener}{/if})</span>
+        <span class="font-bold">{i18n.t('qr.preview.encodedLabel')}</span> <span class="select-all">{displayQrData}</span>
+        <span class="ml-2 opacity-50">{i18n.t('qr.preview.savedInfo', { count: input.length - displayQrData.length, method: settings.urlShortener })}</span>
       </div>
     {:else if displayQrData && isLoaded}
-      <div class="text-xs opacity-50 w-full text-center">QR length: {displayQrData.length} chars</div>
+      <div class="text-xs opacity-50 w-full text-center">{i18n.t('qr.preview.length', { count: displayQrData.length })}</div>
     {/if}
 
     <!-- More options -->
     <div class="collapse collapse-arrow bg-base-100 shadow">
       <input type="checkbox" />
-      <div class="collapse-title font-medium">More Options</div>
+      <div class="collapse-title font-medium">{i18n.t('qr.options.title')}</div>
       <div class="collapse-content">
         <DataTypeSelector bind:type={dataType} onDataChange={handleDataChange} />
       </div>
@@ -203,7 +204,7 @@
 
     <!-- Footer -->
     <div class="text-center">
-      <button class="link" onclick={openSettings}>Settings</button>
+      <button class="link" onclick={openSettings}>{i18n.t('common.actions.settings')}</button>
       <Footer {year} />
     </div>
   </div>

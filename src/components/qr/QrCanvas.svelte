@@ -6,6 +6,7 @@
   import { getLoadedFavicon, loadFavicon } from '../../utils/qr/favicon';
   import type { QrSettings } from '../../utils/storage/settings';
   import { CircleX, TriangleAlert } from '@lucide/svelte';
+  import { i18n } from '#i18n';
 
   let { data, settings, faviconUrl = '', size = 280, isProcessing = false }: { data: string; settings: QrSettings; faviconUrl?: string; size?: number; isProcessing?: boolean } = $props();
 
@@ -212,7 +213,7 @@
       </div>
     {:else if error}
       <div class="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 text-center text-sm text-error max-w-70 wrap-break-word">
-        <span class="font-bold">Error:</span> {error}
+        <span class="font-bold">{i18n.t('qrCanvas.errorLabel')}</span> {error}
       </div>
     {/if}
   </div>

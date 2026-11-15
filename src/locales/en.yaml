@@ -1,10 +1,10 @@
-helloWorld: Hello world!
 common:
   appName: QR Code Buddy
   actions:
     settings: Settings
     next: Next
     done: Done
+    download: Download
   navigation:
     step: Step {step}/{total}
     goToStep: Go to step {step}
@@ -12,6 +12,11 @@ common:
     see: See
     privacyPolicy: Privacy Policy
     releaseNotes: Release Notes
+    email: Email
+    github: GitHub
+    githubIssues: GitHub issues
+  conjunctions:
+    or: or
 welcome:
   intro:
     title: Thanks for installing
@@ -70,3 +75,69 @@ popup:
   enterUrl: Enter URL
   downloadQr: Download QR Code
   downloadError: Failed to download QR - URL may be too long
+qr:
+  input:
+    urlPlaceholder: Enter URL
+    generatedDataPlaceholder: Generated Data will appear here
+  preview:
+    encodedLabel: 'QR encodes:'
+    savedInfo: (saved {count} chars via {method})
+    length: 'QR length: {count} chars'
+  options:
+    title: More Options
+  downloadError: Failed to download - URL may be too long
+qrCanvas:
+  errorLabel: 'Error:'
+dataTypes:
+  label: Data Type
+  options:
+    url: URL
+    text: Text
+    email: Email
+    phone: Phone
+    sms: SMS
+    wifi: WiFi
+    geo: Geo
+    event: Event
+  fields:
+    text: Enter text
+    email:
+      address: Enter email
+      subject: Enter email subject
+      body: Enter email body
+    phone:
+      number: Enter phone number
+    sms:
+      number: Enter phone number
+      message: Enter SMS message
+    wifi:
+      ssid: Enter WiFi SSID
+      password: Enter WiFi password
+      encryption:
+        wpa: WPA
+        wep: WEP
+        none: No password
+    geo:
+      latitude: Enter latitude
+      longitude: Enter longitude
+    event:
+      title: Enter event title
+      location: Enter event location
+  urlHint: Enter URL in the main input above.
+footer:
+  madeWith: Made with ❤️ by
+  viewOnGithub: View on GitHub
+rating:
+  prompt: How would you rate this extension?
+  storeAriaLabel: Rate my work on the browser store
+  storeTitle: Rate my work on the store
+  starLabel:
+    1: Rate $1 star
+    n: Rate $1 stars
+  support:
+    title: Sorry to hear that!
+    description: Help me fix it by sharing feedback via
+    reviewPrompt: Prefer to
+    reviewLink: leave a store review anyway
+    reviewSuffix: '? I promise to read every single one!'
+  thankYou: Thank you for rating this extension!
