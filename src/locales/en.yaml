@@ -132,8 +132,8 @@ rating:
   storeAriaLabel: Rate my work on the browser store
   storeTitle: Rate my work on the store
   starLabel:
-    1: Rate $1 star
-    n: Rate $1 stars
+    singular: Rate $1 star
+    plural: Rate $1 stars
   support:
     title: Sorry to hear that!
     description: Help me fix it by sharing feedback via

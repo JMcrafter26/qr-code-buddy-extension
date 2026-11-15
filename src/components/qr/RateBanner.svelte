@@ -65,7 +65,10 @@
 				<button
 					class="mask mask-star-2 h-6 w-6 transition-colors {star > hoveredStar ? 'bg-base-400' : 'bg-orange-400 opacity-100'}"
 					onmouseenter={() => (hoveredStar = star)}
-					aria-label={i18n.t('rating.starLabel', star)}
+					aria-label={i18n.t(
+						star === 1 ? 'rating.starLabel.singular' : 'rating.starLabel.plural',
+						[star],
+					)}
 					onclick={() => handleRatingClick(star)}
 				></button>
 			{/each}
