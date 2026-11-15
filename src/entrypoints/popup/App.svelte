@@ -7,7 +7,8 @@
   import { getShortUrl } from '../../utils/url/shortener';
   import logo from '../../assets/logo.svg';
   import { Download, ExternalLink, Settings2 } from '@lucide/svelte';
-    import RateBanner from '@/components/qr/RateBanner.svelte';
+  import RateBanner from '@/components/qr/RateBanner.svelte';
+  import { i18n } from '#i18n';
   
 
   let url = $state('https://wikipedia.org');

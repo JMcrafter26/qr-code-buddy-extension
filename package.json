@@ -38,6 +38,7 @@
   "dependencies": {
     "@lucide/svelte": "^1.39.0",
     "@sveltejs/eslint-config": "^10.0.4",
+    "@wxt-dev/i18n": "^0.2.8",
     "eslint": "^10.0.0",
     "eslint-plugin-lube": "^0.5.1",
     "eslint-plugin-svelte": "^3.15.0",
