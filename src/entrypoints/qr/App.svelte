@@ -140,7 +140,7 @@
   }
 
   function openSettings() {
-    // eslint-disable-next-line no-undef
+     
     browser.runtime.openOptionsPage();
   }
 

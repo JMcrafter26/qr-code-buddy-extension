@@ -8,7 +8,7 @@
   let step = $state(1);
   let direction = $state(1); // 1 = forward, -1 = backward
   const total = 3;
-  // eslint-disable-next-line no-undef
+   
   const appVersion = browser.runtime.getManifest().version;
 
   let settings = $state<QrSettings>({ ...DEFAULT_SETTINGS });
@@ -46,7 +46,7 @@
   }
 
   function openSettings() {
-    // eslint-disable-next-line no-undef
+     
     try { browser.runtime.openOptionsPage(); } catch { (globalThis as any).chrome?.runtime?.openOptionsPage?.(); }
   }
 

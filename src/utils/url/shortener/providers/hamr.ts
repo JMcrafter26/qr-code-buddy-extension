@@ -1,6 +1,6 @@
 import { hamrEncode } from '../../hamr/encoder';
 
-export async function shortenWithHamr(url: string): Promise<string> {
+export function shortenWithHamr(url: string): string {
   try {
     const hamrUrl = hamrEncode(url);
     if (hamrUrl && hamrUrl.length < url.length) return hamrUrl;

@@ -112,7 +112,7 @@
       } else {
         if (settings.logoMode === 'favicon') {
           try {
-
+            // eslint-disable-next-line svelte/no-dom-manipulating
             container.innerHTML = '';
             const options = buildQrOptions(data, settings, size, 'canvas', '');
             qrInstance = new QRCodeStyling(options as any);

@@ -94,7 +94,7 @@
   }
 
   async function handleExport() {
-    // eslint-disable-next-line no-undef
+     
     const data = await browser.storage.local.get(null as any);
     importExport = JSON.stringify(data, null);
   }

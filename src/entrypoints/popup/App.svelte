@@ -139,7 +139,7 @@
   }
 
   function openOptions() {
-    // eslint-disable-next-line no-undef
+     
     browser.runtime.openOptionsPage();
   }
 
@@ -147,7 +147,7 @@
     const favicon = settings.logoMode === 'favicon' && faviconUrl
       ? `&favicon=${encodeURIComponent(faviconUrl)}`
       : '';
-    // eslint-disable-next-line no-undef
+     
     browser.tabs.create({ url: browser.runtime.getURL('/qr.html') + `?url=${encodeURIComponent(url)}${favicon}` });
   }
 </script>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { defineConfig } from 'wxt';
 import tailwindcss from '@tailwindcss/vite';
 
