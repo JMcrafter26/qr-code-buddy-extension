@@ -3,12 +3,12 @@ import { compareVersions, isAtLeast } from '../utils/version/compare';
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(async (details) => {
     try {
-      await browser.contextMenus.create({
+       browser.contextMenus.create({
         id: 'contextMenu',
         title: 'Generate QR Code',
         contexts: ['page', 'selection', 'link'],
       });
-    } catch {}
+    } catch {} // Ignore context menu creation errors
 
     try {
       // Use dynamic import to avoid top-level runtime code (WXT build restriction)
@@ -39,6 +39,7 @@ export default defineBackground(() => {
             active: true,
           });
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.error('welcome open failed', e);
         }
       }

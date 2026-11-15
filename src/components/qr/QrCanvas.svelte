@@ -1,4 +1,5 @@
 <script lang="ts">
+/* eslint-disable no-console */
   import { fade } from 'svelte/transition';
   import QRCodeStyling from 'qr-code-styling';
   import { buildQrOptions } from '../../utils/qr/qrOptions';
@@ -69,6 +70,7 @@
     if (!container) return;
     const sequence = ++renderSequence;
     isRendering = true;
+    // eslint-disable-next-line svelte/no-dom-manipulating
     container.innerHTML = '';
     error = null;
     if (!data) {
@@ -110,6 +112,7 @@
       } else {
         if (settings.logoMode === 'favicon') {
           try {
+            // eslint-disable-next-line svelte/no-dom-manipulating
             container.innerHTML = '';
             const options = buildQrOptions(data, settings, size, 'canvas', '');
             qrInstance = new QRCodeStyling(options as any);
@@ -184,7 +187,7 @@
       if (msg.includes('overflow')) {
         const err = `URL too long for QR code (${data.length} chars).`;
         alert(err);
-        throw new Error(err);
+        throw new Error(err, { cause: e });
       }
       throw e;
     }
@@ -208,18 +211,18 @@
         <span class="loading loading-spinner loading-lg opacity-70"></span>
       </div>
     {:else if error}
-      <div class="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 text-center text-sm text-error max-w-[280px] break-words">
+      <div class="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 text-center text-sm text-error max-w-70 wrap-break-word">
         <span class="font-bold">Error:</span> {error}
       </div>
     {/if}
   </div>
   {#if error}
-    <div class="alert alert-error py-2 px-3 text-xs max-w-[280px] break-words">
+    <div class="alert alert-error py-2 px-3 text-xs max-w-70 wrap-break-word">
       <CircleX class="w-4 h-4" />
       <span>{error}</span>
     </div>
   {:else if data && data.length > 1800 && !isRendering}
-    <div class="alert alert-warning py-1 px-2 text-xs max-w-[280px]">
+    <div class="alert alert-warning py-1 px-2 text-xs max-w-70">
       <TriangleAlert class="w-4 h-4" />
       Warning: URL is long ({data.length} chars) — may be hard to scan. Try hamr.
     </div>
