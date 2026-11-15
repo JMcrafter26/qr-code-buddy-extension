@@ -7,11 +7,11 @@ on:
     branches: [main]
     paths: [package.json]
     # Runs for every new version tag, e.g. v2.2.0
-    tags: ["v*"]
+    tags: ['v*']
   workflow_dispatch:
     inputs:
       create_release:
-        description: "Create a draft release with the built zips"
+        description: 'Create a draft release with the built zips'
         type: boolean
         default: false
 
@@ -82,11 +82,11 @@ jobs:
         if: steps.version.outputs.run == 'true'
         run: pnpm install --frozen-lockfile
 
-    #   - name: Lint & type check
-    #     if: steps.version.outputs.run == 'true'
-    #     run: |
-    #       pnpm lint
-    #       pnpm check
+      #   - name: Lint & type check
+      #     if: steps.version.outputs.run == 'true'
+      #     run: |
+      #       pnpm lint
+      #       pnpm check
 
       - name: Build zips (Chrome + Firefox)
         if: steps.version.outputs.run == 'true'
