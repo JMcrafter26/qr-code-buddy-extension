@@ -174,5 +174,5 @@
   "@@bidi_start_edge": "<left|right>",
   "@@bidi_end_edge": "<right|left>",
   "extensionName": "QR Code Buddy",
-  "extensionDescription": "Простой генератор QR-кодов, который делает своё дело и делает его хорошо."
+  "extensionDescription": "«QR Code Buddy» — ваш помощник для быстрого и простого создания QR-кодов. Создавайте, настраивайте, скачивайте и даже сокращайте ссылки в несколько кликов. QR-коды — это просто!"
 }
