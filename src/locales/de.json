@@ -27,7 +27,7 @@
   "welcome.urlHandling.fields.shortener.label": "URL-Verkürzer",
   "welcome.urlHandling.fields.shortener.externalDescription": "Ein externer Dienst erhält die URL. Er wird nur verwendet, wenn du ihn auswählst.",
   "welcome.urlHandling.fields.shortener.options.none.label": "Keiner",
-  "welcome.urlHandling.fields.shortener.options.none.description": "Es verlässt keine Anfrage deinen Browser.",
+  "welcome.urlHandling.fields.shortener.options.none.description": "Keine Anfrage verlässt deinen Browser.",
   "welcome.urlHandling.fields.shortener.options.hamr.label": "hamr (lokal, empfohlen)",
   "welcome.urlHandling.fields.shortener.options.hamr.description": "Lokale Komprimierung, es werden keine Daten an einen Server gesendet.",
   "welcome.urlHandling.fields.shortener.options.tinyurl.label": "TinyURL",
@@ -98,14 +98,14 @@
   "rating.thankYou": "Danke für deine Bewertung dieser Erweiterung!",
   "options.workspace.title": "Arbeitsbereich",
   "options.workspace.description": "Gestalte die QR-Codes, die du erstellst.",
-  "options.navigation.urlDelivery": "URL und Übertragung",
+  "options.navigation.urlDelivery": "URL und Ausgabe",
   "options.navigation.qrAppearance": "QR-Erscheinungsbild",
   "options.navigation.dataTools": "Datenwerkzeuge",
   "options.navigation.url": "URL",
   "options.navigation.qr": "QR",
   "options.navigation.tools": "Werkzeuge",
   "options.savedChanges": "Änderungen werden sofort gespeichert.",
-  "options.url.title": "URL und Übertragung",
+  "options.url.title": "URL und Ausgabe",
   "options.url.description": "Bereinige Links und wähle, wie sie vor der Codierung verkürzt werden.",
   "options.url.cleanTracking": "Tracking-Parameter entfernen",
   "options.url.cleanTrackingDescription": "Entfernt gängige Kampagnen- und Analyseparameter aus URLs.",
@@ -171,5 +171,5 @@
   "@@bidi_start_edge": "<left|right>",
   "@@bidi_end_edge": "<right|left>",
   "extensionName": "QR Code Buddy",
-  "extensionDescription": "Der einfache QR-Code-Generator, der seine Aufgabe einfach gut erledigt."
+  "extensionDescription": "Der einfache QR-Code-Generator, der seine Aufgabe gut erledigt."
 }
