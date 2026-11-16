@@ -15,7 +15,7 @@
   "common.conjunctions.or": "oder",
   "common.language.label": "Sprache",
   "common.language.browserControlled": "Die Sprache richtet sich nach den Browsereinstellungen.",
-  "welcome.intro.title": "Danke für die Installation von",
+  "welcome.intro.title": "Danke fürs Installieren",
   "welcome.intro.description": "Erstelle QR-Codes offline – ohne Tracking und ohne Analysen. Standardmäßig bleibt alles auf deinem Gerät.",
   "welcome.intro.benefits.instantQr": "Klicke auf das Symbol in der Symbolleiste, um sofort einen QR-Code für den aktuellen Tab zu erhalten",
   "welcome.intro.benefits.contextMenu": "Klicke mit der rechten Maustaste auf einen Link oder eine Auswahl → QR-Code erstellen",

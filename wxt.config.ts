@@ -14,7 +14,7 @@ export default defineConfig({
         project: './project.inlang',
         outdir: './src/paraglide',
         emitTsDeclarations: true,
-        strategy: ['localStorage', 'baseLocale'],
+        strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
       }),
     ],
     build: {

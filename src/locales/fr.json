@@ -15,7 +15,7 @@
   "common.conjunctions.or": "ou",
   "common.language.label": "Langue",
   "common.language.browserControlled": "La langue suit les paramètres de votre navigateur.",
-  "welcome.intro.title": "Merci d’avoir installé",
+  "welcome.intro.title": "Merci pour l’installation",
   "welcome.intro.description": "Générez des codes QR hors ligne\u00a0: sans suivi ni analyse. Par défaut, tout reste sur votre appareil.",
   "welcome.intro.benefits.instantQr": "Cliquez sur l’icône de la barre d’outils pour obtenir instantanément le QR de l’onglet actuel",
   "welcome.intro.benefits.contextMenu": "Faites un clic droit sur un lien ou une sélection → Générer un QR",

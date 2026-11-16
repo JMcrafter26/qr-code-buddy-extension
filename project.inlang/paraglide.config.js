@@ -1,5 +1,5 @@
 export default {
   outdir: './src/paraglide',
   emitTsDeclarations: true,
-  strategy: ['localStorage', 'baseLocale'],
+  strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
 };
