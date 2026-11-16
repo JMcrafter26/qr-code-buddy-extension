@@ -28,5 +28,5 @@
   </select>
 </div>
 <p id="language-selector-help" class="mt-1 text-xs text-base-content/60">
-  {i18n.t('common.language.browserControlled')}
+  <!-- {i18n.t('common.language.browserControlled')} -->
 </p>

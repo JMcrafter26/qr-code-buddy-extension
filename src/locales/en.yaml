@@ -45,7 +45,7 @@ welcome:
             label: None
             description: No request leaves your browser.
           hamr:
-            label: amr (local, recommended)
+            label: hamr (local, recommended)
             description: Local compression, does not send data to any server.
           tinyurl:
             label: TinyURL
