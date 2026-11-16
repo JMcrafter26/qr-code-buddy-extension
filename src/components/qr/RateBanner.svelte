@@ -52,11 +52,11 @@
 </script>
 {#if showRateBanner}
 {#if !rated && !showSupportInfo}
-	<div class="justify-center text-center">
-		<p class="text-sm text-center opacity-70">{m['rating.prompt']()}</p>
+	<div class="w-full flex flex-col items-center gap-2">
+		<p class="text-sm opacity-70">{m['rating.prompt']()}</p>
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
-			class="rating inline-flex cursor-pointer gap-1"
+			class="rating flex cursor-pointer gap-1 justify-center"
 			aria-label={m['rating.storeAriaLabel']()}
 			title={m['rating.storeTitle']()}
 			onmouseleave={() => (hoveredStar = 0)}
