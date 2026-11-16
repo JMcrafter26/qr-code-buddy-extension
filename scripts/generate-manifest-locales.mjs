@@ -6,7 +6,7 @@ import {
 } from '@wxt-dev/i18n/build';
 
 const manifestMessageKeys = new Set(['extensionName', 'extensionDescription']);
-const locales = ['en', 'de'];
+const locales = ['en', 'de', 'fr', 'es', 'ja', 'pt-BR', 'ru', 'zh-CN'];
 const outputRoot = path.resolve('public/_locales');
 
 await rm(outputRoot, { recursive: true, force: true });

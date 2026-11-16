@@ -5,6 +5,14 @@
   const localeNames: Record<(typeof locales)[number], string> = {
     en: 'English',
     de: 'Deutsch',
+    fr: 'Français',
+    es: 'Español',
+    ja: '日本語',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    'pt-BR': 'Português (Brasil)',
+    ru: 'Русский',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    'zh-CN': '简体中文',
   };
   const selectedLocale = getLocale();
   document.documentElement.lang = selectedLocale;
