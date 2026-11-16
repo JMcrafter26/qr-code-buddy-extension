@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { m } from '@/paraglide/messages.js';
   import { getLocale, locales, setLocale } from '@/paraglide/runtime.js';
-  import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
+  import { isQrSettings, settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { getContrastRatio } from '../../utils/color/contrast';
   import { removeTrackersFromUrl, ALL_TRACKERS } from '../../utils/url/tracker/cleaner';
   import { detectBrowser } from '../../utils/browser/detect';
@@ -158,7 +158,11 @@
     if (typeof value !== 'object' || value === null || Array.isArray(value)) {
       throw new Error('Invalid settings export');
     }
-    return value as Record<string, unknown>;
+    const storage = value as Record<string, unknown>;
+    if (!isQrSettings(storage.settings)) {
+      throw new Error('Invalid QR settings in export');
+    }
+    return storage;
   }
 
   let year = new Date().getFullYear();
@@ -237,6 +241,7 @@
                     {/if}
                   {:else if settings.urlShortener === 'hamr'}
                       <p class="mt-2 text-xs text-base-content/60">{m['options.url.hamrDescription']()}</p>
+                      <p class="mt-1 text-xs text-base-content/60">{m['common.url.hamrNotice']()}</p>
                   {:else}
                     <p class="mt-2 text-xs text-base-content/60">{m['options.url.originalDescription']()}</p>
                   {/if}

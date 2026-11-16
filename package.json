@@ -10,6 +10,7 @@
     "dev:chrome": "pnpm prepare:manifest-locales && wxt -b chrome",
     "dev:edge": "pnpm prepare:manifest-locales && wxt -b edge",
     "prepare:rules": "node scripts/convert-clearurls-rules.mjs",
+    "update:rules": "node scripts/update-clearurls-rules.mjs",
     "prepare:manifest-locales": "node scripts/generate-manifest-locales.mjs",
     "prepare:paraglide": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations",
     "build": "pnpm prepare:paraglide && pnpm prepare:manifest-locales && pnpm prepare:rules && pnpm build:chrome && pnpm build:firefox",

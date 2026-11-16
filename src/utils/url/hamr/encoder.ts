@@ -4174,7 +4174,7 @@ export function compress(input: string, alphabet: string[]): string {
 export function hamrEncode(input: string): string {
   try {
     const payload = compress(input, outputAlphabetQR);
-    return 'HTTP://HA.MR/' + payload;
+    return 'HTTPS://HA.MR/' + payload;
   } catch (e) {
     console.error('hamrEncode error', e);
     return input;
