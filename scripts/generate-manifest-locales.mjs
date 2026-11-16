@@ -5,10 +5,7 @@ import {
   parseMessagesFile,
 } from '@wxt-dev/i18n/build';
 
-const manifestMessageKeys = new Set([
-  'extensionName',
-  'extensionDescription',
-]);
+const manifestMessageKeys = new Set(['extensionName', 'extensionDescription']);
 const locales = ['en', 'de'];
 const outputRoot = path.resolve('public/_locales');
 
