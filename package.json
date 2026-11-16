@@ -11,7 +11,7 @@
     "dev:edge": "wxt -b edge",
     "prepare:rules": "node scripts/convert-clearurls-rules.mjs",
     "prepare:paraglide": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations",
-    "build": "pnpm prepare:rules && pnpm build:chrome && pnpm build:firefox",
+    "build": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations && pnpm prepare:rules && pnpm build:chrome && pnpm build:firefox",
     "build:chrome": "wxt build -b chrome",
     "build:firefox": "wxt build -b firefox",
     "zip": "pnpm prepare:rules && pnpm zip:chrome && pnpm zip:firefox",
@@ -20,7 +20,10 @@
     "check": "pnpm prepare:paraglide && svelte-check --tsconfig ./tsconfig.json",
     "postinstall": "wxt prepare && pnpm prepare:rules && pnpm prepare:paraglide",
     "lint": "eslint && prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check:i18n": "inlang check --project ./project.inlang",
+    "machine-translate": "inlang machine translate --project project.inlang",
+    "lint:i18n": "eslint --config ./eslint.paraglide.config.mjs ."
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -35,7 +38,9 @@
     "typescript": "^5.9.3",
     "vite": "^8.2.4",
     "web-ext": "^10.5.0",
-    "wxt": "^0.21.4"
+    "wxt": "^0.21.4",
+    "@inlang/cli": "^3.4.0",
+    "@typescript-eslint/parser": "^8.71.2"
   },
   "dependencies": {
     "@lucide/svelte": "^1.39.0",
