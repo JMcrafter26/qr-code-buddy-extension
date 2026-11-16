@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { m } from '@/paraglide/messages.js';
+  import { getLocale, locales, setLocale } from '@/paraglide/runtime.js';
   import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { getContrastRatio } from '../../utils/color/contrast';
   import { removeTrackersFromUrl, ALL_TRACKERS } from '../../utils/url/tracker/cleaner';
@@ -96,26 +97,68 @@
   }
 
   async function handleExport() {
-     
     const data = await browser.storage.local.get(null as any);
-    importExport = JSON.stringify(data, null);
+    importExport = JSON.stringify(
+      {
+        storage: data,
+        locale: getLocale(),
+      }
+    );
   }
 
   async function handleImport() {
     if (!importExport) return;
     try {
-      const parsed = JSON.parse(importExport);
+      const parsed: unknown = JSON.parse(importExport);
+      const imported: ExportData = hasExportEnvelope(parsed)
+        ? parseExportEnvelope(parsed)
+        : { storage: parseStorageData(parsed) };
 
       await browser.storage.local.clear();
 
-      await browser.storage.local.set(parsed);
+      await browser.storage.local.set(imported.storage as Record<string, unknown>);
       const updated = await settingsItem.getValue();
       settings = updated;
       alert(m['options.imported']());
+      if (imported.locale) {
+        await setLocale(imported.locale);
+      }
       location.reload();
     } catch (e) {
       alert(m['options.invalidJson']({ error: String(e) }));
     }
+  }
+
+  function hasExportEnvelope(value: unknown): value is Record<string, unknown> {
+    return Boolean(value && typeof value === 'object' && 'storage' in value);
+  }
+
+  type ExportData = {
+    storage: Record<string, unknown>;
+    locale?: (typeof locales)[number];
+  };
+
+  function parseExportEnvelope(value: Record<string, unknown>): ExportData {
+    const exportData = value as { storage?: unknown; locale?: unknown };
+    const storage = parseStorageData(exportData.storage);
+    if (
+      exportData.locale !== undefined &&
+      (typeof exportData.locale !== 'string' ||
+        !locales.includes(exportData.locale as (typeof locales)[number]))
+    ) {
+      throw new Error('Invalid locale in settings export');
+    }
+    return {
+      storage,
+      locale: exportData.locale as (typeof locales)[number] | undefined,
+    };
+  }
+
+  function parseStorageData(value: unknown): Record<string, unknown> {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+      throw new Error('Invalid settings export');
+    }
+    return value as Record<string, unknown>;
   }
 
   let year = new Date().getFullYear();
@@ -363,9 +406,15 @@
           </div>
         </section>
 
-        <div class="flex justify-between gap-2 rounded-xl border border-base-300 bg-base-100 p-4 text-xs text-base-content/60 ">
-          <span class="flex items-center gap-1"><Check class="h-3.5 w-3.5 shrink-0 text-success" />{m['options.allSaved']()}</span>
-          <button class="btn btn-ghost btn-sm gap-2 text-error" onclick={reset}><RotateCcw class="h-4 w-4" />{m['options.reset']()}</button>
+        <div class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-base-300 bg-base-100 p-4 text-xs text-base-content/60">
+          <span class="flex items-center gap-1">
+            <Check class="h-3.5 w-3.5 shrink-0 text-success" />
+            {m['options.allSaved']()}
+          </span>
+          <button class="btn btn-ghost btn-sm h-auto min-h-8 gap-2 py-1.5 text-left whitespace-normal text-error" onclick={reset}>
+            <RotateCcw class="h-4 w-4 shrink-0" />
+            <span>{m['options.reset']()}</span>
+          </button>
         </div>
 
         <div class="flex flex-col items-center gap-4 m-auto max-w-2xl">
