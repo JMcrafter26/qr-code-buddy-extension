@@ -40,6 +40,7 @@ jobs:
         run: |
           NEW=$(jq -r .version package.json)
           echo "version=$NEW" >> "$GITHUB_OUTPUT"
+          echo "tag=v$NEW" >> "$GITHUB_OUTPUT"
 
           if [ "$EVENT" = "workflow_dispatch" ] || [ "$REF_TYPE" = "tag" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
@@ -82,11 +83,11 @@ jobs:
         if: steps.version.outputs.run == 'true'
         run: pnpm install --frozen-lockfile
 
-      #   - name: Lint & type check
-      #     if: steps.version.outputs.run == 'true'
-      #     run: |
-      #       pnpm lint
-      #       pnpm check
+      - name: Lint & type check
+        if: steps.version.outputs.run == 'true'
+        run: |
+          pnpm lint
+          pnpm check
 
       - name: Build zips (Chrome + Firefox)
         if: steps.version.outputs.run == 'true'
@@ -101,13 +102,27 @@ jobs:
           include-hidden-files: true
           if-no-files-found: error
 
+      - name: Check if release already exists
+        id: release_check
+        if: steps.version.outputs.run == 'true' && inputs.create_release != false
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_type == 'tag' && github.ref_name || steps.version.outputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Release $TAG already exists, skipping creation to avoid overwriting."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create GitHub release
-        if: steps.version.outputs.run == 'true' && (github.ref_type == 'tag' || inputs.create_release)
+        if: steps.version.outputs.run == 'true' && inputs.create_release != false && steps.release_check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          # Tag builds use the pushed tag; manual runs use v<package.json version>
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', steps.version.outputs.version) }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || steps.version.outputs.tag }}
           target_commitish: ${{ github.sha }}
           files: .output/*.zip
           generate_release_notes: true
           draft: true
+          overwrite_files: false
