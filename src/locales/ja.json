@@ -174,5 +174,5 @@
   "@@bidi_start_edge": "<left|right>",
   "@@bidi_end_edge": "<right|left>",
   "extensionName": "QR Code Buddy",
-  "extensionDescription": "「QR Code Buddy」は、QRコードを素早く簡単に作成できる頼れる相棒です。作成、カスタマイズ、ダウンロード、さらにはURLの短縮まで、数クリックで完了。QRコードをもっとシンプルに!"
+  "extensionDescription": "QRコードを素早く簡単に作成。カスタマイズ、ダウンロード、URL短縮まで数クリックで完了。QRコードをもっとシンプルに!"
 }
