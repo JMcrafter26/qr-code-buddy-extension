@@ -117,10 +117,20 @@ pnpm lint    # Run ESLint and Prettier check
 pnpm format  # Auto-format codebase
 ```
 
+## Contributing
+
+We welcome contributions! Please read our [contributing guidelines](CONTRIBUTING.md) before submitting a pull request.
+
 ## Localization
 
 The Svelte UI uses [Paraglide JS](https://paraglidejs.com/) with the messages in [`src/locales/`](src/locales/).
-The language selector on the welcome and settings pages persists the selected UI locale and reloads the current extension page.
+
+To update the translations, you can use the [Inlang](https://inlang.com/) platform or just edit the JSON files directly. After updating, run:
+
+```bash
+pnpm prepare:paraglide
+pnpm prepare:manifest-locales
+```
 
 ## License and Credits
 
