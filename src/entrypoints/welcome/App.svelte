@@ -5,6 +5,7 @@
   import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { PartyPopper, SwatchBook, ChevronsUp, ChevronRight, ChevronLeft } from '@lucide/svelte';
   import { i18n } from '#i18n';
+  import LanguageSelector from '../../components/layout/LanguageSelector.svelte';
 
   let step = $state(1);
   let direction = $state(1); // 1 = forward, -1 = backward
@@ -253,6 +254,7 @@
 
   <!-- version footer -->
   <div class="absolute bottom-2 text-xs opacity-50">
+    <LanguageSelector />
     v{appVersion} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">{i18n.t('common.links.releaseNotes')}</a>
   </div>
 </div>

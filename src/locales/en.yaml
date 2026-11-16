@@ -17,6 +17,9 @@ common:
     githubIssues: GitHub issues
   conjunctions:
     or: or
+  language:
+    label: Language
+    browserControlled: Language follows your browser settings.
 welcome:
   intro:
     title: Thanks for installing

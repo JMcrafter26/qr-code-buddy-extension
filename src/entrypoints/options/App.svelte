@@ -5,6 +5,7 @@
   import { removeTrackersFromUrl, ALL_TRACKERS } from '../../utils/url/tracker/cleaner';
   import { detectBrowser } from '../../utils/browser/detect';
   import Footer from '../../components/layout/Footer.svelte';
+  import LanguageSelector from '../../components/layout/LanguageSelector.svelte';
   import QrCanvas from '../../components/qr/QrCanvas.svelte';
     import RateBanner from '@/components/qr/RateBanner.svelte';
   import {
@@ -348,6 +349,7 @@
 
         <div class="justify-center space-y-4 text-center text-sm text-base-content/60">
           <RateBanner alwaysShow={true} />
+          <LanguageSelector />
           <Footer {year} />
         </div>
       </main>
