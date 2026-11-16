@@ -217,6 +217,18 @@
       </div>
     {/if}
   </div>
+  {#if error}
+    <div class="alert alert-error py-2 px-3 text-xs max-w-70 wrap-break-word">
+      <CircleX class="w-4 h-4" />
+      <span>{error}</span>
+    </div>
+  {:else if data && data.length > 1800 && !isRendering}
+    <div class="alert alert-warning py-1 px-2 text-xs max-w-70">
+      <TriangleAlert class="w-4 h-4" />
+      {m['qrCanvas.longWarning']({ length: data.length })}
+      <span class="block">hamr creates an HTTPS://ha.mr link.</span>
+    </div>
+  {/if}
   {#if showSlowQrMessage && !error}
     <div in:fade={{ duration: 500 }} class="flex items-center justify-center text-center text-xs text-base-content/60">
       QR generation is taking longer than usual.

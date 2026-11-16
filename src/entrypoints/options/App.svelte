@@ -237,6 +237,7 @@
                     {/if}
                   {:else if settings.urlShortener === 'hamr'}
                       <p class="mt-2 text-xs text-base-content/60">{m['options.url.hamrDescription']()}</p>
+                      <p class="mt-1 text-xs text-base-content/60">The result uses HTTPS://ha.mr, a separate open-source project and domain required for links to resolve.</p>
                   {:else}
                     <p class="mt-2 text-xs text-base-content/60">{m['options.url.originalDescription']()}</p>
                   {/if}

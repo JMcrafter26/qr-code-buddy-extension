@@ -336,7 +336,6 @@ vite.config.ts.timestamp-*
 .turbo
 
 
-src/utils/url/tracker/clearurls.generated.ts
 store/
 # General
 .DS_Store
