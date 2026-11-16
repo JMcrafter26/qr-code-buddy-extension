@@ -4,7 +4,7 @@
   import { cubicOut } from 'svelte/easing';
   import { settingsItem, DEFAULT_SETTINGS, normalizeSettings, type QrSettings } from '../../utils/storage/settings';
   import { PartyPopper, SwatchBook, ChevronsUp, ChevronRight, ChevronLeft } from '@lucide/svelte';
-  import { i18n } from '#i18n';
+  import { m } from '@/paraglide/messages.js';
   import LanguageSelector from '../../components/layout/LanguageSelector.svelte';
 
   let step = $state(1);
@@ -96,7 +96,7 @@
         .then((granted) => {
           if (granted === false) {
             // permissionError = `Permission for ${host} denied. Shortener will fallback to original URL.`;
-            permissionError = `${i18n.t('welcome.urlHandling.permissionDenied', { host })}`;
+            permissionError = `${m['welcome.urlHandling.permissionDenied']({ host })}`;
             // Optionally revert to none
           } else {
             permissionError = null;
@@ -119,11 +119,11 @@
       <div class="flex items-center gap-3 mb-2">
         <img src="/icon-48.png" alt="" class="w-10 h-10 rounded" />
         <div>
-          <h1 class="font-bold leading-none">{i18n.t('common.appName')}</h1>
+          <h1 class="font-bold leading-none">{m['common.appName']()}</h1>
           <!-- <p class="text-xs opacity-60">Welcome — 3 quick steps</p> -->
         </div>
         <!-- <div class="ml-auto text-xs opacity-50">Step {step}/{total}</div> -->
-        <div class="ml-auto text-xs opacity-50">{i18n.t('common.navigation.step', { step, total })}</div>
+        <div class="ml-auto text-xs opacity-50">{m['common.navigation.step']({ step, total })}</div>
       </div>
 
       <!-- Dots pagination -->
@@ -132,7 +132,7 @@
           <button
             class="w-2 h-2 rounded-full transition-all {i + 1 === step ? 'bg-primary w-6' : 'bg-base-300'}"
             onclick={() => goToStep(i + 1)}
-            aria-label={i18n.t('common.navigation.goToStep', { step: i + 1 })}
+            aria-label={m['common.navigation.goToStep']({ step: i + 1 })}
           ></button>
         {/each}
       </div>
@@ -148,60 +148,60 @@
             {#if step === 1}
               <div class="space-y-4">
                 <PartyPopper class="w-12 h-12 text-primary" />
-                <h2 class="text-xl font-bold">{i18n.t('welcome.intro.title')}</h2>
-                <p class="text-sm opacity-70">{i18n.t('welcome.intro.description')}</p>
+                <h2 class="text-xl font-bold">{m['welcome.intro.title']()}</h2>
+                <p class="text-sm opacity-70">{m['welcome.intro.description']()}</p>
                 <ul class="list-disc list-inside text-sm space-y-1 opacity-80">
-                  <li>{i18n.t('welcome.intro.benefits.instantQr')}</li>
-                  <li>{i18n.t('welcome.intro.benefits.contextMenu')}</li>
-                  <li>{i18n.t('welcome.intro.benefits.customization')}</li>
+                  <li>{m['welcome.intro.benefits.instantQr']()}</li>
+                  <li>{m['welcome.intro.benefits.contextMenu']()}</li>
+                  <li>{m['welcome.intro.benefits.customization']()}</li>
                 </ul>
                 <p class="text-xs opacity-50">
-                  {i18n.t('common.links.see')}
-                  <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/blob/main/privacy-policy.md" target="_blank" class="link">{i18n.t('common.links.privacyPolicy')}</a>
+                  {m['common.links.see']()}
+                  <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/blob/main/privacy-policy.md" target="_blank" class="link">{m['common.links.privacyPolicy']()}</a>
                 </p>
               </div>
             {:else if step === 2}
               <div class="space-y-4">
-                <h2 class="text-xl font-bold">{i18n.t('welcome.urlHandling.title')}</h2>
-                <p class="text-sm opacity-70">{i18n.t('welcome.urlHandling.description')}</p>
+                <h2 class="text-xl font-bold">{m['welcome.urlHandling.title']()}</h2>
+                <p class="text-sm opacity-70">{m['welcome.urlHandling.description']()}</p>
 
                 <label class="flex items-center gap-3 p-3 rounded-lg border {settings.cleanUrl ? 'border-primary bg-primary/5' : 'border-base-200'} cursor-pointer">
                   <input type="checkbox" class="toggle toggle-primary toggle-sm" bind:checked={settings.cleanUrl} />
                   <div class="text-sm">
-                    <div class="font-medium">{i18n.t('welcome.urlHandling.fields.tracking.label')}</div>
-                    <div class="text-xs opacity-60">{i18n.t('welcome.urlHandling.fields.tracking.description')}</div>
+                    <div class="font-medium">{m['welcome.urlHandling.fields.tracking.label']()}</div>
+                    <div class="text-xs opacity-60">{m['welcome.urlHandling.fields.tracking.description']()}</div>
                   </div>
                 </label>
 
                 <div class="form-control">
-                  <label class="label" for="urlShortener"><span class="label-text font-medium">{i18n.t('welcome.urlHandling.fields.shortener.label')}</span></label>
+                  <label class="label" for="urlShortener"><span class="label-text font-medium">{m['welcome.urlHandling.fields.shortener.label']()}</span></label>
                   <select class="select select-bordered select-sm" bind:value={settings.urlShortener} id="urlShortener">
-                    <option value="none">{i18n.t('welcome.urlHandling.fields.shortener.options.none.label')}</option>
-                    <option value="hamr" selected>{i18n.t('welcome.urlHandling.fields.shortener.options.hamr.label')}</option>
-                    <option value="tinyurl">{i18n.t('welcome.urlHandling.fields.shortener.options.tinyurl.label')}</option>
-                    <option value="isgd">{i18n.t('welcome.urlHandling.fields.shortener.options.isgd.label')}</option>
-                    <option value="bitly">{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.label')}</option>
+                    <option value="none">{m['welcome.urlHandling.fields.shortener.options.none.label']()}</option>
+                    <option value="hamr" selected>{m['welcome.urlHandling.fields.shortener.options.hamr.label']()}</option>
+                    <option value="tinyurl">{m['welcome.urlHandling.fields.shortener.options.tinyurl.label']()}</option>
+                    <option value="isgd">{m['welcome.urlHandling.fields.shortener.options.isgd.label']()}</option>
+                    <option value="bitly">{m['welcome.urlHandling.fields.shortener.options.bitly.label']()}</option>
                   </select>
                   <p class="text-xs opacity-60 mt-1">
-                    {#if settings.urlShortener === 'none'}{i18n.t('welcome.urlHandling.fields.shortener.options.none.description')}
-                    {:else if settings.urlShortener === 'hamr'}{i18n.t('welcome.urlHandling.fields.shortener.options.hamr.description')}
-                    {:else}{i18n.t('welcome.urlHandling.fields.shortener.externalDescription')}{/if}
+                    {#if settings.urlShortener === 'none'}{m['welcome.urlHandling.fields.shortener.options.none.description']()}
+                    {:else if settings.urlShortener === 'hamr'}{m['welcome.urlHandling.fields.shortener.options.hamr.description']()}
+                    {:else}{m['welcome.urlHandling.fields.shortener.externalDescription']()}{/if}
                   </p>
                   {#if settings.urlShortener === 'bitly'}
-                    <input type="text" placeholder="{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.apiKeyPlaceholder')}" class="input input-bordered input-sm mt-2" bind:value={settings.apiKey} />
-                    {#if !settings.apiKey}<p class="text-xs text-warning mt-1">{i18n.t('welcome.urlHandling.fields.shortener.options.bitly.apiKeyRequired')}</p>{/if}
+                    <input type="text" placeholder="{m['welcome.urlHandling.fields.shortener.options.bitly.apiKeyPlaceholder']()}" class="input input-bordered input-sm mt-2" bind:value={settings.apiKey} />
+                    {#if !settings.apiKey}<p class="text-xs text-warning mt-1">{m['welcome.urlHandling.fields.shortener.options.bitly.apiKeyRequired']()}</p>{/if}
                   {/if}
                   {#if permissionError}
                     <div class="alert alert-warning py-2 text-xs mt-2">{permissionError}</div>
                   {/if}
                 </div>
                 <div class="alert py-2 text-xs mt-5">
-                  {i18n.t('welcome.urlHandling.autoSaveDescription')}
+                  {m['welcome.urlHandling.autoSaveDescription']()}
                 </div>
               </div>
             {:else if step === 3}
               <div class="space-y-4">
-                <h2 class="text-xl font-bold">{i18n.t('welcome.features.title')}</h2>
+                <h2 class="text-xl font-bold">{m['welcome.features.title']()}</h2>
                 <label class="flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition {settings.logoMode === 'favicon' ? 'border-primary bg-primary/5' : 'border-base-300'}">
                   <input
                     type="checkbox"
@@ -210,14 +210,14 @@
                     onchange={(event) => (settings.logoMode = (event.currentTarget as HTMLInputElement).checked ? 'favicon' : 'none')}
                   />
                   <span class="text-sm">
-                    <span class="block font-medium">{i18n.t('welcome.features.favicon.label')}</span>
-                    <span class="block text-xs opacity-60">{i18n.t('welcome.features.favicon.description')}</span>
+                    <span class="block font-medium">{m['welcome.features.favicon.label']()}</span>
+                    <span class="block text-xs opacity-60">{m['welcome.features.favicon.description']()}</span>
                   </span>
                 </label>
                 <div class="grid grid-cols-1 gap-3 text-sm">
                   <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><SwatchBook /></span>
-                    <div><b>{i18n.t('welcome.features.style.label')}:</b> {i18n.t('welcome.features.style.description')}</div>
+                    <div><b>{m['welcome.features.style.label']()}:</b> {m['welcome.features.style.description']()}</div>
                   </div>
                   <!-- <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><Link /></span>
@@ -225,11 +225,11 @@
                   </div> -->
                   <div class="flex gap-3 p-3 bg-base-200 rounded-lg">
                     <span class="text-lg text-primary"><ChevronsUp /></span>
-                    <div><b>{i18n.t('welcome.features.performance.label')}:</b> {i18n.t('welcome.features.performance.description')}</div>
+                    <div><b>{m['welcome.features.performance.label']()}:</b> {m['welcome.features.performance.description']()}</div>
                   </div>
                 </div>
                 <div class="alert py-2 text-xs">
-                  {i18n.t('welcome.features.completionMessage')}
+                  {m['welcome.features.completionMessage']()}
                 </div>
               </div>
             {/if}
@@ -242,10 +242,10 @@
         <button class="btn btn-ghost btn-sm" onclick={prev} disabled={step===1}><ChevronLeft /></button>
         <div class="flex gap-2">
           {#if step < total}
-            <button class="btn btn-primary btn-sm" onclick={next}>{i18n.t('common.actions.next')} <ChevronRight /></button>
+            <button class="btn btn-primary btn-sm" onclick={next}>{m['common.actions.next']()} <ChevronRight /></button>
           {:else}
-            <button class="btn btn-ghost btn-sm" onclick={openSettings}>{i18n.t('common.actions.settings')}</button>
-            <button class="btn btn-primary btn-sm" onclick={openQRPage}>{i18n.t('common.actions.done')}</button>
+            <button class="btn btn-ghost btn-sm" onclick={openSettings}>{m['common.actions.settings']()}</button>
+            <button class="btn btn-primary btn-sm" onclick={openQRPage}>{m['common.actions.done']()}</button>
           {/if}
         </div>
       </div>
@@ -255,6 +255,6 @@
   <!-- version footer -->
   <div class="absolute bottom-2 text-xs opacity-50">
     <LanguageSelector />
-    v{appVersion} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">{i18n.t('common.links.releaseNotes')}</a>
+    v{appVersion} — <a href="https://github.com/JMcrafter26/qr-code-buddy-extension/releases" target="_blank" class="link">{m['common.links.releaseNotes']()}</a>
   </div>
 </div>

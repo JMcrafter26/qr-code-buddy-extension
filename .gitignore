@@ -11,6 +11,7 @@ firefox/
 # WXT
 .output
 .wxt
+src/paraglide
 stats.html
 stats-*.json
 web-ext.config.ts

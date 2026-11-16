@@ -8,7 +8,7 @@
   import logo from '../../assets/logo.svg';
   import { Download, ExternalLink, Settings2 } from '@lucide/svelte';
   import RateBanner from '@/components/qr/RateBanner.svelte';
-  import { i18n } from '#i18n';
+  import { m } from '@/paraglide/messages.js';
   
 
   let url = $state('https://wikipedia.org');
@@ -135,7 +135,7 @@
       } catch {}
       if (qrCanvasRef?.download) qrCanvasRef.download(hostname ? `qr-${hostname}` : 'qr-code');
     } catch (e: any) {
-      alert(e?.message || i18n.t('popup.downloadError'));
+      alert(e?.message || m['popup.downloadError']());
     }
   }
 
@@ -159,13 +159,13 @@
     <div class="flex items-center justify-between w-full">
       <div class="flex items-center gap-2">
         <img src={logo} alt="" class="w-8 h-8 rounded" />
-        <h1 class="font-bold text-lg leading-none">{i18n.t('common.appName')}</h1>
+        <h1 class="font-bold text-lg leading-none">{m['common.appName']()}</h1>
       </div>
       <div class="flex items-center gap-2">
-        <button class="btn btn-ghost btn-circle btn-sm" onclick={openQrPage} title="{i18n.t('popup.openQrPage')}">
+        <button class="btn btn-ghost btn-circle btn-sm" onclick={openQrPage} title="{m['popup.openQrPage']()}">
           <ExternalLink class="w-5 h-5" />
         </button>
-      <button class="btn btn-ghost btn-circle btn-sm" onclick={openOptions} title="{i18n.t('common.actions.settings')}">
+      <button class="btn btn-ghost btn-circle btn-sm" onclick={openOptions} title="{m['common.actions.settings']()}">
         <Settings2 class="w-5 h-5" />
       </button>
       </div>
@@ -188,11 +188,11 @@
       <input
         type="text"
         class="input input-bordered join-item flex-1 text-sm"
-        placeholder="{i18n.t('popup.enterUrl')}"
+        placeholder="{m['popup.enterUrl']()}"
         value={url}
         oninput={handleInput}
       />
-      <button class="btn btn-square join-item" onclick={handleDownload} title="{i18n.t('popup.downloadQr')}">
+      <button class="btn btn-square join-item" onclick={handleDownload} title="{m['popup.downloadQr']()}">
         <Download class="w-5 h-5" />
       </button>
     </div>
