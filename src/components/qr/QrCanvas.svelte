@@ -80,7 +80,7 @@
     }
     // Early check for too long
     if (data.length > 3000) {
-      error = m['qrCanvas.longWarning']({ length: data.length, max: 2953 });
+      error = m['qrCanvas.longWarning']({ length: data.length});
       isRendering = false;
       return;
     }
@@ -109,7 +109,7 @@
       console.error('QR render error', e);
       const msg = String(e?.message || e);
       if (msg.includes('code length overflow') || msg.includes('overflow') || data.length > MAX_QR_LENGTH) {
-        error = m['qrCanvas.longWarning']({ length: data.length, max: MAX_QR_LENGTH });
+        error = m['qrCanvas.tooLong']({ length: data.length, max: MAX_QR_LENGTH });
       } else {
         if (settings.logoMode === 'favicon') {
           try {
@@ -217,17 +217,6 @@
       </div>
     {/if}
   </div>
-  {#if error && !data}
-    <div class="alert alert-error py-2 px-3 text-xs max-w-70 wrap-break-word">
-      <CircleX class="w-4 h-4" />
-      <span>{error}</span>
-    </div>
-  {:else if data && data.length > 1800 && !isRendering}
-    <div class="alert alert-warning py-1 px-2 text-xs max-w-70">
-      <TriangleAlert class="w-4 h-4" />
-      {m['qrCanvas.longWarning']({ length: data.length })}
-    </div>
-  {/if}
   {#if showSlowQrMessage && !error}
     <div in:fade={{ duration: 500 }} class="flex items-center justify-center text-center text-xs text-base-content/60">
       QR generation is taking longer than usual.
