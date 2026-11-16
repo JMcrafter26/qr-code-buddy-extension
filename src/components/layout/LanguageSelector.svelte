@@ -15,13 +15,13 @@
   }
 </script>
 
-<div class="flex items-center justify-between gap-3">
+<div class="flex items-center justify-center gap-2">
   <label class="text-sm font-medium" for="language-selector">
     {m['common.language.label']()}
   </label>
   <select
     id="language-selector"
-    class="select select-bordered select-sm"
+    class="select select-bordered select-sm w-auto"
     value={selectedLocale}
     onchange={changeLocale}
   >
