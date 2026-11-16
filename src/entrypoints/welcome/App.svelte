@@ -188,7 +188,7 @@
                     {:else}{m['welcome.urlHandling.fields.shortener.externalDescription']()}{/if}
                   </p>
                   {#if settings.urlShortener === 'hamr'}
-                    <p class="text-xs opacity-60 mt-1">The result uses HTTPS://ha.mr, a separate open-source project and domain required for links to resolve.</p>
+                    <p class="text-xs opacity-60 mt-1">{m['common.url.hamrNotice']()}</p>
                   {/if}
                   {#if settings.urlShortener === 'bitly'}
                     <input type="text" placeholder="{m['welcome.urlHandling.fields.shortener.options.bitly.apiKeyPlaceholder']()}" class="input input-bordered input-sm mt-2" bind:value={settings.apiKey} />

@@ -1,5 +1,6 @@
 {
   "common.appName": "QR Code Buddy",
+  "common.url.hamrNotice": "结果使用 HTTPS://ha.mr，这是一个独立的开源项目；链接解析需要该域名保持可用。",
   "common.actions.settings": "设置",
   "common.actions.next": "下一步",
   "common.actions.done": "完成",

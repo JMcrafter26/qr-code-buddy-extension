@@ -226,7 +226,7 @@
     <div class="alert alert-warning py-1 px-2 text-xs max-w-70">
       <TriangleAlert class="w-4 h-4" />
       {m['qrCanvas.longWarning']({ length: data.length })}
-      <span class="block">hamr creates an HTTPS://ha.mr link.</span>
+      <span class="block">{m['common.url.hamrNotice']()}</span>
     </div>
   {/if}
   {#if showSlowQrMessage && !error}

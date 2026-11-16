@@ -1,5 +1,6 @@
 {
   "common.appName": "QR Code Buddy",
+  "common.url.hamrNotice": "結果には HTTPS://ha.mr が使用されます。リンクを解決するには、別のオープンソースプロジェクトとそのドメインが利用可能である必要があります。",
   "common.actions.settings": "設定",
   "common.actions.next": "次へ",
   "common.actions.done": "完了",
