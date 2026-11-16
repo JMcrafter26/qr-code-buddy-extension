@@ -155,6 +155,12 @@ export default [
       '.output/**',
       // generated files
       '*.generated.ts',
+      'src/paraglide/**',
+      '.wxt/**',
+      // non related to the build -files
+      'scripts/**',
+      'project.inlang',
+      'eslint.paraglide.config.mjs',
     ],
   },
 ];
