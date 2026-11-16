@@ -32,6 +32,7 @@
   // Debug
   let dirtyUrl = $state('');
   let importExport = $state('');
+  let importError = $state<string | null>(null);
 
   let contrast = $derived(getContrastRatio(settings.color, settings.background));
   let isLowContrast = $derived(contrast < 1.4);
@@ -108,6 +109,7 @@
 
   async function handleImport() {
     if (!importExport) return;
+    importError = null;
     try {
       const parsed: unknown = JSON.parse(importExport);
       const imported: ExportData = hasExportEnvelope(parsed)
@@ -125,7 +127,7 @@
       }
       location.reload();
     } catch (e) {
-      alert(m['options.invalidJson']({ error: String(e) }));
+      importError = m['options.invalidJson']({ error: String(e) });
     }
   }
 
@@ -406,6 +408,9 @@
                   <div class="flex gap-2"><button class="btn btn-sm btn-ghost gap-1" onclick={handleExport}><Download class="h-4 w-4" />{m['options.tools.export']()}</button><button class="btn btn-sm btn-primary gap-1" onclick={handleImport}><Upload class="h-4 w-4" />{m['options.tools.import']()}</button></div>
                 </div>
                 <textarea class="textarea textarea-bordered w-full font-mono text-xs" placeholder="{m['options.tools.importPlaceholder']()}" rows="5" bind:value={importExport}></textarea>
+                {#if importError}
+                  <div class="alert alert-warning mt-2 py-2 text-xs" role="alert"><CircleQuestionMark class="h-4 w-4" />{importError}</div>
+                {/if}
               </div>
             </div>
           </div>
