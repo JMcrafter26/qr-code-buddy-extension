@@ -57,6 +57,8 @@
   "qr.options.title": "その他のオプション",
   "qr.downloadError": "ダウンロードに失敗しました。URLが長すぎる可能性があります",
   "qrCanvas.errorLabel": "エラー：",
+  "qrCanvas.tooLong": "QRコードにはURLが長すぎます（{length}文字）。最大約{max}文字です。設定から短縮するか（ローカルのhamr、TinyURL、is.gd）、短いURLを使用してください。",
+  "qrCanvas.longWarning": "警告：URLが長く（{length}文字）、スキャンしにくい可能性があります。hamrをお試しください。",
   "dataTypes.label": "データの種類",
   "dataTypes.options.url": "URL",
   "dataTypes.options.text": "テキスト",

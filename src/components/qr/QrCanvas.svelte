@@ -80,7 +80,7 @@
     }
     // Early check for too long
     if (data.length > 3000) {
-      error = `URL too long for QR code (${data.length} chars). Max ~2953. Try shortening (hamr, TinyURL, is.gd) or a shorter URL.`;
+      error = m['qrCanvas.longWarning']({ length: data.length, max: 2953 });
       isRendering = false;
       return;
     }
@@ -109,7 +109,7 @@
       console.error('QR render error', e);
       const msg = String(e?.message || e);
       if (msg.includes('code length overflow') || msg.includes('overflow') || data.length > MAX_QR_LENGTH) {
-        error = `URL too long for QR code (${data.length} chars). Max ~${MAX_QR_LENGTH}. Try shortening via Settings (hamr local, TinyURL, is.gd) or use a shorter URL.`;
+        error = m['qrCanvas.longWarning']({ length: data.length, max: MAX_QR_LENGTH });
       } else {
         if (settings.logoMode === 'favicon') {
           try {
@@ -152,7 +152,7 @@
       throw new Error(error);
     }
     if (data.length > 3000) {
-      const msg = `URL too long for QR code (${data.length} chars). Cannot download.`;
+      const msg = m['qrCanvas.tooLong']({ length: data.length, max: MAX_QR_LENGTH });
       alert(msg);
       throw new Error(msg);
     }
@@ -186,7 +186,7 @@
     } catch (e: any) {
       const msg = String(e?.message || e);
       if (msg.includes('overflow')) {
-        const err = `URL too long for QR code (${data.length} chars).`;
+        const err = m['qrCanvas.tooLong']({ length: data.length, max: MAX_QR_LENGTH });
         alert(err);
         throw new Error(err, { cause: e });
       }
@@ -217,7 +217,7 @@
       </div>
     {/if}
   </div>
-  {#if error}
+  {#if error && !data}
     <div class="alert alert-error py-2 px-3 text-xs max-w-70 wrap-break-word">
       <CircleX class="w-4 h-4" />
       <span>{error}</span>
@@ -225,7 +225,7 @@
   {:else if data && data.length > 1800 && !isRendering}
     <div class="alert alert-warning py-1 px-2 text-xs max-w-70">
       <TriangleAlert class="w-4 h-4" />
-      Warning: URL is long ({data.length} chars) — may be hard to scan. Try hamr.
+      {m['qrCanvas.longWarning']({ length: data.length })}
     </div>
   {/if}
   {#if showSlowQrMessage && !error}

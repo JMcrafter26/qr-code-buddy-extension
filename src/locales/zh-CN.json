@@ -57,6 +57,8 @@
   "qr.options.title": "更多选项",
   "qr.downloadError": "下载失败，URL 可能过长",
   "qrCanvas.errorLabel": "错误：",
+  "qrCanvas.tooLong": "URL 对二维码来说过长（{length} 个字符）。最大约为 {max} 个字符。请在设置中缩短 URL（本地 hamr、TinyURL、is.gd），或使用更短的 URL。",
+  "qrCanvas.longWarning": "警告：URL 较长（{length} 个字符），可能难以扫描。请尝试 hamr。",
   "dataTypes.label": "数据类型",
   "dataTypes.options.url": "URL",
   "dataTypes.options.text": "文本",

@@ -57,6 +57,8 @@
   "qr.options.title": "Weitere Optionen",
   "qr.downloadError": "Download fehlgeschlagen – die URL ist möglicherweise zu lang",
   "qrCanvas.errorLabel": "Fehler:",
+  "qrCanvas.tooLong": "URL zu lang für einen QR-Code ({length} Zeichen). Maximal etwa {max}. Versuche, die URL über die Einstellungen zu verkürzen (lokales hamr, TinyURL, is.gd), oder verwende eine kürzere URL.",
+  "qrCanvas.longWarning": "Warnung: Die URL ist lang ({length} Zeichen) und möglicherweise schwer zu scannen. Versuche hamr.",
   "dataTypes.label": "Datentyp",
   "dataTypes.options.url": "URL",
   "dataTypes.options.text": "Text",
