@@ -119,14 +119,8 @@ pnpm format  # Auto-format codebase
 
 ## Localization
 
-The Svelte UI uses [Paraglide JS](https://paraglidejs.com/) with English and German
-messages in [`src/locales/`](src/locales/). The language selector on the welcome and
-settings pages persists the selected UI locale and reloads the current extension page.
-
-The WXT i18n module remains enabled only as a build integration: it converts the same
-JSON catalogs into browser-compatible `_locales` files for the localized manifest
-metadata. Manifest localization follows the browser locale, independently of the
-in-app UI selection.
+The Svelte UI uses [Paraglide JS](https://paraglidejs.com/) with the messages in [`src/locales/`](src/locales/).
+The language selector on the welcome and settings pages persists the selected UI locale and reloads the current extension page.
 
 ## License and Credits
 

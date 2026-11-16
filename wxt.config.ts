@@ -6,7 +6,7 @@ import { paraglideVitePlugin } from '@inlang/paraglide-js';
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   srcDir: 'src',
-  modules: ['@wxt-dev/module-svelte', '@wxt-dev/i18n/module'],
+  modules: ['@wxt-dev/module-svelte'],
   vite: () => ({
     plugins: [
       tailwindcss(),

@@ -407,4 +407,5 @@ tmbootpicker.efi
 
 # paraglide
 src/paraglide
+public/_locales
 project.inlang/cache
