@@ -22,7 +22,6 @@
     "lint": "eslint && prettier --check .",
     "format": "prettier --write .",
     "check:i18n": "inlang check --project ./project.inlang",
-    "machine-translate": "inlang machine translate --project project.inlang",
     "lint:i18n": "eslint --config ./eslint.paraglide.config.mjs ."
   },
   "devDependencies": {
