@@ -1,12 +1,52 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import fs from 'node:fs';
+import path from 'node:path';
 import { defineConfig } from 'wxt';
 import tailwindcss from '@tailwindcss/vite';
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 
-// See https://wxt.dev/api/config.html
+const thirdPartyLicenses = new Map<string, string>();
+
+function collectLicenseFromFile(filePath: string) {
+  if (!filePath.includes('node_modules')) return;
+
+  let dir = path.dirname(filePath);
+  while (dir !== path.dirname(dir)) {
+    const pkgFile = path.join(dir, 'package.json');
+    if (fs.existsSync(pkgFile)) {
+      const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf8'));
+      if (pkg.name) {
+        const key = `${pkg.name}@${pkg.version}`;
+        if (!thirdPartyLicenses.has(key)) {
+          const licenseFile = fs
+            .readdirSync(dir)
+            .find((f) => /^(licen[cs]e|copying|notice)(\..+)?$/i.test(f));
+          const text = licenseFile
+            ? fs.readFileSync(path.join(dir, licenseFile), 'utf8').trim()
+            : `License: ${pkg.license ?? 'Unknown'}`;
+          thirdPartyLicenses.set(key, `${key} (${pkg.license ?? 'Unknown'})\n${'-'.repeat(key.length)}\n${text}`);
+        }
+        return;
+      }
+    }
+    dir = path.dirname(dir);
+  }
+}
+
 export default defineConfig({
   srcDir: 'src',
   modules: ['@wxt-dev/module-svelte'],
+  hooks: {
+    'build:done': (wxt) => {
+      if (thirdPartyLicenses.size > 0) {
+        const out = [...thirdPartyLicenses.entries()]
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([, text]) => text)
+          .join('\n\n========================================\n\n');
+        fs.writeFileSync(path.join(wxt.config.outDir, 'THIRD-PARTY-LICENSES.txt'), out + '\n', 'utf8');
+      }
+    },
+  },
   vite: () => ({
     plugins: [
       tailwindcss(),
@@ -16,37 +56,22 @@ export default defineConfig({
         emitTsDeclarations: true,
         strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
       }),
+      {
+        name: 'collect-bundled-licenses',
+        generateBundle(_, bundle) {
+          for (const item of Object.values(bundle)) {
+            if (item.type === 'chunk') {
+              for (const id of item.moduleIds ?? Object.keys(item.modules ?? {})) {
+                collectLicenseFromFile(id);
+              }
+            }
+          }
+        },
+      },
     ],
     build: {
       modulePreload: false,
     },
   }),
-  manifest: ({ manifestVersion }) => ({
-    name: '__MSG_extensionName__',
-    description: '__MSG_extensionDescription__',
-    permissions: ['activeTab', 'storage', 'contextMenus'],
-    default_locale: 'en',
-    // Host permissions are optional to avoid Chrome Web Store thorough review warning.
-    // Requested at runtime only when user enables a network shortener.
-    ...(manifestVersion === 3
-      ? {
-          optional_host_permissions: [
-            'https://tinyurl.com/*',
-            'https://is.gd/*',
-            'https://api-ssl.bitly.com/*',
-          ],
-        }
-      : {
-          optional_permissions: [
-            'https://tinyurl.com/*',
-            'https://is.gd/*',
-            'https://api-ssl.bitly.com/*',
-          ],
-        }),
-    browser_specific_settings: {
-      gecko: {
-        id: 'qr-code-buddy@jm26.net',
-      },
-    },
-  }),
+  // ...manifest
 });
